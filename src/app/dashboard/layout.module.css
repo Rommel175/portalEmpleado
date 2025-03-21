@@ -1,0 +1,7 @@
+.wraper {
+    display: flex;
+    /*width: 1512px;
+    height: 982px;*/
+    align-items: center;
+    min-height: 100vh;
+}

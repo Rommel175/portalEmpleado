@@ -1,16 +1,16 @@
 import HeaderLoginComponent from '@/components/login/Header';
 import styles from './login.module.css';
-import { Roboto } from 'next/font/google';
 import ButtonLoginComponent from '@/components/login/ButtonLogin';
+import { Roboto } from 'next/font/google';
 
 const roboto = Roboto({
-    weight: ['600'],
-    subsets: ['latin'],
+    weight:"600",
+    subsets:['latin']
 })
 
 export default function LoginPage() {
     return (
-        <main className={`${styles.main} ${roboto.className}`}>
+        <div className={`${styles.wraper} ${roboto.className}`}>
             <HeaderLoginComponent />
 
             <div className={styles.content}>
@@ -19,6 +19,6 @@ export default function LoginPage() {
                     <ButtonLoginComponent />
                 </div>
             </div>
-        </main>
+        </div>
     );
 }

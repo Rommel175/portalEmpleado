@@ -1,12 +1,12 @@
 /*@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');*/
 
-.main {
+.wraper {
     display: flex;
     align-items: center;
     /*width: 1572px;*/
     /*height: 982px;*/
     height: 100vh;
-    width: 100wh;
+    width: 100vw;
 }
 
 .content {

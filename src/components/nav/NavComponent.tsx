@@ -20,12 +20,12 @@ export default function NavComponent() {
                     </g>
                     <defs>
                         <linearGradient id="paint0_linear_4_1192" x1="15.6695" y1="23.9747" x2="30.9442" y2="23.9747" gradientUnits="userSpaceOnUse">
-                            <stop offset="0.00558659" stop-color="#E6007E" />
-                            <stop offset="1" stop-color="#82368C" />
+                            <stop offset="0.00558659" stopColor="#E6007E" />
+                            <stop offset="1" stopColor="#82368C" />
                         </linearGradient>
                         <linearGradient id="paint1_linear_4_1192" x1="24.9954" y1="23.9747" x2="40.2715" y2="23.9747" gradientUnits="userSpaceOnUse">
-                            <stop offset="0.00558659" stop-color="#4DD4EC" />
-                            <stop offset="1" stop-color="#1D71B8" />
+                            <stop offset="0.00558659" stopColor="#4DD4EC" />
+                            <stop offset="1" stopColor="#1D71B8" />
                         </linearGradient>
                         <clipPath id="clip0_4_1192">
                             <rect width="58" height="58" rx="29" fill="white" />

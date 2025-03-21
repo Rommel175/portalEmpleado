@@ -1,17 +1,12 @@
-
-//import NavComponent from '@/components/nav/NavComponent';
-import styles from './page.module.css';
-import { Roboto } from 'next/font/google';
-
-const roboto = Roboto ({
-  weight: ['600'],
-  subsets: ['latin'],
-})
+import { redirect } from "next/navigation";
 
 export default function HomePage() {
+  
+  redirect('/dashboard/inicio'); //Luego implementarlo en el middleware
+  
   return (
-    <main className={`${styles.main} ${roboto.className}`}>
-      <h1>dsdsd</h1>
-    </main>
+    <div>
+      <h1>Home Page</h1>
+    </div>
   );
 }

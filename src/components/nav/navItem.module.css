@@ -13,13 +13,18 @@
     align-items: center;
     gap: 10px;
     border-radius: 6px;
-    background: #0B3C70;
-    color: #FFF;
-    font-family: Roboto;
+    color: #0B3C70;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
     text-decoration: none;
-  }
+}
+
+.options a.active {
+    background: #0B3C70;
+    color: #FFF;
+}
+
+
   
