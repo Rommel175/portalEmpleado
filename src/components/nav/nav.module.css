@@ -1,0 +1,27 @@
+.nav {
+    display: flex;
+    padding: 18px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 50px;
+    align-self: stretch;
+    background: #FFF;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 12px
+}
+
+.header h1 {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    color: #0B3C70;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}

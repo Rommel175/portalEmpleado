@@ -10,4 +10,9 @@
     background: var(--primary, #0B3C70);
     color: white;
     font-weight: bold;
+    transition: all .5s linear;
+}
+
+.button:hover {
+    opacity: .8;
 }

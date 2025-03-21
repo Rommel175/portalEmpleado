@@ -6,7 +6,6 @@ import ButtonLoginComponent from '@/components/login/ButtonLogin';
 const roboto = Roboto({
     weight: ['600'],
     subsets: ['latin'],
-
 })
 
 export default function LoginPage() {
