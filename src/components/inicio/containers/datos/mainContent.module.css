@@ -1,0 +1,78 @@
+.mainContent {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    align-self: stretch;
+}
+
+.option {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    flex: 1 0 0;
+}
+
+.option h4 {
+    color: #7B8794;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.state {
+    display: flex;
+    width: 90px;
+    padding: 4px 10px;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    border-radius: 6px;
+    background: #DCFCE7;
+}
+
+.state p {
+    color: var(--colors-Sucess, #04B500);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px; /* 142.857% */
+}
+
+.location {
+    display: flex;
+    width: 120px;
+    padding: 4px 10px;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 6px;
+    border: 1px solid var(--light-02, #EDEDED);
+    background: var(--light-01, #F6F6F6);
+}
+
+.location option {
+    color: #0B3C70;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px; /* 142.857% */
+}
+
+.day {
+    display: flex;
+    width: 120px;
+    padding: 4px 6px;
+    align-items: center;
+    gap: 10px;
+    border-radius: 6px;
+    border: 1px solid #D8D8D8;
+}
+
+.day p {
+    color: #333;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px; /* 142.857% */
+}
