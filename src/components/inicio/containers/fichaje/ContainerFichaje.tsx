@@ -1,9 +1,11 @@
-import ContainerNavComponent from '../ContainerNav';
+import ContainerNav from '../ContainerNav';
+import ButtonsContainer from './ContainerButtons';
+import DateContainer from './ContainerDate';
 import styles from './containerFichaje.module.css'
 
 export default function ContainerFichaje() {
-    const svg = (
-        <svg
+  const svg = (
+    <svg
       width="23"
       height="23"
       viewBox="0 0 23 23"
@@ -25,15 +27,16 @@ export default function ContainerFichaje() {
         strokeLinejoin="round"
       />
     </svg>
-    )
+  )
 
 
-    return (
-      <div className={styles.container}>
-        <ContainerNavComponent name={'FICHAR'} svg={svg}/>
-        <div className={styles.content}>
-
-        </div>
+  return (
+    <div className={styles.container}>
+      <ContainerNav name={'FICHAR'} svg={svg} />
+      <div className={styles.content}>
+        <DateContainer />
+        <ButtonsContainer />
       </div>
-    );
-  }
+    </div>
+  );
+}

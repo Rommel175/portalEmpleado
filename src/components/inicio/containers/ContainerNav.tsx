@@ -5,7 +5,7 @@ type Props = {
     svg: React.ReactNode;
 }
 
-export default function ContainerNavComponent( {name, svg}: Props ) {
+export default function ContainerNav( {name, svg}: Props ) {
     return (
         <nav className={styles.nav}>
 

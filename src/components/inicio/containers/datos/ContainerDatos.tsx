@@ -1,4 +1,4 @@
-import ContainerNavComponent from '../ContainerNav';
+import ContainerNav from '../ContainerNav';
 import styles from './containerDatos.module.css'
 import MainContentComponent from './MainContent';
 import PersonalInfoComponent from './PersonalInfo';
@@ -15,7 +15,7 @@ export default function ContainerDatos() {
     return (
         <div className={styles.container}>
 
-            <ContainerNavComponent name={'MIS DATOS'} svg={svg}/>
+            <ContainerNav name={'MIS DATOS'} svg={svg}/>
 
             <div className={styles.content}>
 

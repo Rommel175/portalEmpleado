@@ -9,7 +9,7 @@
     background: #F6F6F6;
 }
 
-.containers {
+.containerSuperior {
     display: flex;
     align-items: flex-start;
     gap: 18px;
