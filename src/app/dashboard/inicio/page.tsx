@@ -14,11 +14,8 @@ export default async function HomePage() {
   const user = data.user;
 
   if (!user) {
-    redirect('/')
+    redirect('/login')
   }
-
-
-
 
   return (
     <div className={styles.wraper}>

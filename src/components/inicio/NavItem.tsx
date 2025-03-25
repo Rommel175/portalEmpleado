@@ -19,7 +19,7 @@ export default function NavInicioItem( {user} : {user: User} ) {
             </Link>
             
             <Link href={'#'}>
-                <Image src={user.user_metadata.avatar_url ?? "https://clasicoshispanicos.com/wp-content/uploads/2021/01/siluetagrisanonimo.jpg"} width={36} height={36} alt='img_profile' className={styles.navImage} />
+                <Image src={user.user_metadata.avatar_url} width={36} height={36} alt='img_profile' className={styles.navImage} />
             </Link>
         </div>
     );

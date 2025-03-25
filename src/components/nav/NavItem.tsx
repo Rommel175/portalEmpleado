@@ -2,10 +2,18 @@
 
 import Link from 'next/link';
 import styles from './navItem.module.css';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { createClient } from '@/utils/supabase/client';
 
 export default function NavItemComponent() {
   const pathname = usePathname();
+  const supabase = createClient();
+  const router = useRouter();
+
+  async function handleLogOut() {
+    await supabase.auth.signOut();
+    router.push('/login')
+  }
 
   return (
     <div className={styles.options}>
@@ -31,6 +39,8 @@ export default function NavItemComponent() {
         </svg>
         Archivos
       </Link>
+
+      <button onClick={handleLogOut}>Cerrar sesión</button>
     </div>
   );
 }

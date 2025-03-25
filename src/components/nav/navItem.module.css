@@ -26,5 +26,27 @@
     color: #FFF;
 }
 
+.options button {
+    width: 50%;
+    padding: 10px 12px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 6px;
+    border: 1px solid #0B3C70;
+    background: #0B3C70;
+    color: #FFF;
+    text-align: center;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.options button:hover {
+    opacity: .8;
+    cursor: pointer; 
+}
+
+
 
   
