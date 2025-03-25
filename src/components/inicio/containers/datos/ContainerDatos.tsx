@@ -1,10 +1,11 @@
+import { User } from '@supabase/supabase-js';
 import ContainerNav from '../ContainerNav';
 import styles from './containerDatos.module.css'
 import MainContentComponent from './MainContent';
 import PersonalInfoComponent from './PersonalInfo';
 
 
-export default function ContainerDatos() {
+export default function ContainerDatos( {user}: {user: User} ) {
 
     const svg = (
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" >
@@ -19,7 +20,7 @@ export default function ContainerDatos() {
 
             <div className={styles.content}>
 
-                <PersonalInfoComponent />
+                <PersonalInfoComponent user={user}/>
 
                 <div className={styles.line}></div>
 
