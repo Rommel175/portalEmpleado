@@ -2,16 +2,17 @@ import styles from './tableItem.module.css'
 import Image from 'next/image';
 
 type Prop = {
-    name?: string,
-    email?: string,
+    name: string,
+    email: string,
     foto?: string,
-    estado?: string,
-    localizacion?: string,
+    estado?: 'Activo' | 'Inactivo' | 'Pausa',
+    localizacion?: 'Oficina' | 'Casa' | 'Viaje',
     inicio?: string,
     final?: string
 }
 
-export default function TableItem( {name, email, foto ,estado, localizacion, inicio, final}: Prop ) {
+export default function TableItem( {name, email, foto, estado='Inactivo', localizacion, inicio="-", final="-"}: Prop ) {
+
     return (
         <div className={styles.items}>
             <div className={styles.usuario}>
@@ -22,12 +23,12 @@ export default function TableItem( {name, email, foto ,estado, localizacion, ini
                 </div>
             </div>
 
-            <div className={styles.estadoActivo}>
-                <h2>{estado}</h2>
+            <div className={`${(estado == 'Activo') && styles.estadoActivo} ${(estado == 'Inactivo') && styles.estadoInactivo} ${(estado == 'Pausa') && styles.estadoPausa}`}>
+                <h2>{estado ?? 'Inactivo'}</h2>
             </div>
 
             <div className={styles.localizacion}>
-                <h2>{localizacion}</h2>
+                <h2>{localizacion ?? 'No especificado'}</h2>
             </div>
 
             <div className={styles.jornada}>

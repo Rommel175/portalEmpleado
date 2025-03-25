@@ -63,6 +63,44 @@
     line-height: 20px; /* 142.857% */
 }
 
+.estadoInactivo {
+    display: flex;
+    width: 90px;
+    padding: 4px 10px;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    border-radius: 6px;
+    background: #FFDFDF;
+}
+
+.estadoInactivo h2 {
+    color: #E94544;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px; /* 142.857% */
+}
+
+.estadoPausa {
+    display: flex;
+    width: 90px;
+    padding: 4px 10px;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    border-radius: 6px;
+    background: #FFE3D4;
+}
+
+.estadoPausa h2 {
+    color: #FF8446;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px; /* 142.857% */
+}
+
 .localizacion {
     width: 70px;
 }
