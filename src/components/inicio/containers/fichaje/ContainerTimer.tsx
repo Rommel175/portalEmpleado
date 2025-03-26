@@ -1,25 +1,9 @@
 'use client'
 
-import { useEffect, useState } from "react";
+
 import styles from "./ContainerTimer.module.css";
 
 export default function ContainerTimer() {
-
-    const [time, setTime] = useState(0);
-    const [isRunning, setRunning] = useState(false);
-
-    function startTimer() {
-        setRunning(true);
-    }
-
-    function pauseTimer() {
-        setRunning(false);
-    }
-
-    function stopTimer() {
-        setRunning(false);
-        setTime(0);
-    }
 
     return (
         <>
