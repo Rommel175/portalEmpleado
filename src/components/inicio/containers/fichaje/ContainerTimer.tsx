@@ -6,24 +6,46 @@ import styles from "./ContainerTimer.module.css";
 export default function ContainerTimer() {
     const [time, setTime] = useState<number>(0);
     const [isRunning, setRunning] = useState<boolean>(false);
+    const [currentDate, setCurrentDate] = useState<string>("");
+
+    useEffect(() => {
+        const item = localStorage.getItem("timer-time");
+        if (item) {
+            setTime(Number(item))
+        }
+
+        const stateRunning = localStorage.getItem('timer-running');
+
+        if (stateRunning == 'true') {
+            setRunning(true);
+        }
+        
+    }, [])
 
     function startTimer() {
         setRunning(true);
+        localStorage.setItem('timer-running', "true")
     }
 
     function pauseTimer() {
         setRunning(false);
+        localStorage.setItem('timer-running', "false")
     }
 
     function stopTimer() {
         setRunning(false);
         setTime(0);
+        localStorage.clear();
     }
 
     useEffect(() => {
         if (!isRunning) return;
         const timer: number = window.setInterval(() => {
-            setTime(prevTime => prevTime + 1);
+            setTime(prevTime => {
+                const newTime = prevTime + 1;
+                localStorage.setItem('timer-time', String(newTime));
+                return newTime;
+            });
         }, 1000)
 
         return () => clearInterval(timer);
@@ -37,10 +59,22 @@ export default function ContainerTimer() {
         return `${hours}:${minutes}:${seconds}`
     }
 
+
+    useEffect(() => {
+        const date = new Date();
+        const formatDate = new Intl.DateTimeFormat("es-ES", {
+            day: "2-digit",
+            month: "long",
+            year: "numeric"
+        }).format(date)
+        
+        setCurrentDate(formatDate)
+    }, [])
+
     return (
         <>
             <div className={styles.date}>
-                <h3>11 de marzo de 2025</h3>
+                <h3>{currentDate}</h3>
                 <div className={styles.counter}>
                     <h2>{formatTimer(time)}</h2>
                 </div>
