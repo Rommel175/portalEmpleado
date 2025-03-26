@@ -9,9 +9,9 @@ import { redirect } from 'next/navigation';
 
 export default async function HomePage() {
 
-  const supabase = createClient();
-  const { data } = await (await supabase).auth.getUser();
-  const user = data.user;
+  const supabase = await createClient();
+  const { data } = await supabase.auth.getUser();
+    const user = data.user;
 
   if (!user) {
     redirect('/login')

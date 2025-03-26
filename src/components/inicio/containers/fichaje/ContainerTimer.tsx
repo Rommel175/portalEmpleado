@@ -9,6 +9,17 @@ export default function ContainerTimer() {
     const [currentDate, setCurrentDate] = useState<string>("");
 
     useEffect(() => {
+        const date = new Date();
+        const formatDate = new Intl.DateTimeFormat("es-ES", {
+            day: "2-digit",
+            month: "long",
+            year: "numeric"
+        }).format(date)
+        
+        setCurrentDate(formatDate)
+    }, [])
+
+    /*useEffect(() => {
         const item = localStorage.getItem("timer-time");
         if (item) {
             setTime(Number(item))
@@ -20,22 +31,22 @@ export default function ContainerTimer() {
             setRunning(true);
         }
         
-    }, [])
+    }, [])*/
 
     function startTimer() {
         setRunning(true);
-        localStorage.setItem('timer-running', "true")
+        //localStorage.setItem('timer-running', "true")
     }
 
     function pauseTimer() {
         setRunning(false);
-        localStorage.setItem('timer-running', "false")
+        //localStorage.setItem('timer-running', "false")
     }
 
     function stopTimer() {
         setRunning(false);
         setTime(0);
-        localStorage.clear();
+        //localStorage.clear();
     }
 
     useEffect(() => {
@@ -43,7 +54,7 @@ export default function ContainerTimer() {
         const timer: number = window.setInterval(() => {
             setTime(prevTime => {
                 const newTime = prevTime + 1;
-                localStorage.setItem('timer-time', String(newTime));
+                //localStorage.setItem('timer-time', String(newTime));
                 return newTime;
             });
         }, 1000)
@@ -58,18 +69,6 @@ export default function ContainerTimer() {
         
         return `${hours}:${minutes}:${seconds}`
     }
-
-
-    useEffect(() => {
-        const date = new Date();
-        const formatDate = new Intl.DateTimeFormat("es-ES", {
-            day: "2-digit",
-            month: "long",
-            year: "numeric"
-        }).format(date)
-        
-        setCurrentDate(formatDate)
-    }, [])
 
     return (
         <>

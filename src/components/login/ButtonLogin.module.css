@@ -6,14 +6,21 @@
     gap: 10px;
     align-self: stretch;
     border-radius: 6px;
-    border: 1px solid var(--primary, #0B3C70);
-    background: var(--primary, #0B3C70);
-    color: white;
-    font-weight: bold;
+    border: 1px solid #F2F2F2;
+    background: #F6F6F6;
+    color: #7B8794;
+    text-align: center;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
     transition: all .5s linear;
 }
 
+.button svg {
+    aspect-ratio: 1/1;
+}
+
 .button:hover {
-    opacity: .8;
     cursor: pointer;
 }

@@ -1,7 +1,7 @@
 .mainContent {
     display: flex;
-    align-items: flex-start;
-    gap: 12px;
+    justify-content: space-between;
+    align-items: flex-end;
     align-self: stretch;
 }
 
@@ -10,7 +10,6 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 6px;
-    flex: 1 0 0;
 }
 
 .option h4 {
@@ -41,17 +40,11 @@
 }
 
 .location {
-    display: flex;
     width: 120px;
     padding: 4px 10px;
-    justify-content: space-between;
-    align-items: center;
     border-radius: 6px;
     border: 1px solid var(--light-02, #EDEDED);
     background: var(--light-01, #F6F6F6);
-}
-
-.location option {
     color: #0B3C70;
     font-size: 14px;
     font-style: normal;
@@ -59,18 +52,44 @@
     line-height: 20px; /* 142.857% */
 }
 
+.location option {
+    padding: 4px 6px;
+    color: #0B3C70;
+    font-size: 14px;
+    font-weight: 400;
+}
+
 .day {
     display: flex;
-    width: 120px;
+    width: 110px;
     padding: 4px 6px;
     align-items: center;
+    justify-content: center;
     gap: 10px;
     border-radius: 6px;
     border: 1px solid #D8D8D8;
 }
 
 .day p {
-    color: #333;
+    color: #7B8794;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px; /* 142.857% */
+}
+
+.modify {
+    display: flex;
+    padding: 4px 10px;
+    align-items: center;
+    gap: 6px;
+    border-radius: 6px;
+    border: 1px solid var(--light-02, #EDEDED);
+    background: #FFF;
+}
+
+.modify p {
+    color: #0B3C70;
     font-size: 14px;
     font-style: normal;
     font-weight: 400;

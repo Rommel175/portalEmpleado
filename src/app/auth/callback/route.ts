@@ -25,5 +25,8 @@ export async function GET(request: Request) {
   }
 
   // URL to redirect to after sign up process completes
+
+  //ñadir logica de los emails.
+
   return NextResponse.redirect(`${origin}/`);
 }
