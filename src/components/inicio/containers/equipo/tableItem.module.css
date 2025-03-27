@@ -18,7 +18,7 @@
     flex-shrink: 0;
     aspect-ratio: 1/1;
     border-radius: 40px;
-    background: url(https://s3-alpha-sig.figma.com/img/4838/ebf9/9f5d3b04e54d4bda4b727af5ea1e799c?Expires=1743379200&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=OjuiJ9iriZqqOE72l-KP6Dww0UyXc9B5~oomNe-ku1QR-WKTmgYEk~XR4Yy~5V~MbI19w6OyflPM11uPMCXcOxWsYqgjnPTMgz5l785OXlhQxdNPb7xWGmmsO7psdWTdWejBEqynsfqy28~m-GrAtXwhyY3~yo0qiWLyWbQnE3BiSjX0DE30oP3BESuhfHg~v5JAL~DlY8Px5Yty9JsxP5PRJ014RJ6fs4RoQsa9Yu-vyhzBZxaxfqHlg~v61lNCuGBSOxhbrI3QSGkXtdWzW7W9KJMTWdSwNJ7MTQFCUN1~rkYYt5EQEP2C2~f~EwrhSlBisU23jSN4wFepiWJ2gw) lightgray 50% / cover no-repeat;
+    /*background: url(https://s3-alpha-sig.figma.com/img/4838/ebf9/9f5d3b04e54d4bda4b727af5ea1e799c?Expires=1743379200&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=OjuiJ9iriZqqOE72l-KP6Dww0UyXc9B5~oomNe-ku1QR-WKTmgYEk~XR4Yy~5V~MbI19w6OyflPM11uPMCXcOxWsYqgjnPTMgz5l785OXlhQxdNPb7xWGmmsO7psdWTdWejBEqynsfqy28~m-GrAtXwhyY3~yo0qiWLyWbQnE3BiSjX0DE30oP3BESuhfHg~v5JAL~DlY8Px5Yty9JsxP5PRJ014RJ6fs4RoQsa9Yu-vyhzBZxaxfqHlg~v61lNCuGBSOxhbrI3QSGkXtdWzW7W9KJMTWdSwNJ7MTQFCUN1~rkYYt5EQEP2C2~f~EwrhSlBisU23jSN4wFepiWJ2gw) lightgray 50% / cover no-repeat;*/
 }
 
 .personalInfo {
@@ -28,7 +28,13 @@
     gap: 6px;
 }
 
-.personalInfo h2 {
+.name {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.name h2 {
     color: #252525;
     font-size: 16px;
     font-style: normal;
@@ -44,14 +50,22 @@
     line-height: normal;
 }
 
+.estado {
+    display: flex;
+    width: 141px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
 .estadoActivo {
     display: flex;
-    width: 90px;
-    padding: 4px 10px;
+    padding: 4px 18px;
     justify-content: center;
     align-items: center;
     gap: 4px;
     border-radius: 6px;
+    border: 1px solid #D6FFD5;
     background: #DCFCE7;
 }
 
@@ -65,12 +79,12 @@
 
 .estadoInactivo {
     display: flex;
-    width: 90px;
-    padding: 4px 10px;
+    padding: 4px 12px;
     justify-content: center;
     align-items: center;
     gap: 4px;
     border-radius: 6px;
+    border: 1px solid #FFD0CF;
     background: #FFDFDF;
 }
 
@@ -84,17 +98,55 @@
 
 .estadoPausa {
     display: flex;
-    width: 90px;
+    padding: 4px 18px;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    border-radius: 6px;
+    border: 1px solid #FFD8BB;
+    background: #FFE7D5;
+}
+
+.estadoPausa h2 {
+    color: #FF8446;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px; /* 142.857% */
+}
+
+.estadoVacaciones {
+    display: flex;
+    padding: 4px 12px;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    border-radius: 6px;
+    border: 1px solid #BEF5FF;
+    background: #D8F9FF;
+}
+
+.estadoVacaciones h2 {
+    color: #0B3C70;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px; /* 142.857% */
+}
+
+.estadoFinJornada {
+    display: flex;
     padding: 4px 10px;
     justify-content: center;
     align-items: center;
     gap: 4px;
     border-radius: 6px;
-    background: #FFE3D4;
+    border: 1px solid #E6E6E6;
+    background: #F6F6F6;
 }
 
-.estadoPausa h2 {
-    color: #FF8446;
+.estadoFinJornada h2 {
+    color: #0B3C70;
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
