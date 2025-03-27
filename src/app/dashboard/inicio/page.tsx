@@ -20,11 +20,11 @@ export default async function HomePage() {
   return (
     <div className={styles.wraper}>
       <Navbar user={user} />
-      <section className={styles.containerSuperior}>
+      <div className={styles.containerSuperior}>
         <ContainerDatos user={user}/>
 
         <ContainerFichaje />
-      </section>
+      </div>
       
       <ContainerEquipo />
 
