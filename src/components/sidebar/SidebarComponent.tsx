@@ -1,7 +1,7 @@
-import styles from './nav.module.css'
-import NavItemComponent from './NavItem';
+import styles from './sidebar.module.css'
+import SidebarItemComponent from './SidebarItem';
 
-export default function NavComponent() {
+export default function SidebarComponent() {
     return (
         <nav className={styles.nav}>
             <header className={styles.header}>
@@ -35,7 +35,7 @@ export default function NavComponent() {
                 <h1>PORTAL EMPLEADO</h1>
             </header>
 
-            <NavItemComponent />
+            <SidebarItemComponent />
         </nav>
     );
 }

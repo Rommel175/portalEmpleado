@@ -1,11 +1,11 @@
 'use client'
 
 import Link from 'next/link';
-import styles from './navItem.module.css';
+import styles from './sidebarItem.module.css';
 import { usePathname, useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 
-export default function NavItemComponent() {
+export default function SidebarItemComponent() {
   const pathname = usePathname();
   const supabase = createClient();
   const router = useRouter();

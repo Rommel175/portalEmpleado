@@ -1,9 +1,9 @@
 import Image from 'next/image';
-import styles from './navItem.module.css';
+import styles from './navbarItem.module.css';
 import Link from 'next/link';
 import { User } from '@supabase/supabase-js';
 
-export default function NavInicioItem( {user} : {user: User} ) {
+export default function NavbarItem( {user} : {user: User} ) {
     return (
         <div className={styles.navItems}>
             <Link href={'#'}>

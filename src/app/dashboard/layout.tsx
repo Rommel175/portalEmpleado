@@ -1,4 +1,4 @@
-import NavComponent from '@/components/nav/NavComponent';
+import SidebarComponent from '@/components/sidebar/SidebarComponent';
 import styles from './layout.module.css';
 import { Roboto } from 'next/font/google';
 
@@ -14,7 +14,7 @@ export default function DashboardLayout({
 }) {
   return (
     <div className={`${styles.wraper} ${roboto.className}`}>
-      <NavComponent />
+      <SidebarComponent />
       {children}
     </div>
   );
