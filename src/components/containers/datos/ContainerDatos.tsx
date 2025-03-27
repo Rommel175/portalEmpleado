@@ -1,5 +1,5 @@
 import { User } from '@supabase/supabase-js';
-import ContainerNav from '../ContainerNav';
+import ContainerHeader from '../ContainerHeader';
 import styles from './containerDatos.module.css'
 import MainContentComponent from './MainContent';
 import PersonalInfoComponent from './PersonalInfo';
@@ -16,7 +16,7 @@ export default function ContainerDatos( {user}: {user: User} ) {
     return (
         <div className={styles.container}>
 
-            <ContainerNav name={'MIS DATOS'} svg={svg}/>
+            <ContainerHeader name={'Mis datos'} svg={svg}/>
 
             <div className={styles.content}>
 

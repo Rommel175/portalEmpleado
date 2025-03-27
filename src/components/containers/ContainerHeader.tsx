@@ -1,4 +1,4 @@
-import styles from './containerNav.module.css'
+import styles from './containerHeader.module.css'
 
 type Props = {
     name: string,
@@ -7,12 +7,11 @@ type Props = {
 
 export default function ContainerNav( {name, svg}: Props ) {
     return (
-        <nav className={styles.nav}>
-
-            <div className={styles.navTitle}>
+        <header className={styles.header}>
+            <div className={styles.headerTitle}>
                 {svg}
                 <h1>{ name }</h1>
             </div>
-        </nav>
+        </header>
     );
 }

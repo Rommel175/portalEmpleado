@@ -1,4 +1,4 @@
-import ContainerNav from '../ContainerNav';
+import ContainerHeader from '../ContainerHeader';
 import styles from './containerEquipo.module.css'
 import ContainerTable from './ContainerTable';
 
@@ -21,7 +21,7 @@ export default function ContainerEquipo() {
 
     return (
         <div className={styles.container}>
-            <ContainerNav name='EQUIPO' svg={svg} />
+            <ContainerHeader name='Equipo' svg={svg} />
             <div className={styles.content}>
                 <ContainerTable />
             </div>

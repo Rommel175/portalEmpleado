@@ -1,4 +1,4 @@
-.nav {
+.header {
     display: flex;
     padding: 12px 18px;
     flex-direction: column;
@@ -9,15 +9,14 @@
     background: #E8EDF0;
 }
 
-.navTitle {
+.title {
     display: flex;
     align-items: center;
     gap: 6px;
 }
 
-.navTitle h1{
+.title h1 {
     color: #0B3C70;
-    font-family: Roboto;
     font-size: 18px;
     font-style: normal;
     font-weight: 500;

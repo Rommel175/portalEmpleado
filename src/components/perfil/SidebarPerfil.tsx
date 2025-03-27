@@ -1,10 +1,10 @@
 'use client'
 
 import Link from 'next/link';
-import styles from './sidebarFichajes.module.css'
+import styles from './sidebarPerfil.module.css'
 import { usePathname } from 'next/navigation';
 
-export default function SidebarFichajes() {
+export default function SidebarPerfil() {
     const pathname = usePathname();
 
 

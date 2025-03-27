@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import Navbar from '@/components/navbar/Navbar';
 import ContainerFichaje from '@/components/containers/fichaje/ContainerFichaje';
 import ContainerDatos from '@/components/containers/datos/ContainerDatos';
-import SidebarFichajes from '@/components/perfil/SidebarFichajes';
+import SidebarPerfil from '@/components/perfil/SidebarPerfil';
 
 export default async function PerfilLayout({ children }: { children: React.ReactNode }) {
     const supabase = await createClient();
@@ -26,8 +26,10 @@ export default async function PerfilLayout({ children }: { children: React.React
             </div>
 
             <div className={styles.content}>
-                <SidebarFichajes />
-                {children}
+                <SidebarPerfil />
+                <div className={styles.mainContent}>
+                    {children}
+                </div>
             </div>
             
         </div>
