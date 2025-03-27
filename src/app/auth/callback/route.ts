@@ -1,4 +1,5 @@
 import { createClient } from "@/utils/supabase/server";
+import { createClientAdmin } from "@/utils/supabase/serverAdmin";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
@@ -9,24 +10,48 @@ export async function GET(request: Request) {
   const code = requestUrl.searchParams.get("code");
   const origin = requestUrl.origin;
   const redirectTo = requestUrl.searchParams.get("redirect_to")?.toString();
-  const next = requestUrl.searchParams.get("next"); 
+  const next = requestUrl.searchParams.get("next");
 
-  if (code) {
-    const supabase = await createClient();
-    await supabase.auth.exchangeCodeForSession(code);
+  if (!code) {
+    return NextResponse.redirect(`${origin}/login`);
   }
 
-  if (next) {
-    return NextResponse.redirect(`${origin}${next}`);
+  const supabase = await createClient();
+  await supabase.auth.exchangeCodeForSession(code);
+
+  const { data, error } = await supabase.auth.getUser();
+
+  if (error) {
+    return NextResponse.redirect(`${origin}/login`);
+  } 
+
+  const user = data.user
+  const email = user?.user_metadata.email;
+
+  if (email.endsWith("xana@gmail.com")) {
+
+    if (next) {
+      return NextResponse.redirect(`${origin}${next}`);
+    }
+
+    if (redirectTo) {
+      return NextResponse.redirect(`${origin}${redirectTo}`);
+    }
+
+    return NextResponse.redirect(`${origin}/`);
+
+  } else {
+
+    const supabaseAdmin = await createClientAdmin;
+
+
+    const id = user?.id;
+
+    if (id) {
+      await supabaseAdmin.auth.admin.deleteUser(id)
+    }
+
+    return NextResponse.redirect(`${origin}/login`);
+
   }
-
-  if (redirectTo) {
-    return NextResponse.redirect(`${origin}${redirectTo}`);
-  }
-
-  // URL to redirect to after sign up process completes
-
-  //ñadir logica de los emails.
-
-  return NextResponse.redirect(`${origin}/`);
 }
