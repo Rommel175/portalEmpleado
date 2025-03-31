@@ -101,7 +101,7 @@
     flex: 1 0 0;
 }
 
-.hourItem h4 {
+.hourItem label {
     color: #7B8794;
     font-size: 12px;
     font-style: normal;
@@ -135,7 +135,7 @@
     width: 100%;
 }
 
-.modalContainer .messageContainer h3 {
+.modalContainer .messageContainer label {
     color: #0B3C70;
     font-size: 15px;
     font-style: normal;

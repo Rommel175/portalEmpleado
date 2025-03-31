@@ -10,7 +10,7 @@ type Prop = {
 }
 
 export default function ButtonModificar({ hour, date }: Prop) {
-    const { register } = useForm();
+    const { register, handleSubmit, formState: {errors} } = useForm();
     const [isOpen, setIsOpen] = useState(false);
 
     function handleOpen() {
@@ -19,6 +19,13 @@ export default function ButtonModificar({ hour, date }: Prop) {
 
     function handleClose() {
         setIsOpen(false);
+    }    
+
+    function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+        handleSubmit(data => {
+            console.log(data)
+        })
     }
 
 
@@ -34,7 +41,7 @@ export default function ButtonModificar({ hour, date }: Prop) {
             {
                 (isOpen) && (
                     <div className={styles.overlay}>
-                        <div className={styles.modalContainer}>
+                        <form className={styles.modalContainer} onSubmit={onSubmit}>
                             <header className={styles.title}>
                                 <h2>Solicitud de modificación de hora</h2>
                                 <div>
@@ -47,7 +54,7 @@ export default function ButtonModificar({ hour, date }: Prop) {
                             
                             <div className={styles.containerHours}>
                                 <div className={styles.hourItem}>
-                                    <h4>Hora actual</h4>
+                                    <label>Hora actual</label>
                                     <input type="text" value={hour} readOnly />
                                 </div>
 
@@ -56,7 +63,7 @@ export default function ButtonModificar({ hour, date }: Prop) {
                                 </svg>
 
                                 <div className={styles.hourItem}>
-                                    <h4>Petición</h4>
+                                    <label>Petición</label>
                                     <input type="text" placeholder='Escribe aquí la hora, ej: 19:00' {...register('peticion', {
                                         required: {
                                             value: true,
@@ -68,11 +75,13 @@ export default function ButtonModificar({ hour, date }: Prop) {
                                         }
                                     })} />
                                 </div>
+                                
+                                {errors.peticion?.message && <span>{String(errors.peticion.message)}</span>}
 
                             </div>
 
                             <div className={styles.messageContainer}>
-                                <h3>Mensaje</h3>
+                                <label>Mensaje</label>
                                 <textarea name="message" id="message" placeholder='Escribe aquí tu texto'></textarea>
                             </div>
 
@@ -82,7 +91,7 @@ export default function ButtonModificar({ hour, date }: Prop) {
                             </div>
 
 
-                        </div>
+                        </form>
                     </div>
                 )
             }
