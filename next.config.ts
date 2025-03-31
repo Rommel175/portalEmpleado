@@ -2,7 +2,6 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    domains: ['s3-alpha-sig.figma.com'],
     remotePatterns: [
       {
         protocol: 'https',
@@ -11,7 +10,11 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'clasicoshispanicos.com'
-      }
+      },
+      {
+        protocol: 'https',
+        hostname: 's3-alpha-sig.figma.com'
+      } 
     ]
   },
 };
