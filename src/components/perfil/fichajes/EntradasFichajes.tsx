@@ -12,10 +12,10 @@ export default function EntradasFichajes( {date}: Prop) {
         <h2> { date } </h2>
       </header>
 
-      <EntradaFichajesItem action='Entrada' hour='19:00'/>
-      <EntradaFichajesItem action='Pausa' hour='14:30'/>
-      <EntradaFichajesItem action='Entrada' hour='16:20'/>
-      <EntradaFichajesItem action='Salida' hour='18:00'/>
+      <EntradaFichajesItem action='Entrada' hour='19:00' date={date}/>
+      <EntradaFichajesItem action='Pausa' hour='14:30' date={date}/>
+      <EntradaFichajesItem action='Entrada' hour='16:20' date={date}/>
+      <EntradaFichajesItem action='Salida' hour='18:00' date={date}/>
     </div>
   );
 }

@@ -3,10 +3,11 @@ import styles from './entradaFichajesItem.module.css'
 
 type Prop = {
     action: 'Entrada' | 'Pausa' | 'Salida',
-    hour: string
+    hour: string,
+    date: string
 }
 
-export default function EntradaFichajesItem( { action, hour }: Prop ) {
+export default function EntradaFichajesItem( { action, hour, date }: Prop ) {
     return (
         <div className={styles.item}>
             <div>
@@ -20,7 +21,7 @@ export default function EntradaFichajesItem( { action, hour }: Prop ) {
                 </div>
             </div>
 
-            <ButtonModificar />
+            <ButtonModificar hour={hour} date={date}/>
 
         </div>
     );
