@@ -32,9 +32,9 @@ export default function SidebarItemComponent() {
         Perfil
       </Link>
 
-      <Link href={'/dashboard/recursos/incidencias'} className={`${(pathname == '/dashboard/recursos/incidencias') ? styles.active : ""}`}>
+      <Link href={'/dashboard/recursos/incidencias'} className={`${(pathname == '/dashboard/recursos/incidencias' || pathname == '/dashboard/recursos/solicitudes') ? styles.active : ""}`}>
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M9.84905 17.2086V8.51848M15.0631 17.2086V3.30444M4.63501 17.2086V13.7325" stroke={(pathname == '/dashboard/recursos/incidencias') ? 'white' : '#0B3C70'} strokeWidth="2.16092" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M9.84905 17.2086V8.51848M15.0631 17.2086V3.30444M4.63501 17.2086V13.7325" stroke={(pathname == '/dashboard/recursos/incidencias' || pathname == '/dashboard/recursos/solicitudes') ? 'white' : '#0B3C70'} strokeWidth="2.16092" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
         Recursos Humanos
       </Link>
