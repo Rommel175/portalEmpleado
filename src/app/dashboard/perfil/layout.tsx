@@ -1,8 +1,8 @@
 import { createClient } from '@/utils/supabase/server';
 import styles from './layout.module.css'
 import { redirect } from 'next/navigation';
-import ContainerFichaje from '@/components/containers/fichaje/ContainerFichaje';
 import ContainerDatos from '@/components/containers/datos/ContainerDatos';
+import ContainerFichaje from '@/components/containers/fichaje/ContainerFichaje';
 import SidebarPerfil from '@/components/perfil/SidebarPerfil';
 
 export default async function PerfilLayout({ children }: { children: React.ReactNode }) {
@@ -13,7 +13,6 @@ export default async function PerfilLayout({ children }: { children: React.React
     if (!user) {
         redirect('/login')
     }
-
 
     return (
         <>
