@@ -1,0 +1,61 @@
+.date {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    align-self: stretch;
+}
+
+.dateItem {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    flex: 1 0 0;
+}
+
+.dateItem h4 {
+    color: #7B8794;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.dateItemContent {
+    display: flex;
+    padding: 12px;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+    border-radius: 6px;
+    background: #FFF;
+    /* box-shadow-02 */
+    box-shadow: 0px 0px 4px 1.2px rgba(0, 0, 0, 0.15);
+}
+
+.dateItemContent h3 {
+    color: #0B3C70;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px;
+    /* 133.333% */
+}
+
+.dateItemContent div {
+    display: flex;
+    padding: 2px;
+    align-items: center;
+    gap: 4px;
+    align-self: stretch;
+    border-radius: 6px;
+}
+
+.dateItemContent div p {
+    color: var(--light-03, #7B8794);
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
