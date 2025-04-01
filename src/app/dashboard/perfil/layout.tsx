@@ -1,7 +1,6 @@
 import { createClient } from '@/utils/supabase/server';
 import styles from './layout.module.css'
 import { redirect } from 'next/navigation';
-import Navbar from '@/components/navbar/Navbar';
 import ContainerFichaje from '@/components/containers/fichaje/ContainerFichaje';
 import ContainerDatos from '@/components/containers/datos/ContainerDatos';
 import SidebarPerfil from '@/components/perfil/SidebarPerfil';
@@ -17,9 +16,7 @@ export default async function PerfilLayout({ children }: { children: React.React
 
 
     return (
-        <div className={styles.wraper}>
-            <Navbar user={user} />
-
+        <>
             <div className={styles.containerSuperior}>
                 <ContainerDatos user={user} />
                 <ContainerFichaje />
@@ -31,7 +28,7 @@ export default async function PerfilLayout({ children }: { children: React.React
                     {children}
                 </div>
             </div>
-            
-        </div>
+
+        </>
     );
 }

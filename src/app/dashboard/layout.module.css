@@ -5,3 +5,14 @@
     align-items: center;
     min-height: 100vh;
 }
+
+.container {
+    display: flex;
+    padding: 18px;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    flex: 1 0 0;
+    align-self: stretch;
+    background: #F6F6F6;
+}
