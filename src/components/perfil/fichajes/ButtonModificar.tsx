@@ -21,13 +21,7 @@ export default function ButtonModificar({ hour, date }: Prop) {
         setIsOpen(false);
     }    
 
-    function onSubmit(event: React.FormEvent<HTMLFormElement>) {
-        event.preventDefault();
-        handleSubmit(data => {
-            console.log(data)
-        })
-    }
-
+    const onSubmit = handleSubmit((data) => console.log(data));
 
     return (
         <>
@@ -74,9 +68,10 @@ export default function ButtonModificar({ hour, date }: Prop) {
                                             message: 'El formato debe ser HH:mm, ej: 19:00'
                                         }
                                     })} />
+
+                                    {errors.peticion?.message && <span style={{color: 'red'}}>{String(errors.peticion.message)}</span>}
+                                    
                                 </div>
-                                
-                                {errors.peticion?.message && <span>{String(errors.peticion.message)}</span>}
 
                             </div>
 
