@@ -1,7 +1,7 @@
-import styles from './reportesCardHeader.module.css'
+import styles from './incidenciasCardHeader.module.css'
 import Image from 'next/image';
 
-export default function ReportesCardHeader() {
+export default function IncidenciasCardHeader() {
     return (
         <div className={styles.headerCard}>
             <div>

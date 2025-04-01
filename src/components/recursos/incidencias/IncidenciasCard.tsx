@@ -1,13 +1,13 @@
-import styles from './reportesCard.module.css'
-import ReportesCardDate from './ReportesCardDate'
-import ReportesCardHeader from './ReportesCardHeader'
+import styles from './incidenciasCard.module.css'
+import IncidenciasCardDate from './IncidenciasCardDate'
+import IncidenciasCardHeader from './IncidenciasCardHeader'
 
-export default function ReportesCard() {
+export default function IncidenciasCard() {
   return (
     <div className={styles.card}>
-        <ReportesCardHeader />
+        <IncidenciasCardHeader />
 
-        <ReportesCardDate />
+        <IncidenciasCardDate />
 
         <div className={styles.message}>
           <p>Hola, Se me pasó fichar la entrada después de comer, pero retomé a la hora de siempre. ¿Pueden ayudarme a corregirlo? ¡Gracias!</p>

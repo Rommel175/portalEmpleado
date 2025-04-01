@@ -1,6 +1,6 @@
-import styles from './reportesCardDate.module.css'
+import styles from './incidenciasCardDate.module.css'
 
-export default function ReportesCardDate() {
+export default function IncidenciasCardDate() {
     return (
         <div className={styles.date}>
 

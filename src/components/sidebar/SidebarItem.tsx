@@ -32,18 +32,18 @@ export default function SidebarItemComponent() {
         Perfil
       </Link>
 
-      <Link href={'/dashboard/recursos/incidencias'} className={`${(pathname == '/dashboard/recursos/incidencias' || pathname == '/dashboard/recursos/solicitudes') ? styles.active : ""}`}>
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M9.84905 17.2086V8.51848M15.0631 17.2086V3.30444M4.63501 17.2086V13.7325" stroke={(pathname == '/dashboard/recursos/incidencias' || pathname == '/dashboard/recursos/solicitudes') ? 'white' : '#0B3C70'} strokeWidth="2.16092" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-        Recursos Humanos
-      </Link>
-
       <Link href={'/dashboard/archivos'} className={`${(pathname == '/dashboard/archivos') ? styles.active : ""}`}>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M5 7.69135C5 6.31677 5 5.62949 5.42778 5.20343C5.85322 4.77582 6.54078 4.77582 7.91667 4.77582C9.29178 4.77582 9.97933 4.77582 10.4056 5.20343C10.8333 5.62949 10.8333 6.31677 10.8333 7.69135C10.8333 9.06593 10.8333 9.75322 10.4056 10.1793C9.97933 10.6069 9.29178 10.6069 7.91667 10.6069C6.54156 10.6069 5.854 10.6069 5.42778 10.1793C5 9.75399 5 9.0667 5 7.69135ZM5 15.8603C5 14.4857 5 13.7984 5.42778 13.3724C5.854 12.9448 6.54156 12.9448 7.91667 12.9448C9.29178 12.9448 9.97933 12.9448 10.4056 13.3724C10.8333 13.7984 10.8333 14.4857 10.8333 15.8603C10.8333 17.2349 10.8333 17.9222 10.4056 18.3482C9.97933 18.7758 9.29178 18.7758 7.91667 18.7758C6.54156 18.7758 5.854 18.7758 5.42778 18.3482C5 17.9229 5 17.2349 5 15.8603ZM13.1667 7.69135C13.1667 6.31677 13.1667 5.62949 13.5944 5.20343C14.0207 4.77582 14.7082 4.77582 16.0833 4.77582C17.4584 4.77582 18.146 4.77582 18.5722 5.20343C19 5.62949 19 6.31677 19 7.69135C19 9.06593 19 9.75322 18.5722 10.1793C18.146 10.6069 17.4584 10.6069 16.0833 10.6069C14.7082 10.6069 14.0207 10.6069 13.5944 10.1793C13.1667 9.75322 13.1667 9.06593 13.1667 7.69135ZM13.1667 15.8603C13.1667 14.4857 13.1667 13.7984 13.5944 13.3724C14.0207 12.9448 14.7082 12.9448 16.0833 12.9448C17.4584 12.9448 18.146 12.9448 18.5722 13.3724C19 13.7984 19 14.4857 19 15.8603C19 17.2349 19 17.9222 18.5722 18.3482C18.146 18.7758 17.4584 18.7758 16.0833 18.7758C14.7082 18.7758 14.0207 18.7758 13.5944 18.3482C13.1667 17.9222 13.1667 17.2349 13.1667 15.8603Z" stroke={(pathname == '/dashboard/archivos') ? 'white' : '#0B3C70'} strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
         Archivos
+      </Link>
+
+      <Link href={'/dashboard/recursos/incidencias'} className={`${(pathname == '/dashboard/recursos/incidencias' || pathname == '/dashboard/recursos/solicitudes') ? styles.active : ""}`}>
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9.84905 17.2086V8.51848M15.0631 17.2086V3.30444M4.63501 17.2086V13.7325" stroke={(pathname == '/dashboard/recursos/incidencias' || pathname == '/dashboard/recursos/solicitudes') ? 'white' : '#0B3C70'} strokeWidth="2.16092" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+        Recursos Humanos
       </Link>
 
       <Link href={'/dashboard/reportes'} className={`${(pathname == '/dashboard/reportes') ? styles.active : ""}`}>
