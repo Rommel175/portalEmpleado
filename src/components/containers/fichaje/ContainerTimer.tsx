@@ -81,7 +81,7 @@ export default function ContainerTimer() {
             <div className={styles.buttons}>
                 <button className={styles.entrada} onClick={startTimer}>FICHAR ENTRADA</button>
                 <button className={styles.pausa} onClick={pauseTimer}>PAUSA</button>
-                <button className={styles.salida} onClick={stopTimer}>SALIDA</button>
+                <button className={styles.salida} onClick={stopTimer}>FICHAR SALIDA</button>
             </div>
         </>
     );

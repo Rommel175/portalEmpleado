@@ -66,9 +66,9 @@
     align-items: center;
     gap: 4px;
     align-self: stretch;
-    border-radius: 6px;
+        border-radius: 6px;
     border: 1px solid #FFDFDF;
-    background: #FFDFDF;
+    background: #FFE7D5;
     color: #E94544;
     text-align: center;
     font-size: 15px;
