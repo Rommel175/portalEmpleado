@@ -1,6 +1,6 @@
-import styles from './header.module.css';
+import styles from './headerLogin.module.css';
 
-export default function HeaderLoginComponent() {
+export default function HeaderLogin() {
     return (
         <div className={styles.bienvenida}>
             <svg width="40" height="50" viewBox="0 0 40 50" fill="none" xmlns="http://www.w3.org/2000/svg">

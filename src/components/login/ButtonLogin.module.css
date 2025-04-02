@@ -3,9 +3,9 @@
     padding: 10px 12px;
     justify-content: center;
     align-items: center;
-    gap: 10px;
+    gap: 6px;
     align-self: stretch;
-    border-radius: 6px;
+    border-radius: 100px;
     border: 1px solid #F2F2F2;
     background: #F6F6F6;
     color: #7B8794;
@@ -15,10 +15,6 @@
     font-weight: 400;
     line-height: normal;
     transition: all .5s linear;
-}
-
-.button svg {
-    aspect-ratio: 1/1;
 }
 
 .button:hover {

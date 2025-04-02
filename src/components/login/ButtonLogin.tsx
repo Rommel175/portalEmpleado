@@ -3,7 +3,7 @@
 import { createClient } from '@/utils/supabase/client';
 import styles from './ButtonLogin.module.css'
 
-export default function ButtonLoginComponent(props: { nextUrl?: string }) {
+export default function ButtonLogin(props: { nextUrl?: string }) {
 
   const supabase = createClient();
 
