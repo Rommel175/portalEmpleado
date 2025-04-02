@@ -15,13 +15,9 @@
 }
 
 .header h1 {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 5px;
     color: #0B3C70;
     font-size: 18px;
     font-style: normal;
-    font-weight: 600;
+    font-weight: 700;
     line-height: normal;
 }

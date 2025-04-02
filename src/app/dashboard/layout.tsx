@@ -1,12 +1,12 @@
 import SidebarComponent from '@/components/sidebar/SidebarComponent';
 import styles from './layout.module.css';
-import { Poppins, Poppins } from 'next/font/google';
+import { Poppins } from 'next/font/google';
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 import Navbar from '@/components/navbar/Navbar';
 
 const poppins = Poppins({
-  weight: ['600', '500', '400'],
+  weight: ['700' ,'600', '500', '400'],
   subsets: ['latin']
 });
 
