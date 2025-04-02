@@ -7,7 +7,7 @@
     gap: 150px;
     flex-shrink: 0;
     align-self: stretch;
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.50) 0%, rgba(0, 0, 0, 0.50) 100%), url(https://s3-alpha-sig.figma.com/img/862b/ae99/e7d28aca5cd5b5184aa0ba64d4e73de2?Expires=1744588800&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=i4rRIX3BVfmoHV4UMa9a5tEKT61pUwbN2S97qEYv61lro7YIBOctsENSfRnhwvxoVOTFJ6kxAufTRT1GF8LmDGfQVTQVIPGj8hfvqyNYSC-OZUa1hT66-AvlUSDek9hi9MiIoWHttASAE4Kyxo2q3avJ~K1RRaSZTvj4PQbLipIuDCcXRrkXVrW14UGNinVPMZFHC69pHPAGeUc2pOxb2tHd8-25lFfsAE2-qMA4CII58Smm63X7Xua7DMzqX~d-SiAEpqE~YHmCX3CnQwlQEHnspyQE9EAVDF4VQ1T~OiJg6kuilD3ES96lMekF4S9pWAUYbPf6Bd-ow0zTLYvvpw__) lightgray 50% / cover no-repeat;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.50) 0%, rgba(0, 0, 0, 0.50) 100%), url(https://s3-alpha-sig.figma.com/img/862b/ae99/e7d28aca5cd5b5184aa0ba64d4e73de2?Expires=1744588800&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=i4rRIX3BVfmoHV4UMa9a5tEKT61pUwbN2S97qEYv61lro7YIBOctsENSfRnhwvxoVOTFJ6kxAufTRT1GF8LmDGfQVTQVIPGj8hfvqyNYSC-OZUa1hT66-AvlUSDek9hi9MiIoWHttASAE4Kyxo2q3avJ~K1RRaSZTvj4PQbLipIuDCcXRrkXVrW14UGNinVPMZFHC69pHPAGeUc2pOxb2tHd8-25lFfsAE2-qMA4CII58Smm63X7Xua7DMzqX~d-SiAEpqE~YHmCX3CnQwlQEHnspyQE9EAVDF4VQ1T~OiJg6kuilD3ES96lMekF4S9pWAUYbPf6Bd-ow0zTLYvvpw) lightgray 50% / cover no-repeat;
 }
 
 .header {

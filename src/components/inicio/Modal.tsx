@@ -2,6 +2,7 @@
 import { User } from '@supabase/supabase-js';
 import styles from './modal.module.css'
 import { useState, useEffect } from "react";
+import Image from 'next/image';
 
 export default function Modal({ user }: { user: User }) {
     const [isOpen, setIsOpen] = useState(true);
@@ -57,7 +58,7 @@ export default function Modal({ user }: { user: User }) {
                         <div className={styles.location}>
                             <label htmlFor="location">Localización</label>
                             <select name="location">
-                                <option value="0">Oficiona</option>
+                                <option value="0">Oficina</option>
                                 <option value="1">Casa</option>
                                 <option value="2">Viaje</option>
                             </select>
@@ -91,6 +92,7 @@ export default function Modal({ user }: { user: User }) {
                     </div>
 
                 </form>
+                <Image src={'https://s3-alpha-sig.figma.com/img/862b/ae99/e7d28aca5cd5b5184aa0ba64d4e73de2?Expires=1744588800&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=i4rRIX3BVfmoHV4UMa9a5tEKT61pUwbN2S97qEYv61lro7YIBOctsENSfRnhwvxoVOTFJ6kxAufTRT1GF8LmDGfQVTQVIPGj8hfvqyNYSC-OZUa1hT66-AvlUSDek9hi9MiIoWHttASAE4Kyxo2q3avJ~K1RRaSZTvj4PQbLipIuDCcXRrkXVrW14UGNinVPMZFHC69pHPAGeUc2pOxb2tHd8-25lFfsAE2-qMA4CII58Smm63X7Xua7DMzqX~d-SiAEpqE~YHmCX3CnQwlQEHnspyQE9EAVDF4VQ1T~OiJg6kuilD3ES96lMekF4S9pWAUYbPf6Bd-ow0zTLYvvpw'} width={542} height={756} alt='img'/>
             </div>
         </div>
 
