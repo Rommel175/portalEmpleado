@@ -1,12 +1,12 @@
 import SidebarComponent from '@/components/sidebar/SidebarComponent';
 import styles from './layout.module.css';
-import { Roboto } from 'next/font/google';
+import { Poppins, Poppins } from 'next/font/google';
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 import Navbar from '@/components/navbar/Navbar';
 
-const roboto = Roboto({
-  weight: ['600', '400', '500'],
+const poppins = Poppins({
+  weight: ['600', '500', '400'],
   subsets: ['latin']
 });
 
@@ -19,7 +19,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   }
 
   return (
-    <div className={`${styles.wraper} ${roboto.className}`}>
+    <div className={`${styles.wraper} ${poppins.className}`}>
       <SidebarComponent />
       <div className={styles.container}>
         <Navbar user={user}/>

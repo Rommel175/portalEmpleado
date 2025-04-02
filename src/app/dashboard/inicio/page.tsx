@@ -1,35 +1,26 @@
-'use client'
-
 import styles from './inicio.module.css';
 import ContainerDatos from '@/components/containers/datos/ContainerDatos';
 import ContainerFichaje from '@/components/containers/fichaje/ContainerFichaje';
 import ContainerEquipo from '@/components/containers/equipo/ContainerEquipo';
-import { createClient } from '@/utils/supabase/client';
-import { useEffect, useState } from 'react';
 import { redirect } from 'next/navigation';
-import { User } from '@supabase/supabase-js';
+import { createClient } from '@/utils/supabase/server';
+import Modal from '@/components/inicio/Modal';
 
-export default function HomePage() {
+export default async function HomePage() {
 
-  const [user, setUser] = useState<User | null>(null);
-  const supabase = createClient();
+  const supabase = await createClient();
+  const { data } = await supabase.auth.getUser();
+  const user = data.user;
 
-  useEffect(() => {
-    async function loadUser() {
-      const { data } = await supabase.auth.getUser();
-      if (!data.user) {
-        redirect('/login')
-      }
-      setUser(data.user)
-    }
-
-    loadUser()
-  }, [])
+  if (!user) {
+    redirect('/login')
+  }
 
   return (
     <>
+      <Modal user={user} />
       <div className={styles.containerSuperior}>
-        {user && <ContainerDatos user={user} />}
+        <ContainerDatos user={user} />
 
         <ContainerFichaje />
       </div>
