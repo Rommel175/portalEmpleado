@@ -18,7 +18,7 @@ export default async function PerfilLayout({ children }: { children: React.React
         <>
             <div className={styles.containerSuperior}>
                 <ContainerDatos user={user} />
-                <ContainerFichaje />
+                <ContainerFichaje user={user}/>
             </div>
 
             <div className={styles.content}>
