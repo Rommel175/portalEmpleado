@@ -42,11 +42,11 @@ export async function GET(request: Request) {
       return NextResponse.redirect(`${process.env.NEXT_PUBLIC_VERCEL_URL}/`);  
     } else {
       if (next) {
-        return NextResponse.redirect(`localhost:3000/${next}`);
+        return NextResponse.redirect(`${origin}${next}`);
       }
   
       if (redirectTo) {
-        return NextResponse.redirect(`localhost:3000/${redirectTo}`);
+        return NextResponse.redirect(`${origin}${redirectTo}`);
       }
   
       return NextResponse.redirect(`${origin}/`);
