@@ -22,7 +22,7 @@ export default async function HomePage() {
       <div className={styles.containerSuperior}>
         <ContainerDatos user={user} />
 
-        <ContainerFichaje />
+        <ContainerFichaje user={user} />
       </div>
 
       <ContainerEquipo />

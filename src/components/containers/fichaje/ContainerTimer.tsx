@@ -2,11 +2,14 @@
 
 import { useEffect, useState } from "react";
 import styles from "./ContainerTimer.module.css";
+import { createClient } from "@/utils/supabase/client";
+import { User } from "@supabase/supabase-js";
 
-export default function ContainerTimer() {
+export default function ContainerTimer( { user }: {user:User} ) {
     const [time, setTime] = useState<number>(0);
     const [isRunning, setRunning] = useState<boolean>(false);
     const [currentDate, setCurrentDate] = useState<string>("");
+    const supabase = createClient();
 
     useEffect(() => {
         const date = new Date();
@@ -27,9 +30,46 @@ export default function ContainerTimer() {
         setRunning(false);
     }
 
+    async function salida() {
+        const date3 = new Date();
+        const day = String(date3.getDate()).padStart(2, '0');
+        const mounth = String(date3.getMonth() + 1).padStart(2, '0');
+        const year = date3.getFullYear();
+
+        const { data, error } = await supabase
+            .from('historialFichajes')
+            .select('id')
+            .eq('created_at', `${year}-${mounth}-${day}`)
+            .eq('user_id', user.id);
+
+        if (error) {
+            console.error('Error fetching fichaje state:', error);
+            return;
+        }
+
+        console.log(data);
+
+        if (data && data.length > 0) {
+            const fichajeId = data[0].id;
+            console.log(fichajeId)
+        
+            const { error: updateError } = await supabase
+                .from('historialFichajes')
+                .update({estado: 'inactivo'})  
+                .eq('id', fichajeId); 
+        
+            if (updateError) {
+                console.error('Error updating fichaje:', updateError);
+                return;
+            }
+        
+        }
+    }
+
     function stopTimer() {
         setRunning(false);
         setTime(0);
+        salida();
     }
 
     useEffect(() => {
