@@ -10,6 +10,7 @@ export default function ContainerTimer( { user }: {user:User} ) {
     const [isRunning, setRunning] = useState<boolean>(false);
     const [currentDate, setCurrentDate] = useState<string>("");
     const supabase = createClient();
+    const [fichaje, setFichaje] = useState("");
 
     useEffect(() => {
         const date = new Date();
@@ -20,14 +21,125 @@ export default function ContainerTimer( { user }: {user:User} ) {
         }).format(date)
 
         setCurrentDate(formatDate)
+
+        const fetchData = async () => {
+            const date3 = new Date();
+            const day = String(date3.getDate()).padStart(2, '0');
+            const mounth = String(date3.getMonth() + 1).padStart(2, '0');
+            const year = date3.getFullYear();
+
+            const { data, error } = await supabase
+                .from('historialFichajes')
+                .select('estado')
+                .eq('created_at', `${year}-${mounth}-${day}`)
+                .eq('user_id', user.id);
+
+            if (error) {
+                console.error('Error fetching fichaje state:', error);
+                return;
+            }
+
+            if (data && data.length > 0) {
+                setFichaje(data[0].estado)
+            };
+        }
+
+        fetchData();
     }, [])
 
+    useEffect(() => {
+
+        if (fichaje == 'activo') {
+            setRunning(true)
+        } else if(fichaje == 'inactivo') {
+            setRunning(false);
+            setTime(0);
+        } else if (fichaje === 'pausa') {
+            setRunning(false)
+        }
+
+    },[fichaje])
+
+    async function activo() {
+        const date3 = new Date();
+        const day = String(date3.getDate()).padStart(2, '0');
+        const mounth = String(date3.getMonth() + 1).padStart(2, '0');
+        const year = date3.getFullYear();
+
+        const { data, error } = await supabase
+            .from('historialFichajes')
+            .select('id')
+            .eq('created_at', `${year}-${mounth}-${day}`)
+            .eq('user_id', user.id);
+
+        if (error) {
+            console.error('Error fetching fichaje state:', error);
+            return;
+        }
+
+        console.log(data);
+
+        if (data && data.length > 0) {
+            const fichajeId = data[0].id;
+            //console.log(fichajeId)
+        
+            const { error: updateError } = await supabase
+                .from('historialFichajes')
+                .update({estado: 'activo'})  
+                .eq('id', fichajeId); 
+        
+            if (updateError) {
+                console.error('Error updating fichaje:', updateError);
+                return;
+            }
+        
+        }
+    }
+
     function startTimer() {
-        setRunning(true);
+        activo();
+        setFichaje('activo');
+    }
+
+    async function pausa() {
+        const date3 = new Date();
+        const day = String(date3.getDate()).padStart(2, '0');
+        const mounth = String(date3.getMonth() + 1).padStart(2, '0');
+        const year = date3.getFullYear();
+
+        const { data, error } = await supabase
+            .from('historialFichajes')
+            .select('id')
+            .eq('created_at', `${year}-${mounth}-${day}`)
+            .eq('user_id', user.id);
+
+        if (error) {
+            console.error('Error fetching fichaje state:', error);
+            return;
+        }
+
+        console.log(data);
+
+        if (data && data.length > 0) {
+            const fichajeId = data[0].id;
+            //console.log(fichajeId)
+        
+            const { error: updateError } = await supabase
+                .from('historialFichajes')
+                .update({estado: 'pausa'})  
+                .eq('id', fichajeId); 
+        
+            if (updateError) {
+                console.error('Error updating fichaje:', updateError);
+                return;
+            }
+        
+        }
     }
 
     function pauseTimer() {
-        setRunning(false);
+        pausa();
+        setFichaje('pausa');
     }
 
     async function salida() {
@@ -51,7 +163,7 @@ export default function ContainerTimer( { user }: {user:User} ) {
 
         if (data && data.length > 0) {
             const fichajeId = data[0].id;
-            console.log(fichajeId)
+            //console.log(fichajeId)
         
             const { error: updateError } = await supabase
                 .from('historialFichajes')
@@ -67,9 +179,8 @@ export default function ContainerTimer( { user }: {user:User} ) {
     }
 
     function stopTimer() {
-        setRunning(false);
-        setTime(0);
         salida();
+        setFichaje('inactivo');
     }
 
     useEffect(() => {
@@ -102,9 +213,24 @@ export default function ContainerTimer( { user }: {user:User} ) {
                 </div>
             </div>
             <div className={styles.buttons}>
-                <button className={styles.entrada} onClick={startTimer}>FICHAR ENTRADA</button>
-                <button className={styles.pausa} onClick={pauseTimer}>PAUSA</button>
-                <button className={styles.salida} onClick={stopTimer}>FICHAR SALIDA</button>
+            {
+                (fichaje == 'activo') && (
+                    <>
+                        <button className={styles.pausa} onClick={pauseTimer}>PAUSA</button>
+                        <button className={styles.salida} onClick={stopTimer}>FICHAR SALIDA</button>
+                    </>
+                )
+            }
+
+            {
+                (fichaje == 'pausa' || fichaje == 'inactivo') && (
+                    <>
+                        <button className={styles.entrada} onClick={startTimer}>FICHAR ENTRADA</button>
+                        <button className={styles.salida} onClick={stopTimer}>FICHAR SALIDA</button>                
+                    </>
+                )
+            }
+                
             </div>
         </>
     );

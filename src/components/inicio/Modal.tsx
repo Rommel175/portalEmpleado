@@ -4,6 +4,7 @@ import styles from './modal.module.css'
 import { useState, useEffect } from "react";
 import Image from 'next/image';
 import { createClient } from '@/utils/supabase/client';
+import { redirect } from 'next/navigation';
 
 export default function Modal({ user }: { user: User }) {
     const [isOpen, setIsOpen] = useState(true);
@@ -84,6 +85,7 @@ export default function Modal({ user }: { user: User }) {
     function fichar() {
         setIsOpen(false);
         accionFichar();
+        redirect('/');
 
     }
 
