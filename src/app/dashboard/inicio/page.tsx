@@ -4,6 +4,7 @@ import ContainerFichaje from '@/components/containers/fichaje/ContainerFichaje';
 import ContainerEquipo from '@/components/containers/equipo/ContainerEquipo';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/utils/supabase/server';
+import Modal from '@/components/inicio/Modal';
 
 export default async function HomePage() {
 
@@ -17,10 +18,11 @@ export default async function HomePage() {
 
   return (
     <>
+      <Modal user={user}/>
       <div className={styles.containerSuperior}>
         <ContainerDatos user={user} />
 
-        <ContainerFichaje user={user} />
+        <ContainerFichaje />
       </div>
 
       <ContainerEquipo />

@@ -1,11 +1,10 @@
-import { User } from '@supabase/supabase-js';
 import ContainerHeader from '../ContainerHeader';
 //import ButtonsContainer from './ContainerButtons';
 //import DateContainer from './ContainerDate';
 import styles from './containerFichaje.module.css'
 import ContainerTimer from './ContainerTimer';
 
-export default function ContainerFichaje( {user}: {user: User} ) {
+export default function ContainerFichaje() {
   const svg = (
     <svg
       width="23"
@@ -35,7 +34,7 @@ export default function ContainerFichaje( {user}: {user: User} ) {
     <div className={styles.container}>
       <ContainerHeader name={'Fichar'} svg={svg} />
       <div className={styles.content}>
-        <ContainerTimer user={user}/>
+        <ContainerTimer />
       </div>
     </div>
   );

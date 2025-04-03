@@ -3,14 +3,88 @@ import { User } from '@supabase/supabase-js';
 import styles from './modal.module.css'
 import { useState, useEffect } from "react";
 import Image from 'next/image';
+import { createClient } from '@/utils/supabase/client';
 
 export default function Modal({ user }: { user: User }) {
     const [isOpen, setIsOpen] = useState(true);
     const [currentDate, setCurrentDate] = useState<string>("");
     const [currebtTime, setCurrentTime] = useState<string>("");
+    const [fichaje, setFichaje] = useState('');
+
+    const supabase = createClient();
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const date3 = new Date();
+            const day = String(date3.getDate()).padStart(2, '0');
+            const mounth = String(date3.getMonth() + 1).padStart(2, '0');
+            const year = date3.getFullYear();
+
+            //Luego implementarlo bien en la base de datos, junto con las acciones de fichar, pausar etc...
+            const { data, error } = await supabase
+                .from('historialFichajes')
+                .select('estado')
+                .eq('created_at', `${year}-${mounth}-${day}`)
+                .eq('user_id', user.id);
+
+            if (error) {
+                console.error('Error fetching fichaje state:', error);
+                return;
+            }
+
+            if (data && data.length > 0) {
+                setFichaje(data[0].estado);
+            };
+
+        }
+
+        fetchData();
+    }, []);
+
+    async function accionFichar() {
+        const date3 = new Date();
+        const day = String(date3.getDate()).padStart(2, '0');
+        const mounth = String(date3.getMonth() + 1).padStart(2, '0');
+        const year = date3.getFullYear();
+
+        const { data, error } = await supabase
+            .from('historialFichajes')
+            .select('id')
+            .eq('created_at', `${year}-${mounth}-${day}`)
+            .eq('user_id', user.id);
+
+        if (error) {
+            console.error('Error fetching fichaje state:', error);
+            return;
+        }
+
+        console.log(data)
+
+        if (data && data.length > 0) {
+            const fichajeId = data[0].id;
+            console.log(fichajeId)
+        
+            const { error: updateError } = await supabase
+                .from('historialFichajes')
+                .update({estado: 'activo'})  
+                .eq('id', fichajeId); 
+        
+            if (updateError) {
+                console.error('Error updating fichaje:', updateError);
+                return;
+            }
+        
+        }
+    }
 
     function handleClose() {
         setIsOpen(false);
+    }
+
+    function fichar() {
+        setIsOpen(false);
+        accionFichar();
+
     }
 
     useEffect(() => {
@@ -33,7 +107,7 @@ export default function Modal({ user }: { user: User }) {
     }, [])
 
     return (
-        (isOpen) &&
+        (isOpen && fichaje == 'inactivo') &&
 
         <div className={styles.overlay}>
             <div className={styles.modalContainer}>
@@ -86,7 +160,7 @@ export default function Modal({ user }: { user: User }) {
 
                         <div className={styles.buttons}>
                             <button type='button' onClick={handleClose}>Saltar fichajes</button>
-                            <button type='button'>Fichar</button>
+                            <button type='button' onClick={fichar}>Fichar</button>
                         </div>
 
                     </div>
