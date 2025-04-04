@@ -1,8 +1,14 @@
+import ContainerOptions from '@/components/containers/ContainerOptions';
+import EntradaSolicitudes from '@/components/containers/historialSolicitudes/EntradaSolicitudes';
 
 export default function Solicitudes() {
   return (
-    <div>
-      <h1>Página Solicitudes</h1>
-    </div>
+    <>
+      <ContainerOptions ubicacion={false} urlExportar={'#'}/>
+      <EntradaSolicitudes />
+      <EntradaSolicitudes />
+      <EntradaSolicitudes />
+      <EntradaSolicitudes />
+    </>
   );
 }

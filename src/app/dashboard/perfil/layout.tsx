@@ -4,7 +4,6 @@ import { redirect } from 'next/navigation';
 import ContainerDatos from '@/components/containers/datos/ContainerDatos';
 import ContainerFichaje from '@/components/containers/fichaje/ContainerFichaje';
 import NavbarPerfil from '@/components/perfil/NavbarPerfil';
-import ContainerOptions from '@/components/containers/ContainerOptions';
 
 export default async function PerfilLayout({ children }: { children: React.ReactNode }) {
     const supabase = await createClient();
@@ -25,7 +24,6 @@ export default async function PerfilLayout({ children }: { children: React.React
             <div className={styles.content}>
                 <NavbarPerfil />
                 <div className={styles.mainContent}>
-                    <ContainerOptions />
                     {children}
                 </div>
             </div>
