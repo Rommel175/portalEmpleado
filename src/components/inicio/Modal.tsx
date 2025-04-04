@@ -35,7 +35,18 @@ export default function Modal({ user }: { user: User }) {
 
             if (data && data.length > 0) {
                 setFichaje(data[0].estado);
-            };
+            } /*else {
+                const { data:dataInsert, error: errorInsert } = await supabase
+                    .from('historialFichajes')
+                    .insert({estado: 'inactivo', created_at: `${year}-${mounth}-${day}`, user_id: user.id});
+                    
+                if (errorInsert)  {
+                    console.error('Error insert fichaje:', errorInsert);
+                    return;
+                }
+
+                console.log(dataInsert);
+            };*/
 
         }
 

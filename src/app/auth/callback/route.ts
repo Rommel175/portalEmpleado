@@ -23,12 +23,43 @@ export async function GET(request: Request) {
 
   if (error) {
     return NextResponse.redirect(`${origin}/login`);
-  } 
+  }
 
   const user = data.user
   const email = user?.user_metadata.email;
 
   if (email.endsWith("xana@gmail.com")) {
+
+    //Realizar esto en la verdadera base de datos cuando esté creada
+    const date = new Date();
+    const day = String(date.getDate()).padStart(2, '0');
+    const mounth = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+
+    const { data, error } = await supabase
+      .from('historialFichajes')
+      .select('estado')
+      .eq('created_at', `${year}-${mounth}-${day}`)
+      .eq('user_id', user.id);
+
+    if (error) {
+      console.error('Error fetching fichaje state:', error);
+    }
+
+    if (!data || data.length === 0) {
+      const { data: dataInsert, error: errorInsert } = await supabase
+        .from('historialFichajes')
+        .insert({ estado: 'inactivo', created_at: `${year}-${mounth}-${day}`, user_id: user.id });
+
+      if (errorInsert) {
+        console.error('Error insert fichaje:', errorInsert);
+        return;
+      }
+
+      if (dataInsert) {
+        console.log(dataInsert)
+      }
+    }
 
     if (next) {
       return NextResponse.redirect(`${origin}${next}`);

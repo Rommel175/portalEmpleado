@@ -35,12 +35,14 @@ export default function ContainerTimer( { user }: {user:User} ) {
                 .eq('user_id', user.id);
 
             if (error) {
-                console.error('Error fetching fichaje state:', error);
+                console.error('Error fetching fichaje:', error);
                 return;
             }
 
             if (data && data.length > 0) {
                 setFichaje(data[0].estado)
+            } else {
+                console.log('undefined')   
             };
         }
 
@@ -220,6 +222,7 @@ export default function ContainerTimer( { user }: {user:User} ) {
                         <button className={styles.salida} onClick={stopTimer}>FICHAR SALIDA</button>
                     </>
                 )
+                
             }
 
             {
