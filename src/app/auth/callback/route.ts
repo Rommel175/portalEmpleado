@@ -30,27 +30,15 @@ export async function GET(request: Request) {
 
   if (email.endsWith("xana@gmail.com")) {
 
-    if (process.env.NEXT_PUBLIC_VERCEL_URL) {
-      if (next) {
-        return NextResponse.redirect(`${process.env.NEXT_PUBLIC_VERCEL_URL}${next}`);
-      }
-  
-      if (redirectTo) {
-        return NextResponse.redirect(`${process.env.NEXT_PUBLIC_VERCEL_URL}${origin}${redirectTo}`);
-      }
-  
-      return NextResponse.redirect(`${process.env.NEXT_PUBLIC_VERCEL_URL}/`);  
-    } else {
-      if (next) {
-        return NextResponse.redirect(`${origin}${next}`);
-      }
-  
-      if (redirectTo) {
-        return NextResponse.redirect(`${origin}${redirectTo}`);
-      }
-  
-      return NextResponse.redirect(`${origin}/`);
+    if (next) {
+      return NextResponse.redirect(`${origin}${next}`);
     }
+
+    if (redirectTo) {
+      return NextResponse.redirect(`${origin}${redirectTo}`);
+    }
+
+    return NextResponse.redirect(`${origin}/`);
 
   } else {
 
