@@ -1,0 +1,24 @@
+.navbar {
+    display: flex;
+    align-items: flex-start;
+    align-self: stretch;
+    border-bottom: 1.5px solid #EDEDED;
+}
+
+.navbar a {
+    display: flex;
+    padding: 14px 24px;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    color: #B3B7BA;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px; /* 142.857% */
+}
+
+.navbar a.active {
+    border-bottom: 1.5px solid #0B3C70;
+    color: #0B3C70;
+}

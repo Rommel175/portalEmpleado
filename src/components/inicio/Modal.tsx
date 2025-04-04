@@ -35,6 +35,7 @@ export default function Modal({ user }: { user: User }) {
 
             if (data && data.length > 0) {
                 setFichaje(data[0].estado);
+                sessionStorage.setItem('estado', data[0].estado)
             } /*else {
                 const { data:dataInsert, error: errorInsert } = await supabase
                     .from('historialFichajes')
@@ -74,7 +75,7 @@ export default function Modal({ user }: { user: User }) {
 
         if (data && data.length > 0) {
             const fichajeId = data[0].id;
-            console.log(fichajeId)
+            //console.log(fichajeId)
         
             const { error: updateError } = await supabase
                 .from('historialFichajes')
@@ -120,7 +121,7 @@ export default function Modal({ user }: { user: User }) {
     }, [])
 
     return (
-        (isOpen && fichaje == 'inactivo') &&
+        (isOpen && fichaje === 'inactivo') &&
 
         <div className={styles.overlay}>
             <div className={styles.modalContainer}>
