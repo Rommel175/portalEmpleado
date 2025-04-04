@@ -48,14 +48,13 @@
     align-items: center;
     gap: 4px;
     align-self: stretch;
-    border-radius: 6px;
-    border: 1px solid #0B3C70;
+    border-radius: 100px;
     background: #0B3C70;
     color: #FFF;
     text-align: center;
     font-size: 15px;
     font-style: normal;
-    font-weight: 400;
+    font-weight: 500;
     line-height: normal;
 }
 
@@ -66,14 +65,15 @@
     align-items: center;
     gap: 4px;
     align-self: stretch;
-        border-radius: 6px;
+    border-radius: 100px;
     border: 1px solid #FFDFDF;
     background: #FFE7D5;
-    color: #E94544;
+    color: #FF6E00;
     text-align: center;
+    font-family: Poppins;
     font-size: 15px;
     font-style: normal;
-    font-weight: 400;
+    font-weight: 500;
     line-height: normal;
 }
 
@@ -84,20 +84,32 @@
     align-items: center;
     gap: 4px;
     align-self: stretch;
-    border-radius: 6px;
+    border-radius: 100px;
     border: 1px solid #F6F6F6;
     background: #F6F6F6;
     color: #0B3C70;
     text-align: center;
     font-size: 15px;
     font-style: normal;
-    font-weight: 400;
+    font-weight: 500;
     line-height: normal;
+}
+
+.salida:disabled {
+    color: #B3B7BA;
+    text-align: center;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.salida:disabled:hover {
+    cursor: not-allowed;
 }
 
 .entrada:hover,
 .pausa:hover,
 .salida:hover {
-    opacity: 0.8;
     cursor: pointer;
 }

@@ -5,7 +5,7 @@ import styles from "./ContainerTimer.module.css";
 import { createClient } from "@/utils/supabase/client";
 import { User } from "@supabase/supabase-js";
 
-export default function ContainerTimer( { user }: {user:User} ) {
+export default function ContainerTimer({ user }: { user: User }) {
     const [time, setTime] = useState<number>(0);
     const [isRunning, setRunning] = useState<boolean>(false);
     const [currentDate, setCurrentDate] = useState<string>("");
@@ -42,7 +42,7 @@ export default function ContainerTimer( { user }: {user:User} ) {
             if (data && data.length > 0) {
                 setFichaje(data[0].estado)
             } else {
-                console.log('undefined')   
+                console.log('undefined')
             };
         }
 
@@ -53,14 +53,14 @@ export default function ContainerTimer( { user }: {user:User} ) {
 
         if (fichaje == 'activo') {
             setRunning(true)
-        } else if(fichaje == 'inactivo') {
+        } else if (fichaje == 'inactivo') {
             setRunning(false);
             setTime(0);
         } else if (fichaje === 'pausa') {
             setRunning(false)
         }
 
-    },[fichaje])
+    }, [fichaje])
 
     async function activo() {
         const date3 = new Date();
@@ -84,17 +84,17 @@ export default function ContainerTimer( { user }: {user:User} ) {
         if (data && data.length > 0) {
             const fichajeId = data[0].id;
             //console.log(fichajeId)
-        
+
             const { error: updateError } = await supabase
                 .from('historialFichajes')
-                .update({estado: 'activo'})  
-                .eq('id', fichajeId); 
-        
+                .update({ estado: 'activo' })
+                .eq('id', fichajeId);
+
             if (updateError) {
                 console.error('Error updating fichaje:', updateError);
                 return;
             }
-        
+
         }
     }
 
@@ -125,17 +125,17 @@ export default function ContainerTimer( { user }: {user:User} ) {
         if (data && data.length > 0) {
             const fichajeId = data[0].id;
             //console.log(fichajeId)
-        
+
             const { error: updateError } = await supabase
                 .from('historialFichajes')
-                .update({estado: 'pausa'})  
-                .eq('id', fichajeId); 
-        
+                .update({ estado: 'pausa' })
+                .eq('id', fichajeId);
+
             if (updateError) {
                 console.error('Error updating fichaje:', updateError);
                 return;
             }
-        
+
         }
     }
 
@@ -166,17 +166,17 @@ export default function ContainerTimer( { user }: {user:User} ) {
         if (data && data.length > 0) {
             const fichajeId = data[0].id;
             //console.log(fichajeId)
-        
+
             const { error: updateError } = await supabase
                 .from('historialFichajes')
-                .update({estado: 'inactivo'})  
-                .eq('id', fichajeId); 
-        
+                .update({ estado: 'inactivo' })
+                .eq('id', fichajeId);
+
             if (updateError) {
                 console.error('Error updating fichaje:', updateError);
                 return;
             }
-        
+
         }
     }
 
@@ -215,25 +215,49 @@ export default function ContainerTimer( { user }: {user:User} ) {
                 </div>
             </div>
             <div className={styles.buttons}>
-            {
-                (fichaje == 'activo') && (
-                    <>
-                        <button className={styles.pausa} onClick={pauseTimer}>PAUSA</button>
-                        <button className={styles.salida} onClick={stopTimer}>FICHAR SALIDA</button>
-                    </>
-                )
-                
-            }
+                {
+                    (fichaje == 'activo') && (
+                        <>
+                            <button className={styles.pausa} onClick={pauseTimer}>
+                                <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M14.5 19V5H18.5V19H14.5ZM6.5 19V5H10.5V19H6.5Z" fill="#FF6E00" />
+                                </svg>
+                                PAUSA
+                            </button>
+                            <button className={styles.salida} onClick={stopTimer}>FICHAR SALIDA</button>
+                        </>
+                    )
 
-            {
-                (fichaje == 'pausa' || fichaje == 'inactivo') && (
-                    <>
-                        <button className={styles.entrada} onClick={startTimer}>FICHAR ENTRADA</button>
-                        <button className={styles.salida} onClick={stopTimer}>FICHAR SALIDA</button>                
-                    </>
-                )
-            }
-                
+                }
+
+                {
+                    (fichaje == 'inactivo') && (
+                        <>
+                            <button className={styles.entrada} onClick={startTimer}>
+                                <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M8.5 6L18.5 12L8.5 18V6Z" fill="white" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                FICHAR ENTRADA
+                            </button>
+                            <button className={styles.salida} onClick={stopTimer} disabled>FICHAR SALIDA</button>
+                        </>
+                    )
+                }
+
+                {
+                    (fichaje == 'pausa') && (
+                        <>
+                            <button className={styles.entrada} onClick={startTimer}>
+                                <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M8.5 6L18.5 12L8.5 18V6Z" fill="white" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                FICHAR ENTRADA
+                            </button>
+                            <button className={styles.salida} onClick={stopTimer}>FICHAR SALIDA</button>
+                        </>
+                    )
+                }
+
             </div>
         </>
     );
