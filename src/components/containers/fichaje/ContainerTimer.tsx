@@ -11,7 +11,23 @@ export default function ContainerTimer({ user }: { user: User }) {
     const [currentDate, setCurrentDate] = useState<string>("");
     const supabase = createClient();
     const [fichaje, setFichaje] = useState("");
+    const [isOpen, setIsOpen] = useState(false);
 
+    //Acciones Modal Finalizar jornada
+    function handleCloseCancel() {
+        setIsOpen(false);
+    }
+
+    function handleCloseAccept() {
+        setIsOpen(false);
+        stopTimer();
+    }
+
+    function handleOpen() {
+        setIsOpen(true)
+    }
+
+    //Buscar el estado del empleado al iniciar el componente
     useEffect(() => {
         const date = new Date();
         const formatDate = new Intl.DateTimeFormat("es-ES", {
@@ -49,6 +65,7 @@ export default function ContainerTimer({ user }: { user: User }) {
         fetchData();
     }, [])
 
+    //AL cambiar el estado fichaje realizar las accions del timer
     useEffect(() => {
 
         if (fichaje == 'activo') {
@@ -62,6 +79,7 @@ export default function ContainerTimer({ user }: { user: User }) {
 
     }, [fichaje])
 
+    //Establecer a Activo el estado del trabajador en la BD
     async function activo() {
         const date3 = new Date();
         const day = String(date3.getDate()).padStart(2, '0');
@@ -79,7 +97,7 @@ export default function ContainerTimer({ user }: { user: User }) {
             return;
         }
 
-        console.log(data);
+        //console.log(data);
 
         if (data && data.length > 0) {
             const fichajeId = data[0].id;
@@ -103,6 +121,7 @@ export default function ContainerTimer({ user }: { user: User }) {
         setFichaje('activo');
     }
 
+    //Establecr a pausa el estado del trabajador en la BD
     async function pausa() {
         const date3 = new Date();
         const day = String(date3.getDate()).padStart(2, '0');
@@ -144,6 +163,7 @@ export default function ContainerTimer({ user }: { user: User }) {
         setFichaje('pausa');
     }
 
+    //Establecer a inactivo el estado del trabajador en la BD
     async function salida() {
         const date3 = new Date();
         const day = String(date3.getDate()).padStart(2, '0');
@@ -161,7 +181,7 @@ export default function ContainerTimer({ user }: { user: User }) {
             return;
         }
 
-        console.log(data);
+        //console.log(data);
 
         if (data && data.length > 0) {
             const fichajeId = data[0].id;
@@ -185,6 +205,7 @@ export default function ContainerTimer({ user }: { user: User }) {
         setFichaje('inactivo');
     }
 
+    //Accion del timer
     useEffect(() => {
         if (!isRunning) return;
         const timer: number = window.setInterval(() => {
@@ -208,6 +229,25 @@ export default function ContainerTimer({ user }: { user: User }) {
 
     return (
         <>
+            {
+                (isOpen) && (
+                    <div className={styles.overlay}>
+                        <div className={styles.modalContainer}>
+                            <svg  onClick={handleCloseCancel} className={styles.svgModal} width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path fillRule="evenodd" clipRule="evenodd" d="M10.1811 10.8737L14.3294 15.0219C14.4677 15.1555 14.6529 15.2294 14.8452 15.2278C15.0374 15.2261 15.2214 15.149 15.3573 15.013C15.4933 14.877 15.5704 14.6931 15.5721 14.5009C15.5737 14.3086 15.4998 14.1234 15.3663 13.9851L11.218 9.83679L15.3663 5.68853C15.4998 5.55023 15.5737 5.36499 15.5721 5.17273C15.5704 4.98046 15.4933 4.79654 15.3573 4.66058C15.2214 4.52462 15.0374 4.4475 14.8452 4.44583C14.6529 4.44416 14.4677 4.51807 14.3294 4.65165L10.1811 8.79991L6.03284 4.65165C5.89392 4.52137 5.70976 4.45026 5.51934 4.45335C5.32891 4.45644 5.14716 4.5335 5.01254 4.66821C4.87792 4.80293 4.80099 4.98474 4.79803 5.17516C4.79508 5.36559 4.86632 5.5497 4.99669 5.68853L9.14422 9.83679L4.99596 13.9851C4.92592 14.0527 4.87006 14.1336 4.83163 14.2231C4.7932 14.3125 4.77297 14.4088 4.77212 14.5061C4.77128 14.6035 4.78983 14.7001 4.8267 14.7902C4.86357 14.8803 4.91802 14.9622 4.98687 15.031C5.05572 15.0999 5.1376 15.1543 5.22772 15.1912C5.31784 15.2281 5.4144 15.2466 5.51176 15.2458C5.60913 15.2449 5.70535 15.2247 5.79482 15.1863C5.88428 15.1478 5.9652 15.092 6.03284 15.0219L10.1811 10.8737Z" fill="#333333" />
+                            </svg>
+                            <div className={styles.content}>
+                                <h3>¿Estás seguro de que deseas Fichar la Salida?</h3>
+                                <p>Al confirmar esta acción, se registrará oficialmente el fin de tu jornada laboral en el sistema. Asegúrate de haber completado todas tus tareas y de no tener actividades pendientes antes de fichar la salida. Gracias por tu dedicación. ¡Nos vemos en la próxima jornada!</p>
+                            </div>
+                            <div className={styles.buttonsModal}>
+                                <button onClick={handleCloseCancel}>Cancelar</button>
+                                <button onClick={handleCloseAccept}>Aceptar</button>
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
             <div className={styles.date}>
                 <h3>{currentDate}</h3>
                 <div className={styles.counter}>
@@ -224,7 +264,7 @@ export default function ContainerTimer({ user }: { user: User }) {
                                 </svg>
                                 PAUSA
                             </button>
-                            <button className={styles.salida} onClick={stopTimer}>FICHAR SALIDA</button>
+                            <button className={styles.salida} onClick={handleOpen}>FICHAR SALIDA</button>
                         </>
                     )
 

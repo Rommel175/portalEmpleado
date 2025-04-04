@@ -70,7 +70,7 @@ export default function Modal({ user }: { user: User }) {
             return;
         }
 
-        console.log(data)
+        //console.log(data)
 
         if (data && data.length > 0) {
             const fichajeId = data[0].id;
