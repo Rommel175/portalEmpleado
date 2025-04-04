@@ -18,8 +18,8 @@
 
 .mainContent {
     display: flex;
+    width: 100%;
     flex-direction: column;
-    justify-content: center;
     align-items: flex-start;
-    flex: 1 0 0;
+    gap: 24px;
 }

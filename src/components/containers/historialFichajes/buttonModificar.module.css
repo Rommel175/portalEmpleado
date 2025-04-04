@@ -1,5 +1,6 @@
 .modificacion {
     display: flex;
+    width: 157px;
     justify-content: flex-end;
     align-items: center;
     gap: 2px;
@@ -8,11 +9,11 @@
 .modificacion p {
     color: #285FF5;
     text-align: right;
+    font-family: Poppins;
     font-size: 13px;
     font-style: normal;
     font-weight: 400;
-    line-height: 20px;
-    /* 153.846% */
+    line-height: 20px; /* 153.846% */
     text-decoration-line: underline;
     text-decoration-style: solid;
     text-decoration-skip-ink: none;
@@ -21,8 +22,9 @@
     text-underline-position: from-font;
 }
 
-.modificacion:hover {
+.modificacion p:hover {
     cursor: pointer;
+    text-decoration-line: none;
 }
 
 /* MODAL */
@@ -44,7 +46,7 @@
     transform: translate(-50%, -50%);
     z-index: 1000;
     display: flex;
-    width: 870px;
+    width: 772px;
     padding: 24px;
     flex-direction: column;
     align-items: flex-start;
@@ -52,6 +54,16 @@
     border-radius: 12px;
     border: 1px solid #F6F6F6;
     background: #FFF;
+}
+
+.svgModal {
+    position: absolute;
+    right: 24px;
+    top: 14px;
+}
+
+.svgModal:hover {
+    cursor: pointer;
 }
 
 .modalContainer .title {
@@ -64,11 +76,12 @@
 
 .modalContainer .title h2 {
     color: #0B3C70;
-    font-size: 16px;
+    font-size: 20px;
     font-style: normal;
-    font-weight: 400;
+    font-weight: 500;
     line-height: normal;
 }
+
 
 .modalContainer .title div {
     display: flex;
@@ -76,13 +89,13 @@
     gap: 6px;
 }
 
+
 .modalContainer .title div h3 {
-    color: var(--light-03, #949597);
-    font-size: 15px;
+    color: var(--light-03, #7B8794);
+    font-size: 14px;
     font-style: normal;
     font-weight: 400;
-    line-height: 20px; /* 133.333% */
-    width: auto;
+    line-height: 20px;
 }
 
 .modalContainer .containerHours {
@@ -101,14 +114,15 @@
     flex: 1 0 0;
 }
 
-.hourItem label {
-    color: #7B8794;
-    font-size: 12px;
+.modalContainer .hourItem label {
+    color: #0B3C70;
+    font-size: 13px;
     font-style: normal;
-    font-weight: 400;
+    font-weight: 500;
     line-height: normal;
     width: auto;
 }
+
 
 .hourItem input {
     display: flex;
@@ -122,8 +136,16 @@
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
-    line-height: 20px;
-    /*color: #7B8794;*/
+    line-height: 20px; /* 142.857% */
+    text-align: center;
+}
+
+.containerHours .hourItem:first-child input {
+    color: #7B8794;
+}
+
+.containerHours .hourItem:last-child input {
+    color: #333;
 }
 
 .modalContainer .messageContainer {
@@ -137,7 +159,7 @@
 
 .modalContainer .messageContainer label {
     color: #0B3C70;
-    font-size: 15px;
+    font-size: 13px;
     font-style: normal;
     font-weight: 500;
     line-height: normal;
@@ -153,11 +175,14 @@
     border-radius: 10px;
     border: 1px solid rgba(123, 135, 148, 0.30);
     background: #FFF;
-    /*color: #C0C0C0;*/
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
+}
+
+.modalContainer .messageContainer textarea::placeholder {
+    color: #C0C0C0
 }
 
 .modalContainer .buttons {
@@ -179,7 +204,7 @@
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
-    line-height: 20px; /* 142.857% */
+    line-height: 20px; 
     letter-spacing: -0.08px;
 }
 
@@ -198,7 +223,7 @@
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
-    line-height: 20px; /* 142.857% */
+    line-height: 20px; 
     letter-spacing: -0.08px;
 }
 

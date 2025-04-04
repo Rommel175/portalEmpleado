@@ -10,7 +10,7 @@ type Prop = {
 }
 
 export default function ButtonModificar({ hour, date }: Prop) {
-    const { register, handleSubmit, formState: {errors} } = useForm();
+    const { register, handleSubmit, formState: { errors } } = useForm();
     const [isOpen, setIsOpen] = useState(false);
 
     function handleOpen() {
@@ -19,7 +19,7 @@ export default function ButtonModificar({ hour, date }: Prop) {
 
     function handleClose() {
         setIsOpen(false);
-    }    
+    }
 
     const onSubmit = handleSubmit((data) => console.log(data));
 
@@ -36,11 +36,15 @@ export default function ButtonModificar({ hour, date }: Prop) {
                 (isOpen) && (
                     <div className={styles.overlay}>
                         <form className={styles.modalContainer} onSubmit={onSubmit}>
+                            <svg onClick={handleClose} className={styles.svgModal} width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path fillRule="evenodd" clipRule="evenodd" d="M10.181 10.8737L14.3292 15.0219C14.4675 15.1555 14.6528 15.2294 14.845 15.2278C15.0373 15.2261 15.2212 15.149 15.3572 15.013C15.4932 14.877 15.5703 14.6931 15.5719 14.5009C15.5736 14.3086 15.4997 14.1234 15.3661 13.9851L11.2179 9.83679L15.3661 5.68853C15.4997 5.55023 15.5736 5.36499 15.5719 5.17273C15.5703 4.98046 15.4932 4.79654 15.3572 4.66058C15.2212 4.52462 15.0373 4.4475 14.845 4.44583C14.6528 4.44416 14.4675 4.51807 14.3292 4.65165L10.181 8.79991L6.03272 4.65165C5.8938 4.52137 5.70964 4.45026 5.51922 4.45335C5.32879 4.45644 5.14704 4.5335 5.01242 4.66821C4.8778 4.80293 4.80087 4.98474 4.79791 5.17516C4.79496 5.36559 4.8662 5.5497 4.99657 5.68853L9.1441 9.83679L4.99584 13.9851C4.9258 14.0527 4.86994 14.1336 4.83151 14.2231C4.79308 14.3125 4.77285 14.4088 4.772 14.5061C4.77115 14.6035 4.78971 14.7001 4.82658 14.7902C4.86345 14.8803 4.9179 14.9622 4.98675 15.031C5.0556 15.0999 5.13748 15.1543 5.2276 15.1912C5.31771 15.2281 5.41427 15.2466 5.51164 15.2458C5.60901 15.2449 5.70523 15.2247 5.7947 15.1863C5.88416 15.1478 5.96508 15.092 6.03272 15.0219L10.181 10.8737Z" fill="#333333" />
+                            </svg>
+
                             <header className={styles.title}>
-                                <h2>Solicitud de modificación de hora</h2>
+                                <h2>Solicitud de modificación de la hora de entrada</h2>
                                 <div>
                                     <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M12.0683 4.22716V2.86353M5.93195 4.22716V2.86353M3.03422 6.27262H14.966M2.86377 7.66625C2.86377 6.22421 2.86377 5.50284 3.16104 4.95193C3.42985 4.46055 3.84695 4.0666 4.35286 3.82625C4.9365 3.54534 5.70013 3.54534 7.22741 3.54534H10.7729C12.3001 3.54534 13.0638 3.54534 13.6474 3.82625C14.1608 4.07307 14.5774 4.46716 14.8392 4.95125C15.1365 5.50353 15.1365 6.22489 15.1365 7.66693V11.016C15.1365 12.4581 15.1365 13.1794 14.8392 13.7303C14.5704 14.2217 14.1533 14.6157 13.6474 14.856C13.0638 15.1363 12.3001 15.1363 10.7729 15.1363H7.22741C5.70013 15.1363 4.9365 15.1363 4.35286 14.8553C3.84705 14.6152 3.42996 14.2215 3.16104 13.7303C2.86377 13.1781 2.86377 12.4567 2.86377 11.0147V7.66625Z" stroke="#9CA1A6" strokeWidth="1.02273" strokeLinecap="round" strokeLinejoin="round" />
+                                        <path d="M12.0681 4.22728V2.86365M5.93171 4.22728V2.86365M3.03398 6.27274H14.9658M2.86353 7.66637C2.86353 6.22433 2.86353 5.50297 3.1608 4.95206C3.4296 4.46067 3.8467 4.06672 4.35262 3.82637C4.93625 3.54547 5.69989 3.54547 7.22716 3.54547H10.7726C12.2999 3.54547 13.0635 3.54547 13.6472 3.82637C14.1606 4.07319 14.5772 4.46728 14.839 4.95137C15.1363 5.50365 15.1363 6.22501 15.1363 7.66706V11.0161C15.1363 12.4582 15.1363 13.1796 14.839 13.7305C14.5702 14.2218 14.1531 14.6158 13.6472 14.8561C13.0635 15.1364 12.2999 15.1364 10.7726 15.1364H7.22716C5.69989 15.1364 4.93625 15.1364 4.35262 14.8555C3.8468 14.6153 3.42972 14.2216 3.1608 13.7305C2.86353 13.1782 2.86353 12.4568 2.86353 11.0148V7.66637Z" stroke="#9CA1A6" strokeWidth="1.02273" strokeLinecap="round" strokeLinejoin="round" />
                                     </svg>
                                     <h3>{date}</h3>
                                 </div>
@@ -69,8 +73,8 @@ export default function ButtonModificar({ hour, date }: Prop) {
                                         }
                                     })} />
 
-                                    {errors.peticion?.message && <span style={{color: 'red'}}>{String(errors.peticion.message)}</span>}
-                                    
+                                    {errors.peticion?.message && <span style={{ color: 'red' }}>{String(errors.peticion.message)}</span>}
+
                                 </div>
 
                             </div>
@@ -82,9 +86,8 @@ export default function ButtonModificar({ hour, date }: Prop) {
 
                             <div className={styles.buttons}>
                                 <button onClick={handleClose} className={styles.cancel}>Cancelar</button>
-                                <input type="submit" value="Enviar" className={styles.send}/>
+                                <input type="submit" value="Enviar" className={styles.send} />
                             </div>
-
 
                         </form>
                     </div>

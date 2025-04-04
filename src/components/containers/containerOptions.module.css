@@ -1,15 +1,14 @@
 .options {
     display: flex;
-    padding: 6px 12px 12px 12px;
+    padding: 18px 12px 0px 12px;
     justify-content: space-between;
     align-items: center;
     align-self: stretch;
-    border-bottom: 1px solid #F6F6F6;
+    /*border-bottom: 1px solid #F6F6F6;*/
 }
 
 .options a {
     display: flex;
-    width: 134px;
     align-items: center;
     gap: 6px;
     color: var(--blue, #285FF5);
@@ -69,6 +68,6 @@
     line-height: normal;
 }
 
-.filtro select:hover {
+.filtro .tipoRegistro:hover {
     cursor: pointer;
 }
