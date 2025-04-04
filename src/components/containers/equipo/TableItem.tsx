@@ -30,14 +30,75 @@ export default function TableItem({ name, email, foto, estado = 'Jornada Finaliz
             </div>
 
             <div className={styles.estado}>
-                <div className={`${(estado == 'Activo') && styles.estadoActivo} ${(estado == 'Inactivo') && styles.estadoInactivo} ${(estado == 'Pausa') && styles.estadoPausa} ${(estado == 'Jornada Finalizada') && styles.estadoFinJornada} ${(estado == 'Vacaciones') && styles.estadoVacaciones}`}>
-                    <h2>{estado ?? 'Inactivo'}</h2>
-                </div>
+                {
+                    (estado == 'Activo') && (
+                        <div className={styles.estadoActivo}>
+                            <svg width="7" height="7" viewBox="0 0 7 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="3.5" cy="3.5" r="3" fill="#0DC44A" />
+                            </svg>
+                            <h2>
+                                {estado}
+                            </h2>
+                        </div>
+                    )
+                }
+
+                {
+                    (estado == 'Inactivo') && (
+                        <div className={styles.estadoActivo}>
+                            <svg width="7" height="7" viewBox="0 0 7 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="3.5" cy="3.5" r="3" fill="#E94544" />
+                            </svg>
+                            <h2>
+                                {estado}
+                            </h2>
+                        </div>
+                    )
+                }
+
+                {
+                    (estado == 'Pausa') && (
+                        <div className={styles.estadoActivo}>
+                            <svg width="7" height="7" viewBox="0 0 7 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="3.5" cy="3.5" r="3" fill="#FF6E00" />
+                            </svg>
+                            <h2>
+                                {estado}
+                            </h2>
+                        </div>
+                    )
+                }
+
+                {
+                    (estado == 'Jornada Finalizada') && (
+                        <div className={styles.estadoActivo}>
+                            <svg width="7" height="7" viewBox="0 0 7 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="3.5" cy="3.5" r="3" fill="#828282" />
+                            </svg>
+                            <h2>
+                                {estado}
+                            </h2>
+                        </div>
+                    )
+                }
+
+                {
+                    (estado == 'Vacaciones') && (
+                        <div className={styles.estadoActivo}>
+                            <svg width="7" height="7" viewBox="0 0 7 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="3.5" cy="3.5" r="3" fill="#4DD4EC" />
+                            </svg>
+                            <h2>
+                                {estado}
+                            </h2>
+                        </div>
+                    )
+                }
             </div>
-            
+
 
             <div className={styles.localizacion}>
-                <h2>{localizacion ?? 'No especificado'}</h2>
+                <h2>{localizacion ?? '-'}</h2>
             </div>
 
             <div className={styles.jornada}>

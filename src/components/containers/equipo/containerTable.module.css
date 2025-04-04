@@ -17,17 +17,30 @@
 }
 
 .tableNav h3:first-child {
-    width: 270px;
+    width: 300px;
 }
 
 .tableNav h3:nth-child(2) {
-    width: 141px;
+    width: 200px;
 }
 
-.tableNav h3:nth-child(3),
-.tableNav h3:nth-child(4),
-.table h3:last-child {
-    width: 78px;
+.tableNav h3:nth-child(3) {
+    width: 90px;
+}
+
+.tableNav h3:nth-child(4) {
+    width: 132px;
+}
+
+.tableNav h3:last-child {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    color: #424955;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
 }
 
 .tableNav h3 {

@@ -72,7 +72,7 @@
     width: 180px;
 }
 
-.day {
+.inicio {
     display: flex;
     padding: 6px 12px;
     align-items: flex-start;
@@ -83,8 +83,27 @@
     background: #FFF;
 }
 
-.day p {
+.final {
+    display: flex;
+    padding: 6px 12px;
+    align-items: flex-start;
+    gap: 10px;
+    align-self: stretch;
+    border-radius: 6px;
+    border: 1px solid #EDEDED;
+    background: #FFF;
+}
+
+.inicio p {
     color: #B3B7BA;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.final p {
+    color: #333;
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
