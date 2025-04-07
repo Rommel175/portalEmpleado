@@ -17,9 +17,9 @@ export default function ReportesTableItem() {
                     <h4>jane.cooper@example.com</h4>
                 </div>
             </div>
-            <div className={styles.horasSemanales}>
-                <p>36:00</p>
-            </div>
+
+            <p className={styles.horasSemanales}>36:00h</p>
+
             <Link href={'#'}>
                 Ver Usuario
                 <svg width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -1,14 +1,16 @@
 .containerItem {
     display: flex;
-    padding: 12px 18px;
+    padding: 18px;
     justify-content: space-between;
     align-items: center;
     align-self: stretch;
+    border-bottom: 1px solid #FFF;
+    background: #FFF;
 }
 
 .personalInfo {
     display: flex;
-    width: 270px;
+    width: 300px;
     align-items: center;
     gap: 6px;
 }
@@ -47,23 +49,12 @@
 }
 
 .horasSemanales {
-    display: flex;
-    width: 100px;
-    padding: 4px 6px;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    border-radius: 6px;
-    border: 1px solid #D8D8D8;
-}
-
-.horasSemanales p {
-    width: auto;
-    color: #7B8794;
+    width: 180px;
+    color: var(--light-03, #7B8794);
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
-    line-height: 20px; /* 142.857% */
+    line-height: normal;
 }
 
 .containerItem a {
