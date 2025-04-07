@@ -9,7 +9,7 @@ export default function ReportesPage() {
       <ContainerHeader name='Reportes' />
       <div className={styles.content}>
 
-        <ContainerOptions option2={false} />
+        <ContainerOptions ubicacion={false} urlExportar='#'/>
 
         <form className={styles.filtrosForm}>
           <div>
