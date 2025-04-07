@@ -28,7 +28,7 @@ export async function GET(request: Request) {
   const user = data.user
   const email = user?.user_metadata.email;
 
-  if (email == 'rommel.xana@gmail.com' || email.endsWith('xanasystem.com') || email.endsWith('xanatechnolgies.com')) {
+  if (email == 'rommel.xana@gmail.com' || email.endsWith('@xanasystem.com') || email.endsWith('@xanatechnolgies.com')) {
 
     const date = new Date();
     const day = String(date.getDate()).padStart(2, '0');
