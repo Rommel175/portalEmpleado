@@ -21,3 +21,9 @@
     font-weight: 700;
     line-height: normal;
 }
+
+@media (width < 1024px) {
+    .nav {
+        display: none;
+    }
+}

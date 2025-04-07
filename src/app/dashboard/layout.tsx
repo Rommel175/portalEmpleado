@@ -4,6 +4,7 @@ import { Poppins } from 'next/font/google';
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 import Navbar from '@/components/navbar/Navbar';
+//import SidebarNovil from '@/components/sidebar/SidebarMovil';
 
 const poppins = Poppins({
   weight: ['700' ,'600', '500', '400'],

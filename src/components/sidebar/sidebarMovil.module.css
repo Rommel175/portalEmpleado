@@ -1,0 +1,36 @@
+.options {
+    display: flex;
+    padding: 6px 18px 12px 18px;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 24px;
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 0px;
+    background-color: #FFF;
+    width: 100%;
+}
+
+.options a {
+    display: flex;
+    padding: 0px 6px;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    color: #C0C0C0;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.options a.active {
+    color: #0B3C70;
+}
+
+@media (width > 1024px) {
+    .options {
+        display: none;
+    }
+}

@@ -47,6 +47,32 @@
     cursor: pointer; 
 }
 
+@media (width < 400px) {
+    .options {
+        flex-direction: row;
+        width: 100%;
+        padding: 6px 18px 12px 18px;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 24px;
+        border-radius: 12px;
+        background: #FFF;
+    }
 
+    .options a {
+        padding: 0px 6px;
+        flex-direction: column;
+        gap: 2px;
+        border-radius: 6px;
+        color: #C0C0C0;
+    }
 
-  
+    .options button {
+        display: none;
+    }
+
+    .options a.active {
+        background: none;
+        color: #0B3C70;
+    }
+}

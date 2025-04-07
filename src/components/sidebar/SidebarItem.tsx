@@ -18,7 +18,7 @@ export default function SidebarItemComponent() {
   return (
     <div className={styles.options}>
       <Link href={'/dashboard/inicio'} className={`${(pathname == '/dashboard/inicio') ? styles.active : ""}`}>
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg className={styles.svg} width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M14.2223 18.6668V13.0527C14.2223 12.8665 14.1442 12.688 14.0053 12.5564C13.8664 12.4248 13.678 12.3509 13.4815 12.3509H10.5186C10.3221 12.3509 10.1337 12.4248 9.99479 12.5564C9.85587 12.688 9.77783 12.8665 9.77783 13.0527V18.6668" stroke={(pathname == '/dashboard/inicio') ? 'white' : '#0B3C70'} strokeLinecap="round" strokeLinejoin="round" />
           <path d="M5.33325 10.9471C5.3332 10.7429 5.38017 10.5412 5.47087 10.356C5.56158 10.1708 5.69384 10.0066 5.85844 9.87478L11.0436 5.66488C11.311 5.45078 11.6498 5.33331 11.9999 5.33331C12.35 5.33331 12.6888 5.45078 12.9562 5.66488L18.1414 9.87478C18.306 10.0066 18.4383 10.1708 18.529 10.356C18.6197 10.5412 18.6666 10.7429 18.6666 10.9471V17.263C18.6666 17.6352 18.5105 17.9922 18.2327 18.2554C17.9548 18.5186 17.578 18.6665 17.1851 18.6665H6.81473C6.42182 18.6665 6.045 18.5186 5.76717 18.2554C5.48934 17.9922 5.33325 17.6352 5.33325 17.263V10.9471Z" stroke={(pathname == '/dashboard/inicio') ? 'white' : '#0B3C70'} strokeLinecap="round" strokeLinejoin="round" />
         </svg>
