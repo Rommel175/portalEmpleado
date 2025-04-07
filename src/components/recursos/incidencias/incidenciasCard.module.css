@@ -38,6 +38,10 @@
     align-self: stretch;
 }
 
+.buttons button:hover {
+    cursor: pointer;
+}
+
 .buttons button:first-child {
     display: flex;
     padding: 8px 60px;
