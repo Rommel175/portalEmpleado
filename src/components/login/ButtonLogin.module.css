@@ -20,3 +20,10 @@
 .button:hover {
     cursor: pointer;
 }
+
+@media (width < 400px) {
+    .button {
+        align-self: unset;
+        border-radius: 6px;
+    }
+}

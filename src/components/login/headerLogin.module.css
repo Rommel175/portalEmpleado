@@ -34,3 +34,19 @@
     line-height: normal;
     width: 411px;
 }
+
+@media (width < 400px) {
+    .bienvenida {
+        display: flex;
+        padding: 24;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 28px;
+        align-self: stretch;
+    }
+
+    .header {
+        display: none;
+    }
+}
