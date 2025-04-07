@@ -21,7 +21,7 @@
     cursor: pointer;
 }
 
-@media (width < 400px) {
+@media (width < 400px), (400px <= width <= 1024px) {
     .button {
         align-self: unset;
         border-radius: 6px;
