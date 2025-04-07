@@ -74,11 +74,14 @@ export async function GET(request: Request) {
 
     const supabaseAdmin = await createClientAdmin;
 
-
-    const id = user?.id;
+    try {
+      const id = user?.id;
 
     if (id) {
       await supabaseAdmin.auth.admin.deleteUser(id)
+    }
+    } catch (e) {
+      console.log('Error eliminando usuario no autorizado ' + e)
     }
 
     return NextResponse.redirect(`${origin}/login`);
