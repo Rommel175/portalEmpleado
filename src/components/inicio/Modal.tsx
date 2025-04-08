@@ -9,7 +9,7 @@ import { redirect } from 'next/navigation';
 export default function Modal({ user }: { user: User }) {
     const [isOpen, setIsOpen] = useState(true);
     const [currentDate, setCurrentDate] = useState<string>("");
-    const [currebtTime, setCurrentTime] = useState<string>("");
+    const [currentTime, setCurrentTime] = useState<string>("");
     const [fichaje, setFichaje] = useState('');
 
     const supabase = createClient();
@@ -21,7 +21,6 @@ export default function Modal({ user }: { user: User }) {
             const mounth = String(date3.getMonth() + 1).padStart(2, '0');
             const year = date3.getFullYear();
 
-            //Luego implementarlo bien en la base de datos, junto con las acciones de fichar, pausar etc...
             const { data, error } = await supabase
                 .from('historialFichajes')
                 .select('estado')
@@ -35,30 +34,17 @@ export default function Modal({ user }: { user: User }) {
 
             if (data && data.length > 0) {
                 setFichaje(data[0].estado);
-                sessionStorage.setItem('estado', data[0].estado)
-            } /*else {
-                const { data:dataInsert, error: errorInsert } = await supabase
-                    .from('historialFichajes')
-                    .insert({estado: 'inactivo', created_at: `${year}-${mounth}-${day}`, user_id: user.id});
-                    
-                if (errorInsert)  {
-                    console.error('Error insert fichaje:', errorInsert);
-                    return;
-                }
-
-                console.log(dataInsert);
-            };*/
-
+            } 
         }
 
         fetchData();
     }, []);
 
     async function accionFichar() {
-        const date3 = new Date();
-        const day = String(date3.getDate()).padStart(2, '0');
-        const mounth = String(date3.getMonth() + 1).padStart(2, '0');
-        const year = date3.getFullYear();
+        const date = new Date();
+        const day = String(date.getDate()).padStart(2, '0');
+        const mounth = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
 
         const { data, error } = await supabase
             .from('historialFichajes')
@@ -71,11 +57,8 @@ export default function Modal({ user }: { user: User }) {
             return;
         }
 
-        //console.log(data)
-
         if (data && data.length > 0) {
             const fichajeId = data[0].id;
-            //console.log(fichajeId)
         
             const { error: updateError } = await supabase
                 .from('historialFichajes')
@@ -98,7 +81,6 @@ export default function Modal({ user }: { user: User }) {
         setIsOpen(false);
         accionFichar();
         redirect('/');
-
     }
 
     useEffect(() => {
@@ -139,7 +121,7 @@ export default function Modal({ user }: { user: User }) {
                             </div>
                             <div className={styles.dateItem}>
                                 <label htmlFor="date">Fecha</label>
-                                <input type="text" name='date' defaultValue={`${currebtTime}h`} readOnly/>
+                                <input type="text" name='date' defaultValue={`${currentTime}h`} readOnly/>
                             </div>
                         </div>
 

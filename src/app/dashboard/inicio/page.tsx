@@ -25,7 +25,7 @@ export default async function HomePage() {
         <ContainerFichaje user={user} />
       </div>
 
-      <ContainerEquipo />
+      <ContainerEquipo/>
 
     </>
   );

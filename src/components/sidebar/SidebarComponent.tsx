@@ -35,7 +35,7 @@ export default function SidebarComponent() {
                 <h1>PORTAL EMPLEADO</h1>
             </header>
 
-            <SidebarItemComponent />
+            <SidebarItemComponent/>
         </nav>
     );
 }

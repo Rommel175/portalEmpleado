@@ -24,7 +24,7 @@ export default function ContainerDatos( {user}: {user: User} ) {
 
                 <div className={styles.line}></div>
 
-                <MainContentComponent />
+                <MainContentComponent user={user}/>
 
             </div>
         </div>

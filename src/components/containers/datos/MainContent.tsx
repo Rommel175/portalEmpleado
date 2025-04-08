@@ -1,21 +1,54 @@
+import { User } from '@supabase/supabase-js';
 import styles from './mainContent.module.css';
+import { createClient } from '@/utils/supabase/server';
 
-export default function MainContentComponent() {
+export default async function MainContentComponent({ user }: { user: User }) {
+    const supabase = await createClient();
+    const date = new Date();
+    const day = String(date.getDate()).padStart(2, '0');
+    const mounth = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    const { data } = await supabase.from('historialFichajes').select('estado').eq('user_id', user.id).eq('created_at', `${year}-${mounth}-${day}`);
+    console.log(data)
+
+    const estado = data && data[0]?.estado ? data[0].estado : 'inactivo';
+
+
+
+
     return (
         <div className={styles.mainContent}>
             <div>
                 <h4>Estado</h4>
                 <div className={styles.state}>
-                    <svg width="7" height="6" viewBox="0 0 7 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="3.5" cy="3" r="3" fill="#0DC44A" />
-                    </svg>
-                    <p>Activo</p>
+                    {
+                        (estado == 'activo') &&
+                        <svg width="7" height="6" viewBox="0 0 7 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="3.5" cy="3" r="3" fill="#0DC44A" />
+                        </svg>
+                    }
+
+                    {
+                        (estado == 'inactivo') &&
+                        <svg width="7" height="7" viewBox="0 0 7 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="3.5" cy="3.5" r="3" fill="#E94544" />
+                        </svg>
+                    }
+
+                    {
+                        (estado == 'pausa') &&
+                        <svg width="7" height="7" viewBox="0 0 7 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="3.5" cy="3.5" r="3" fill="#FF6E00" />
+                        </svg>
+                    }
+
+                    <p>{estado}</p>
                 </div>
             </div>
 
             <div>
                 <h4>Ubicación</h4>
-                <select name="localizacion" id="localizacion" className={styles.location}>
+                <select name="localizacion" id="localizacion" className={styles.location} defaultValue={2}>
                     <option value="0">Oficina</option>
                     <option value="1">Casa</option>
                     <option value="2">Viaje</option>

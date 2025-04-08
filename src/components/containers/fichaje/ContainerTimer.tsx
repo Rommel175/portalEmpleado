@@ -10,7 +10,7 @@ export default function ContainerTimer({ user }: { user: User }) {
     const [isRunning, setRunning] = useState<boolean>(false);
     const [currentDate, setCurrentDate] = useState<string>("");
     const supabase = createClient();
-    const [fichaje, setFichaje] = useState("");
+    const [estado, setEstado] = useState("");
     const [isOpen, setIsOpen] = useState(false);
 
     //Acciones Modal Finalizar jornada
@@ -29,6 +29,19 @@ export default function ContainerTimer({ user }: { user: User }) {
 
     //Buscar el estado del empleado al iniciar el componente
     useEffect(() => {
+        const localTime = sessionStorage.getItem('time');
+        const run = sessionStorage.getItem('run');
+
+        if (localTime) {
+            setTime(Number(localTime));
+        }
+
+        if (run === 'true') {
+            setRunning(true);
+        } else {
+            setRunning(false);
+        }
+
         const date = new Date();
         const formatDate = new Intl.DateTimeFormat("es-ES", {
             day: "2-digit",
@@ -56,28 +69,34 @@ export default function ContainerTimer({ user }: { user: User }) {
             }
 
             if (data && data.length > 0) {
-                setFichaje(data[0].estado)
+                setEstado(data[0].estado)
             } else {
                 console.log('undefined')
             };
         }
 
         fetchData();
+
+
     }, [])
 
     //AL cambiar el estado fichaje realizar las accions del timer
     useEffect(() => {
 
-        if (fichaje == 'activo') {
-            setRunning(true)
-        } else if (fichaje == 'inactivo') {
+        if (estado == 'activo') {
+            setRunning(true);
+            sessionStorage.setItem('run', 'true');
+        } else if (estado == 'inactivo') {
             setRunning(false);
             setTime(0);
-        } else if (fichaje === 'pausa') {
-            setRunning(false)
+            sessionStorage.setItem('run', 'false');
+            sessionStorage.setItem('time', '0');
+        } else if (estado === 'pausa') {
+            setRunning(false);
+            sessionStorage.setItem('run', 'false');
         }
 
-    }, [fichaje])
+    }, [estado])
 
     //Establecer a Activo el estado del trabajador en la BD
     async function activo() {
@@ -118,7 +137,8 @@ export default function ContainerTimer({ user }: { user: User }) {
 
     function startTimer() {
         activo();
-        setFichaje('activo');
+        setEstado('activo');
+        sessionStorage.setItem('run', 'true');
     }
 
     //Establecr a pausa el estado del trabajador en la BD
@@ -160,7 +180,8 @@ export default function ContainerTimer({ user }: { user: User }) {
 
     function pauseTimer() {
         pausa();
-        setFichaje('pausa');
+        setEstado('pausa');
+        sessionStorage.setItem('run', 'false');
     }
 
     //Establecer a inactivo el estado del trabajador en la BD
@@ -202,7 +223,9 @@ export default function ContainerTimer({ user }: { user: User }) {
 
     function stopTimer() {
         salida();
-        setFichaje('inactivo');
+        setEstado('inactivo');
+        sessionStorage.setItem('run', 'false');
+        sessionStorage.setItem('time','0')
     }
 
     //Accion del timer
@@ -211,6 +234,7 @@ export default function ContainerTimer({ user }: { user: User }) {
         const timer: number = window.setInterval(() => {
             setTime(prevTime => {
                 const newTime = prevTime + 1;
+                sessionStorage.setItem('time', String(newTime));
                 return newTime;
             });
         }, 1000)
@@ -256,7 +280,7 @@ export default function ContainerTimer({ user }: { user: User }) {
             </div>
             <div className={styles.buttons}>
                 {
-                    (fichaje == 'activo') && (
+                    (estado == 'activo') && (
                         <>
                             <button className={styles.pausa} onClick={pauseTimer}>
                                 <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -271,7 +295,7 @@ export default function ContainerTimer({ user }: { user: User }) {
                 }
 
                 {
-                    (fichaje == 'inactivo') && (
+                    (estado == 'inactivo') && (
                         <>
                             <button className={styles.entrada} onClick={startTimer}>
                                 <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -285,7 +309,7 @@ export default function ContainerTimer({ user }: { user: User }) {
                 }
 
                 {
-                    (fichaje == 'pausa') && (
+                    (estado == 'pausa') && (
                         <>
                             <button className={styles.entrada} onClick={startTimer}>
                                 <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
