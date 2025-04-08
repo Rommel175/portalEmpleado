@@ -4,7 +4,7 @@ import styles from './modal.module.css'
 import { useState, useEffect } from "react";
 import Image from 'next/image';
 import { createClient } from '@/utils/supabase/client';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 export default function Modal({ user }: { user: User }) {
     const [isOpen, setIsOpen] = useState(true);
@@ -13,6 +13,7 @@ export default function Modal({ user }: { user: User }) {
     const [fichaje, setFichaje] = useState('');
 
     const supabase = createClient();
+    const router = useRouter();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -45,6 +46,7 @@ export default function Modal({ user }: { user: User }) {
         const day = String(date.getDate()).padStart(2, '0');
         const mounth = String(date.getMonth() + 1).padStart(2, '0');
         const year = date.getFullYear();
+        const currentTime = new Date().toLocaleTimeString('es-ES', { hour12: false }); 
 
         const { data, error } = await supabase
             .from('historialFichajes')
@@ -62,7 +64,7 @@ export default function Modal({ user }: { user: User }) {
         
             const { error: updateError } = await supabase
                 .from('historialFichajes')
-                .update({estado: 'activo'})  
+                .update({estado: 'activo', horaEntrada: currentTime})  
                 .eq('id', fichajeId); 
         
             if (updateError) {
@@ -80,7 +82,7 @@ export default function Modal({ user }: { user: User }) {
     function fichar() {
         setIsOpen(false);
         accionFichar();
-        redirect('/');
+        router.push('/');
     }
 
     useEffect(() => {
@@ -102,12 +104,16 @@ export default function Modal({ user }: { user: User }) {
         setCurrentTime(formatHour)
     }, [])
 
+    async function handleSubmit() {
+        fichar();
+    }
+
     return (
         (isOpen && fichaje === 'inactivo') &&
 
         <div className={styles.overlay}>
             <div className={styles.modalContainer}>
-                <form className={styles.form}>
+                <form className={styles.form} onSubmit={handleSubmit} >
                     <header className={styles.formHeader}>
                         <h1>!Hola {user.user_metadata.full_name}!</h1>
                         <h2>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Qui ad quisquam consequatur maiores suscipit voluptatum necessitatibus placeat molestias nulla incidunt dolor dolores fugit, odit assumenda reiciendis ipsum culpa alias. Ex!</h2>
@@ -128,9 +134,9 @@ export default function Modal({ user }: { user: User }) {
                         <div className={styles.location}>
                             <label htmlFor="location">Localización</label>
                             <select name="location">
-                                <option value="0">Oficina</option>
-                                <option value="1">Casa</option>
-                                <option value="2">Viaje</option>
+                                <option value="oficina">Oficina</option>
+                                <option value="casa">Casa</option>
+                                <option value="viaje">Viaje</option>
                             </select>
                         </div>
 
@@ -156,7 +162,7 @@ export default function Modal({ user }: { user: User }) {
 
                         <div className={styles.buttons}>
                             <button type='button' onClick={handleClose}>Saltar fichajes</button>
-                            <button type='button' onClick={fichar}>Fichar</button>
+                            <button type='submit' onClick={fichar}>Fichar</button>
                         </div>
 
                     </div>
