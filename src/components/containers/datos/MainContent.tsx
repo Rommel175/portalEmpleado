@@ -9,7 +9,6 @@ export default async function MainContentComponent({ user }: { user: User }) {
     const mounth = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
     const { data } = await supabase.from('historialFichajes').select('estado').eq('user_id', user.id).eq('created_at', `${year}-${mounth}-${day}`);
-    console.log(data)
 
     const estado = data && data[0]?.estado ? data[0].estado : 'inactivo';
 
