@@ -1,10 +1,8 @@
-import styles from './inicio.module.css';
-import ContainerDatos from '@/components/containers/datos/ContainerDatos';
-import ContainerFichaje from '@/components/containers/fichaje/ContainerFichaje';
-import ContainerEquipo from '@/components/containers/equipo/ContainerEquipo';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/utils/supabase/server';
 import Modal from '@/components/inicio/Modal';
+import ContainerSuperior from '@/components/containers/containerSuperior/ContainerSuperior';
+import ContainerEquipo from '@/components/containers/equipo/ContainerEquipo';
 
 export default async function HomePage() {
 
@@ -19,14 +17,8 @@ export default async function HomePage() {
   return (
     <>
       <Modal user={user}/>
-      <div className={styles.containerSuperior}>
-        <ContainerDatos user={user} />
-
-        <ContainerFichaje user={user} />
-      </div>
-
-      <ContainerEquipo/>
-
+      <ContainerSuperior user={user}/>
+      <ContainerEquipo />
     </>
   );
 }

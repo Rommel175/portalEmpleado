@@ -1,0 +1,6 @@
+.containerSuperior {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+    align-self: stretch; 
+}

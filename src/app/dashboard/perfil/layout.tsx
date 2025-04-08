@@ -1,9 +1,8 @@
 import { createClient } from '@/utils/supabase/server';
 import styles from './layout.module.css'
 import { redirect } from 'next/navigation';
-import ContainerDatos from '@/components/containers/datos/ContainerDatos';
-import ContainerFichaje from '@/components/containers/fichaje/ContainerFichaje';
 import NavbarPerfil from '@/components/perfil/NavbarPerfil';
+import ContainerSuperior from '@/components/containers/containerSuperior/ContainerSuperior';
 
 export default async function PerfilLayout({ children }: { children: React.ReactNode }) {
     const supabase = await createClient();
@@ -16,10 +15,7 @@ export default async function PerfilLayout({ children }: { children: React.React
 
     return (
         <>
-            <div className={styles.containerSuperior}>
-                <ContainerDatos user={user} />
-                <ContainerFichaje user={user}/>
-            </div>
+            <ContainerSuperior user={user}/>
 
             <div className={styles.content}>
                 <NavbarPerfil />
