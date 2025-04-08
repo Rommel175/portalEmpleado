@@ -11,6 +11,7 @@ import ContainerFichaje from "./fichaje/ContanerFichaje";
 export default function ContainerSuperior( {user}: {user: User} ) {
     const [estado, setEstado] = useState('');
     const supabase = createClient();
+    const [localizacion, setLocalizacion] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -21,7 +22,7 @@ export default function ContainerSuperior( {user}: {user: User} ) {
 
             const { data, error } = await supabase
                 .from('historialFichajes')
-                .select('estado')
+                .select('estado, localizacionFichaje')
                 .eq('created_at', `${year}-${mounth}-${day}`)
                 .eq('user_id', user.id);
 
@@ -31,7 +32,8 @@ export default function ContainerSuperior( {user}: {user: User} ) {
             }
 
             if (data && data.length > 0) {
-                setEstado(data[0].estado)
+                setEstado(data[0].estado);
+                setLocalizacion(data[0].localizacionFichaje);
             } else {
                 console.log('undefined')
             };
@@ -42,7 +44,7 @@ export default function ContainerSuperior( {user}: {user: User} ) {
 
   return (
     <div className={styles.containerSuperior}>
-      <ContainerDatos user={user} estado={estado}/>
+      <ContainerDatos user={user} estado={estado} localizacion={localizacion}  setLocalizacion={setLocalizacion} />
       <ContainerFichaje user={user} estado={estado} setEstado={setEstado}/>
     </div>
   );
