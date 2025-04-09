@@ -48,7 +48,7 @@ export async function GET(request: Request) {
     if (!data || data.length === 0) {
       const { data: dataInsert, error: errorInsert } = await supabase
         .from('historialFichajes')
-        .insert({ estado: 'inactivo', created_at: `${year}-${mounth}-${day}`, user_id: user.id });
+        .insert({ estado: 'Inactivo', created_at: `${year}-${mounth}-${day}`, user_id: user.id });
 
       if (errorInsert) {
         console.error('Error insert fichaje:', errorInsert);
