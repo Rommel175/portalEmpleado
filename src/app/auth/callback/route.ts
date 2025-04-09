@@ -30,6 +30,30 @@ export async function GET(request: Request) {
 
   if (email == 'rommel.xana@gmail.com' || email.endsWith('@xanasystem.com') || email.endsWith('@xanatechnolgies.com')) {
 
+    const { data: dataProfile, error: errorProfle } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('user_id', user.id)
+     
+    if (errorProfle) {
+      console.log('Error fetching Profile ID: ', errorProfle)
+    }
+    
+    if (!dataProfile || dataProfile.length === 0) {
+      const { data: dataInsertProfile, error: errorInsertProfile } = await supabase
+        .from('profiles')
+        .insert({user_id: user.id, name: user.user_metadata.full_name, email: user.email, image: user.user_metadata.avatar_url})
+
+      if (errorInsertProfile) {
+        console.log('Error insert Profile: ', errorInsertProfile);
+        return;
+      } 
+      
+      if (dataInsertProfile) {
+       console.log(dataInsertProfile);
+      }
+    }
+
     const date = new Date();
     const day = String(date.getDate()).padStart(2, '0');
     const mounth = String(date.getMonth() + 1).padStart(2, '0');
@@ -52,7 +76,6 @@ export async function GET(request: Request) {
 
       if (errorInsert) {
         console.error('Error insert fichaje:', errorInsert);
-        return;
       }
 
       if (dataInsert) {

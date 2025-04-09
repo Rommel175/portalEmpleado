@@ -36,17 +36,30 @@ export default function ContainerSuperior({ user }: { user: User }) {
 
             if (data && data.length > 0) {
                 setEstado(data[0].estado);
-                setLocalizacion(data[0].localizacionFichaje);
-                
-                const horaEntradaSplit = data[0].horaEntrada.split(':');
-                setHoraInicio(`${horaEntradaSplit[0]}:${horaEntradaSplit[1]}`);
 
-                const horaAproxSalidaSplit = data[0].horaAproxSalida.split(':');
-                setHoraFinalAprox(`${horaAproxSalidaSplit[0]}:${horaAproxSalidaSplit[1]}`)
+                if (data[0].localizacionFichaje) {
+                    setLocalizacion(data[0].localizacionFichaje);
+                } else {
+                    setLocalizacion('-');
+                }
+
+                if (data[0].horaEntrada) {
+                    const horaEntradaSplit = data[0].horaEntrada.split(':');
+                    setHoraInicio(`${horaEntradaSplit[0]}:${horaEntradaSplit[1]}`);
+                } else {
+                    setHoraInicio('-')
+                }
+
+                if (data[0].horaAproxSalida) {
+                    const horaAproxSalidaSplit = data[0].horaAproxSalida.split(':');
+                    setHoraFinalAprox(`${horaAproxSalidaSplit[0]}:${horaAproxSalidaSplit[1]}`)
+                } else {
+                    setHoraFinalAprox('-')
+                }
 
                 /*setHoraInicio(data[0].horaEntrada);
                 setHoraFinalAprox(data[0].horaAproxSalida);*/
-                
+
             } else {
                 console.log('undefined')
             };
@@ -58,7 +71,7 @@ export default function ContainerSuperior({ user }: { user: User }) {
     return (
         <div className={styles.containerSuperior}>
             <ContainerDatos user={user} estado={estado} localizacion={localizacion} setLocalizacion={setLocalizacion} horaInicio={horaInicio} horaFinalAprox={horaFinalAprox} />
-            <ContainerFichaje user={user} estado={estado} setEstado={setEstado}/>
+            <ContainerFichaje user={user} estado={estado} setEstado={setEstado} />
         </div>
     );
 }
