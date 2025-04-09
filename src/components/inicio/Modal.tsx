@@ -149,7 +149,7 @@ export default function Modal({ user }: { user: User }) {
 
                         <div className={styles.location}>
                             <label htmlFor="location">Localización</label>
-                            <select name="location" value={localizacion} onChange={handleChangeLocation}>
+                            <select name="location" value={localizacion || ''} onChange={handleChangeLocation}>
                                 <option value="oficina">Oficina</option>
                                 <option value="casa">Casa</option>
                                 <option value="viaje">Viaje</option>
