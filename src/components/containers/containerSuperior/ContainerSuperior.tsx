@@ -25,7 +25,7 @@ export default function ContainerSuperior({ user }: { user: User }) {
 
             const { data, error } = await supabase
                 .from('historialFichajes')
-                .select('estado, localizacionFichaje, horaEntrada, horaAproxSalida')
+                .select('localizacionFichaje, horaEntrada, horaAproxSalida')
                 .eq('created_at', `${year}-${mounth}-${day}`)
                 .eq('user_id', user.id);
 
@@ -35,8 +35,6 @@ export default function ContainerSuperior({ user }: { user: User }) {
             }
 
             if (data && data.length > 0) {
-                setEstado(data[0].estado);
-
                 if (data[0].localizacionFichaje) {
                     setLocalizacion(data[0].localizacionFichaje);
                 } else {
@@ -63,6 +61,21 @@ export default function ContainerSuperior({ user }: { user: User }) {
             } else {
                 console.log('undefined')
             };
+
+            const { data: dataEstado, error: errorEstado } = await supabase
+                .from('profiles')
+                .select('estado')
+                .eq('user_id', user.id)
+
+            if (errorEstado) {
+                console.log('Error fetching Estado: ', errorEstado)
+            }
+
+            if (dataEstado && dataEstado.length > 0) {
+                setEstado(dataEstado[0].estado);
+            } else {
+                console.log('undefined')
+            }
         }
 
         fetchData();

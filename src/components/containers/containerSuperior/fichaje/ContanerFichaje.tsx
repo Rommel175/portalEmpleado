@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 
 export default function ContainerFichaje ({ estado, setEstado, user }: { estado: string, setEstado: React.Dispatch<React.SetStateAction<string>>, user: User }) {
-    
+
     const [isOpen, setIsOpen] = useState(false);
     const [isRunning, setRunning] = useState<boolean>(false);
     const [time, setTime] = useState<number>(0);
@@ -100,32 +100,27 @@ export default function ContainerFichaje ({ estado, setEstado, user }: { estado:
 
     //Establecer a Activo el estado del trabajador en la BD
     async function activo() {
-        const date = new Date();
-        const day = String(date.getDate()).padStart(2, '0');
-        const mounth = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
 
         const { data, error } = await supabase
-            .from('historialFichajes')
+            .from('profiles')
             .select('id')
-            .eq('created_at', `${year}-${mounth}-${day}`)
             .eq('user_id', user.id);
 
         if (error) {
-            console.error('Error fetching fichaje state:', error);
+            console.error('Error fetching state:', error);
             return;
         }
 
         //console.log(data);
 
         if (data && data.length > 0) {
-            const fichajeId = data[0].id;
+            const profileId = data[0].id;
             //console.log(fichajeId)
 
             const { error: updateError } = await supabase
-                .from('historialFichajes')
+                .from('profiles')
                 .update({ estado: 'Activo' })
-                .eq('id', fichajeId);
+                .eq('id', profileId);
 
             if (updateError) {
                 console.error('Error updating fichaje:', updateError);
@@ -143,32 +138,27 @@ export default function ContainerFichaje ({ estado, setEstado, user }: { estado:
 
     //Establecr a pausa el estado del trabajador en la BD
     async function pausa() {
-        const date = new Date();
-        const day = String(date.getDate()).padStart(2, '0');
-        const mounth = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
 
         const { data, error } = await supabase
-            .from('historialFichajes')
+            .from('profiles')
             .select('id')
-            .eq('created_at', `${year}-${mounth}-${day}`)
             .eq('user_id', user.id);
 
         if (error) {
-            console.error('Error fetching fichaje state:', error);
+            console.error('Error fetching state:', error);
             return;
         }
 
         //console.log(data);
 
         if (data && data.length > 0) {
-            const fichajeId = data[0].id;
+            const profileId = data[0].id;
             //console.log(fichajeId)
 
             const { error: updateError } = await supabase
-                .from('historialFichajes')
+                .from('profiles')
                 .update({ estado: 'Pausa' })
-                .eq('id', fichajeId);
+                .eq('id', profileId);
 
             if (updateError) {
                 console.error('Error updating fichaje:', updateError);
@@ -186,15 +176,10 @@ export default function ContainerFichaje ({ estado, setEstado, user }: { estado:
 
     //Establecer a inactivo el estado del trabajador en la BD
     async function salida() {
-        const date = new Date();
-        const day = String(date.getDate()).padStart(2, '0');
-        const mounth = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
 
         const { data, error } = await supabase
-            .from('historialFichajes')
+            .from('profiles')
             .select('id')
-            .eq('created_at', `${year}-${mounth}-${day}`)
             .eq('user_id', user.id);
 
         if (error) {
@@ -205,13 +190,13 @@ export default function ContainerFichaje ({ estado, setEstado, user }: { estado:
         //console.log(data);
 
         if (data && data.length > 0) {
-            const fichajeId = data[0].id;
+            const profileId = data[0].id;
             //console.log(fichajeId)
 
             const { error: updateError } = await supabase
-                .from('historialFichajes')
+                .from('profiles')
                 .update({ estado: 'Jornada Finalizada' })
-                .eq('id', fichajeId);
+                .eq('id', profileId);
 
             if (updateError) {
                 console.error('Error updating fichaje:', updateError);

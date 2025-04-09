@@ -42,7 +42,7 @@ export async function GET(request: Request) {
     if (!dataProfile || dataProfile.length === 0) {
       const { data: dataInsertProfile, error: errorInsertProfile } = await supabase
         .from('profiles')
-        .insert({user_id: user.id, name: user.user_metadata.full_name, email: user.email, image: user.user_metadata.avatar_url})
+        .insert({user_id: user.id, name: user.user_metadata.full_name, email: user.email, image: user.user_metadata.avatar_url, estado: 'Inactivo'})
 
       if (errorInsertProfile) {
         console.log('Error insert Profile: ', errorInsertProfile);
@@ -54,15 +54,9 @@ export async function GET(request: Request) {
       }
     }
 
-    const date = new Date();
-    const day = String(date.getDate()).padStart(2, '0');
-    const mounth = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-
     const { data, error } = await supabase
-      .from('historialFichajes')
+      .from('profiles')
       .select('estado')
-      .eq('created_at', `${year}-${mounth}-${day}`)
       .eq('user_id', user.id);
 
     if (error) {
@@ -71,8 +65,8 @@ export async function GET(request: Request) {
 
     if (!data || data.length === 0) {
       const { data: dataInsert, error: errorInsert } = await supabase
-        .from('historialFichajes')
-        .insert({ estado: 'Inactivo', created_at: `${year}-${mounth}-${day}`, user_id: user.id });
+        .from('profiles')
+        .update({estado: 'Inactivo'})
 
       if (errorInsert) {
         console.error('Error insert fichaje:', errorInsert);

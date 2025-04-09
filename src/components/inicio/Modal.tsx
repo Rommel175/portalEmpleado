@@ -11,7 +11,7 @@ export default function Modal({ user }: { user: User }) {
     const [isOpen, setIsOpen] = useState(true);
     const [currentDate, setCurrentDate] = useState<string>("");
     const [currentTime, setCurrentTime] = useState<string>("");
-    const [fichaje, setFichaje] = useState('');
+    const [estado, setEstado] = useState('');
     const [localizacion, setLocalizacion] = useState('');
     const [horaFinalAprox, setHoraFinalAprox] = useState({
         value: '',
@@ -44,20 +44,32 @@ export default function Modal({ user }: { user: User }) {
     
             setCurrentTime(formatHour)
 
-            const { data, error } = await supabase
+            const { data: dataLocation, error: errorLocation } = await supabase
                 .from('historialFichajes')
-                .select('estado, localizacionFichaje')
+                .select('localizacionFichaje')
                 .eq('created_at', `${year}-${month}-${day}`)
                 .eq('user_id', user.id);
 
-            if (error) {
-                console.error('Error fetching fichaje state:', error);
+            if (errorLocation) {
+                console.error('Error fetching fichaje state:', dataLocation);
                 return;
             }
 
-            if (data && data.length > 0) {
-                setFichaje(data[0].estado);
-                setLocalizacion(data[0].localizacionFichaje)
+            if (dataLocation && dataLocation.length > 0) {
+                setLocalizacion(dataLocation[0].localizacionFichaje)
+            }
+
+            const { data: dataEstado, error: errorEstado } = await supabase
+                .from('profiles')
+                .select('estado')
+                .eq('user_id', user.id)
+
+            if (errorEstado) {
+                console.log('Error fetching state: ', errorEstado)
+            }
+
+            if (dataEstado && dataEstado.length > 0) {
+                setEstado(dataEstado[0].estado)
             }
         }
 
@@ -77,7 +89,7 @@ export default function Modal({ user }: { user: User }) {
             .eq('user_id', user.id);
 
         if (error) {
-            console.error('Error fetching fichaje state:', error);
+            console.error('Error fetching Historial state:', error);
             return;
         }
 
@@ -86,14 +98,35 @@ export default function Modal({ user }: { user: User }) {
 
             const { error: updateError } = await supabase
                 .from('historialFichajes')
-                .update({ estado: 'Activo', horaEntrada: currentTime, localizacionFichaje: localizacion, horaAproxSalida: horaFinalAprox.value })
+                .update({ horaEntrada: currentTime, localizacionFichaje: localizacion, horaAproxSalida: horaFinalAprox.value })
                 .eq('id', fichajeId);
 
             if (updateError) {
-                console.error('Error updating fichaje:', updateError);
+                console.error('Error updating Historial fichaje:', updateError);
                 return;
             }
+        }
 
+        const {data: dataEstado, error: errorEstado} = await supabase
+            .from('profiles')
+            .select('id')
+            .eq('user_id', user.id)
+        
+        if (errorEstado) {
+            console.log('Error fetching esatdo: ', errorEstado);
+        }
+        
+        if (dataEstado && dataEstado.length > 0) {
+            const profileId = dataEstado[0].id;
+
+            const { error: errorUpdatingEstado } = await supabase
+                .from('profiles')
+                .update({estado: 'Activo'})
+                .eq('id', profileId) 
+            
+            if (errorUpdatingEstado) {
+                console.log('Error updating estado: ', errorUpdatingEstado)
+            }    
         }
     }
 
@@ -125,7 +158,7 @@ export default function Modal({ user }: { user: User }) {
     }
 
     return (
-        (isOpen && fichaje === 'Inactivo') &&
+        (isOpen && estado === 'Inactivo') &&
 
         <div className={styles.overlay}>
             <div className={styles.modalContainer}>
