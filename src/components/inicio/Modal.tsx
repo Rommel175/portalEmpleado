@@ -163,7 +163,7 @@ export default function Modal({ user }: { user: User }) {
     }
 
     async function handleSubmit() {
-        
+
         if (!horaFinalAprox.value || !hourRegexp.test(horaFinalAprox.value)) {
             return;
         }
@@ -187,7 +187,7 @@ export default function Modal({ user }: { user: User }) {
     }
 
     return (
-        (isOpen && estado === 'Inactivo') &&
+        (isOpen && (estado === 'Inactivo' || estado === 'Jornada Finalizada')) &&
 
         <div className={styles.overlay}>
             <div className={styles.modalContainer}>
