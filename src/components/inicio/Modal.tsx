@@ -34,14 +34,14 @@ export default function Modal({ user }: { user: User }) {
                 month: "long",
                 year: "numeric"
             }).format(date)
-    
+
             setCurrentDate(formatDate)
 
             const formatHour = new Intl.DateTimeFormat("es-ES", {
                 hour: "2-digit",
                 minute: "2-digit"
             }).format(date)
-    
+
             setCurrentTime(formatHour)
 
             const { data: dataLocation, error: errorLocation } = await supabase
@@ -54,6 +54,20 @@ export default function Modal({ user }: { user: User }) {
                 console.error('Error fetching fichaje state:', dataLocation);
                 return;
             }
+
+            /*if (!dataLocation || dataLocation.length == 0) {
+                const { data: dataInsert, error: errorInsert } = await supabase
+                    .from('historialFichajes')
+                    .insert({ created_at: `${year}-${month}-${day}`, user_id: user.id });
+
+                if (errorInsert) {
+                    console.error('Error insert fichaje:', errorInsert);
+                }
+
+                if (dataInsert) {
+                    console.log(dataInsert)
+                }
+            }*/
 
             if (dataLocation && dataLocation.length > 0) {
                 setLocalizacion(dataLocation[0].localizacionFichaje)
@@ -107,26 +121,40 @@ export default function Modal({ user }: { user: User }) {
             }
         }
 
-        const {data: dataEstado, error: errorEstado} = await supabase
+        if (!data || data.length == 0) {
+            const { data: dataInsert, error: errorInsert } = await supabase
+                .from('historialFichajes')
+                .insert({ created_at: `${year}-${month}-${day}`, user_id: user.id, horaEntrada: currentTime, localizacionFichaje: localizacion, horaAproxSalida: horaFinalAprox.value });
+
+            if (errorInsert) {
+                console.error('Error insert fichaje:', errorInsert);
+            }
+
+            if (dataInsert) {
+                console.log(dataInsert)
+            }
+        }
+
+        const { data: dataEstado, error: errorEstado } = await supabase
             .from('profiles')
             .select('id')
             .eq('user_id', user.id)
-        
+
         if (errorEstado) {
             console.log('Error fetching esatdo: ', errorEstado);
         }
-        
+
         if (dataEstado && dataEstado.length > 0) {
             const profileId = dataEstado[0].id;
 
             const { error: errorUpdatingEstado } = await supabase
                 .from('profiles')
-                .update({estado: 'Activo'})
-                .eq('id', profileId) 
-            
+                .update({ estado: 'Activo' })
+                .eq('id', profileId)
+
             if (errorUpdatingEstado) {
                 console.log('Error updating estado: ', errorUpdatingEstado)
-            }    
+            }
         }
     }
 
@@ -135,6 +163,7 @@ export default function Modal({ user }: { user: User }) {
     }
 
     async function handleSubmit() {
+        
         if (!horaFinalAprox.value || !hourRegexp.test(horaFinalAprox.value)) {
             return;
         }

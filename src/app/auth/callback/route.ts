@@ -34,46 +34,23 @@ export async function GET(request: Request) {
       .from('profiles')
       .select('id')
       .eq('user_id', user.id)
-     
+
     if (errorProfle) {
       console.log('Error fetching Profile ID: ', errorProfle)
     }
-    
+
     if (!dataProfile || dataProfile.length === 0) {
       const { data: dataInsertProfile, error: errorInsertProfile } = await supabase
         .from('profiles')
-        .insert({user_id: user.id, name: user.user_metadata.full_name, email: user.email, image: user.user_metadata.avatar_url, estado: 'Inactivo'})
+        .insert({ user_id: user.id, name: user.user_metadata.full_name, email: user.email, image: user.user_metadata.avatar_url })
 
       if (errorInsertProfile) {
         console.log('Error insert Profile: ', errorInsertProfile);
         return;
-      } 
-      
+      }
+
       if (dataInsertProfile) {
-       console.log(dataInsertProfile);
-      }
-    }
-
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('estado')
-      .eq('user_id', user.id);
-
-    if (error) {
-      console.error('Error fetching fichaje state:', error);
-    }
-
-    if (!data || data.length === 0) {
-      const { data: dataInsert, error: errorInsert } = await supabase
-        .from('profiles')
-        .update({estado: 'Inactivo'})
-
-      if (errorInsert) {
-        console.error('Error insert fichaje:', errorInsert);
-      }
-
-      if (dataInsert) {
-        console.log(dataInsert)
+        console.log(dataInsertProfile);
       }
     }
 
@@ -94,9 +71,9 @@ export async function GET(request: Request) {
     try {
       const id = user?.id;
 
-    if (id) {
-      await supabaseAdmin.auth.admin.deleteUser(id)
-    }
+      if (id) {
+        await supabaseAdmin.auth.admin.deleteUser(id)
+      }
     } catch (e) {
       console.log('Error eliminando usuario no autorizado ' + e)
     }
