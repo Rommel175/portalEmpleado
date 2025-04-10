@@ -10,7 +10,8 @@ import ContainerFichaje from "./fichaje/ContanerFichaje";
 
 export default function ContainerSuperior({ user }: { user: User }) {
     const [estado, setEstado] = useState('');
-    const [localizacion, setLocalizacion] = useState('');
+    //const [eventoFichaje, setEventoFichaje] = useState('');
+    const [localizacionFichaje, setLocalizacionFichaje] = useState('');
     const [horaInicio, setHoraInicio] = useState('');
     const [horaFinalAprox, setHoraFinalAprox] = useState('');
 
@@ -20,47 +21,38 @@ export default function ContainerSuperior({ user }: { user: User }) {
         const fetchData = async () => {
             const date = new Date();
             const day = String(date.getDate()).padStart(2, '0');
-            const mounth = String(date.getMonth() + 1).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
             const year = date.getFullYear();
 
             const { data, error } = await supabase
-                .from('historialFichajes')
-                .select('localizacionFichaje, horaEntrada, horaAproxSalida')
-                .eq('created_at', `${year}-${mounth}-${day}`)
-                .eq('user_id', user.id);
+                .from('fichaje_jornada')
+                .select('id, hora_aprox_salida')
+                .eq('user_id', user.id)
+                .eq('created_at', `${year}-${month}-${day}`);
 
             if (error) {
-                console.error('Error fetching fichaje:', error);
-                return;
+                console.log('Error fetching fichaje: ', error);
             }
 
             if (data && data.length > 0) {
-                if (data[0].localizacionFichaje) {
-                    setLocalizacion(data[0].localizacionFichaje);
-                } else {
-                    setLocalizacion('-');
+                const fichajeId = data[0].id;
+                setHoraFinalAprox(data[0].hora_aprox_salida);
+
+                const { data: dataFichajeEvent, error: errorFichajeEvent } = await supabase
+                    .from('fichaje_eventos')
+                    .select('hora, localizacion')
+                    .eq('fichaje_id', fichajeId);
+
+                if (errorFichajeEvent) {
+                    console.log('Error fetching Fichaje Evento: ', errorFichajeEvent)
                 }
 
-                if (data[0].horaEntrada) {
-                    const horaEntradaSplit = data[0].horaEntrada.split(':');
-                    setHoraInicio(`${horaEntradaSplit[0]}:${horaEntradaSplit[1]}`);
-                } else {
-                    setHoraInicio('-')
+                if (dataFichajeEvent && dataFichajeEvent.length > 0) {
+                    setLocalizacionFichaje(dataFichajeEvent[0].localizacion);
+                    setHoraInicio(dataFichajeEvent[0].hora);
+                    //setEventoFichaje(dataFichajeEvent[0].evento)
                 }
-
-                if (data[0].horaAproxSalida) {
-                    const horaAproxSalidaSplit = data[0].horaAproxSalida.split(':');
-                    setHoraFinalAprox(`${horaAproxSalidaSplit[0]}:${horaAproxSalidaSplit[1]}`)
-                } else {
-                    setHoraFinalAprox('-')
-                }
-
-                /*setHoraInicio(data[0].horaEntrada);
-                setHoraFinalAprox(data[0].horaAproxSalida);*/
-
-            } else {
-                console.log('undefined')
-            };
+            }
 
             const { data: dataEstado, error: errorEstado } = await supabase
                 .from('profiles')
@@ -79,12 +71,12 @@ export default function ContainerSuperior({ user }: { user: User }) {
         }
 
         fetchData();
-    }, []);
+    }, [])
 
     return (
         <div className={styles.containerSuperior}>
-            <ContainerDatos user={user} estado={estado} localizacion={localizacion} setLocalizacion={setLocalizacion} horaInicio={horaInicio} horaFinalAprox={horaFinalAprox} />
-            <ContainerFichaje user={user} estado={estado} setEstado={setEstado} />
+            <ContainerDatos user={user} estado={estado} localizacionFichaje={localizacionFichaje} setLocalizacionFichaje={setLocalizacionFichaje} horaInicio={horaInicio} horaFinalAprox={horaFinalAprox} /*eventoFichaje={eventoFichaje} setEventoFichaje={setEventoFichaje}*/ />
+            <ContainerFichaje user={user} estado={estado} setEstado={setEstado} localizacionFichaje={localizacionFichaje} /*eventoFichaje={eventoFichaje} setEventoFichaje={setEventoFichaje}*/ />
         </div>
     );
 }

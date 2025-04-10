@@ -6,7 +6,7 @@ import ContainerHeader from "../../ContainerHeader";
 import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 
-export default function ContainerFichaje ({ estado, setEstado, user }: { estado: string, setEstado: React.Dispatch<React.SetStateAction<string>>, user: User }) {
+export default function ContainerFichaje({ estado, setEstado, user, localizacionFichaje /*, setEventoFichaje, eventoFichaje*/ }: { estado: string, setEstado: React.Dispatch<React.SetStateAction<string>>, user: User, localizacionFichaje: string, /*setEventoFichaje: React.Dispatch<React.SetStateAction<string>>, eventoFichaje: string*/ }) {
 
     const [isOpen, setIsOpen] = useState(false);
     const [isRunning, setRunning] = useState<boolean>(false);
@@ -51,33 +51,6 @@ export default function ContainerFichaje ({ estado, setEstado, user }: { estado:
 
         setCurrentDate(formatDate)
 
-        /*const fetchData = async () => {
-            const date = new Date();
-            const day = String(date.getDate()).padStart(2, '0');
-            const mounth = String(date.getMonth() + 1).padStart(2, '0');
-            const year = date.getFullYear();
-
-            const { data, error } = await supabase
-                .from('historialFichajes')
-                .select('estado')
-                .eq('created_at', `${year}-${mounth}-${day}`)
-                .eq('user_id', user.id);
-
-            if (error) {
-                console.error('Error fetching fichaje:', error);
-                return;
-            }
-
-            if (data && data.length > 0) {
-                setEstado(data[0].estado)
-            } else {
-                console.log('undefined')
-            };
-        }
-
-        fetchData();*/
-
-
     }, []);
 
     //AL cambiar el estado fichaje realizar las accions del timer
@@ -98,117 +71,373 @@ export default function ContainerFichaje ({ estado, setEstado, user }: { estado:
 
     }, [estado])
 
-    //Establecer a Activo el estado del trabajador en la BD
+    //Establecer a Activo 
     async function activo() {
 
+        const date = new Date();
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+
+        const formatHour = new Intl.DateTimeFormat("es-ES", {
+            hour: "2-digit",
+            minute: "2-digit"
+        }).format(date)
+
+
+
         const { data, error } = await supabase
-            .from('profiles')
+            .from('fichaje_jornada')
             .select('id')
-            .eq('user_id', user.id);
+            .eq('created_at', `${year}-${month}-${day}`)
+            .eq('user_id', user.id)
 
         if (error) {
-            console.error('Error fetching state:', error);
-            return;
+            console.log('Error fetching fichaje: ', error);
         }
 
-        //console.log(data);
 
-        if (data && data.length > 0) {
-            const profileId = data[0].id;
-            //console.log(fichajeId)
+        //AÑADIR HORA APROX SALIDA MÁS TARDE
+        if (!data || data.length == 0) {
+            const { error: errorInsertFichaje } = await supabase
+                .from('fichaje_jornada')
+                .insert({ created_at: `${year}-${month}-${day}`, user_id: user.id })
 
-            const { error: updateError } = await supabase
-                .from('profiles')
-                .update({ estado: 'Activo' })
-                .eq('id', profileId);
-
-            if (updateError) {
-                console.error('Error updating fichaje:', updateError);
-                return;
+            if (errorInsertFichaje) {
+                console.log('Error insert fichaje: ', errorInsertFichaje)
             }
 
+            const { data: dataFichaje, error: errorFichaje } = await supabase
+                .from('fichaje_jornada')
+                .select('id')
+                .eq('user_id', user.id)
+                .eq('created_at', `${year}-${month}-${day}`)
+
+            if (errorFichaje) {
+                console.log('Error fetching fichaje');
+            }
+
+            if (dataFichaje && dataFichaje.length > 0) {
+                const idFichaje = dataFichaje[0].id;
+
+                const { error: errorInsertFichajeEvent } = await supabase
+                    .from('fichaje_eventos')
+                    .insert({ fichaje_id: idFichaje, evento: 'Inicio Jornada', hora: formatHour, localizacion: localizacionFichaje });
+
+                if (errorInsertFichajeEvent) {
+                    console.log('Error insert Fichaje_event: ', errorInsertFichajeEvent)
+                }
+
+                const { data: dataEstado, error: errorEstado } = await supabase
+                    .from('profiles')
+                    .select('id')
+                    .eq('user_id', user.id)
+
+                if (errorEstado) {
+                    console.log('Error fetching esatdo: ', errorEstado);
+                }
+
+                if (dataEstado && dataEstado.length > 0) {
+                    const profileId = dataEstado[0].id;
+
+                    const { error: errorUpdatingEstado } = await supabase
+                        .from('profiles')
+                        .update({ estado: 'Activo' })
+                        .eq('id', profileId)
+
+                    setEstado('Activo')
+
+                    if (errorUpdatingEstado) {
+                        console.log('Error updating estado: ', errorUpdatingEstado)
+                    }
+                }
+            }
+
+        } else {
+
+            const formatHour = new Intl.DateTimeFormat("es-ES", {
+                hour: "2-digit",
+                minute: "2-digit"
+            }).format(date)
+
+            const fichajeId = data[0].id;
+
+            const { error: errorInsertFichajeEvent } = await supabase
+                .from('fichaje_eventos')
+                .insert({ fichaje_id: fichajeId, evento: 'Inicio Jornada', hora: formatHour, localizacion: localizacionFichaje });
+
+            if (errorInsertFichajeEvent) {
+                console.log('Error insert Fichaje_event: ', errorInsertFichajeEvent)
+            }
+
+            const { data: dataEstado, error: errorEstado } = await supabase
+                .from('profiles')
+                .select('id')
+                .eq('user_id', user.id)
+
+            if (errorEstado) {
+                console.log('Error fetching esatdo: ', errorEstado);
+            }
+
+            if (dataEstado && dataEstado.length > 0) {
+                const profileId = dataEstado[0].id;
+
+                const { error: errorUpdatingEstado } = await supabase
+                    .from('profiles')
+                    .update({ estado: 'Activo' })
+                    .eq('id', profileId)
+
+                setEstado('Activo')
+
+                if (errorUpdatingEstado) {
+                    console.log('Error updating estado: ', errorUpdatingEstado)
+                }
+            }
         }
+
     };
 
     function startTimer() {
         activo();
-        setEstado('Activo');
         sessionStorage.setItem('run', 'true');
     }
 
-    //Establecr a pausa el estado del trabajador en la BD
+    //Establecr a pausa 
     async function pausa() {
 
+        const date = new Date();
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+
+        const formatHour = new Intl.DateTimeFormat("es-ES", {
+            hour: "2-digit",
+            minute: "2-digit"
+        }).format(date)
+
         const { data, error } = await supabase
-            .from('profiles')
+            .from('fichaje_jornada')
             .select('id')
-            .eq('user_id', user.id);
+            .eq('created_at', `${year}-${month}-${day}`)
+            .eq('user_id', user.id)
 
         if (error) {
-            console.error('Error fetching state:', error);
-            return;
+            console.log('Error fetching fichaje: ', error);
         }
 
-        //console.log(data);
-
         if (data && data.length > 0) {
-            const profileId = data[0].id;
-            //console.log(fichajeId)
+            const fichajeId = data[0].id;
 
-            const { error: updateError } = await supabase
+            const { error: errorInsertFichajeEvent } = await supabase
+                .from('fichaje_eventos')
+                .insert({ fichaje_id: fichajeId, evento: 'Inicio Pausa', hora: formatHour, localizacion: localizacionFichaje });
+
+            if (errorInsertFichajeEvent) {
+                console.log('Error insert Fichaje Evento: ', errorInsertFichajeEvent);
+            }
+
+            const { data: dataEstado, error: errorEstado } = await supabase
                 .from('profiles')
-                .update({ estado: 'Pausa' })
-                .eq('id', profileId);
+                .select('id')
+                .eq('user_id', user.id);
 
-            if (updateError) {
-                console.error('Error updating fichaje:', updateError);
+            if (errorEstado) {
+                console.error('Error fetching state:', error);
                 return;
             }
 
+            if (dataEstado && dataEstado.length > 0) {
+                const profileId = dataEstado[0].id;
+                //console.log(fichajeId)
+
+                const { error: updateError } = await supabase
+                    .from('profiles')
+                    .update({ estado: 'Pausa' })
+                    .eq('id', profileId);
+
+                setEstado('Pausa')
+
+                if (updateError) {
+                    console.error('Error updating fichaje:', updateError);
+                    return;
+                }
+
+            }
         }
     }
 
     function pauseTimer() {
         pausa();
-        setEstado('Pausa');
         sessionStorage.setItem('run', 'false');
     }
 
-    //Establecer a inactivo el estado del trabajador en la BD
-    async function salida() {
+    //Reanudar jornada
+
+    async function reanudar() {
+        const date = new Date();
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+
+        const formatHour = new Intl.DateTimeFormat("es-ES", {
+            hour: "2-digit",
+            minute: "2-digit"
+        }).format(date)
 
         const { data, error } = await supabase
-            .from('profiles')
+            .from('fichaje_jornada')
             .select('id')
-            .eq('user_id', user.id);
+            .eq('created_at', `${year}-${month}-${day}`)
+            .eq('user_id', user.id)
 
         if (error) {
-            console.error('Error fetching fichaje state:', error);
-            return;
+            console.log('Error fetching fichaje: ', error);
         }
 
-        //console.log(data);
-
         if (data && data.length > 0) {
-            const profileId = data[0].id;
-            //console.log(fichajeId)
+            const fichajeId = data[0].id;
 
-            const { error: updateError } = await supabase
+            const { error: errorInsertFichajeEvent } = await supabase
+                .from('fichaje_eventos')
+                .insert({ fichaje_id: fichajeId, evento: 'Fin Pausa', hora: formatHour, localizacion: localizacionFichaje });
+
+            if (errorInsertFichajeEvent) {
+                console.log('Error insert Fichaje Evento: ', errorInsertFichajeEvent);
+            }
+
+            const { data: dataEstado, error: errorEstado } = await supabase
                 .from('profiles')
-                .update({ estado: 'Jornada Finalizada' })
-                .eq('id', profileId);
+                .select('id')
+                .eq('user_id', user.id);
 
-            if (updateError) {
-                console.error('Error updating fichaje:', updateError);
+            if (errorEstado) {
+                console.error('Error fetching state:', error);
                 return;
             }
 
+            if (dataEstado && dataEstado.length > 0) {
+                const profileId = dataEstado[0].id;
+                //console.log(fichajeId)
+
+                const { error: updateError } = await supabase
+                    .from('profiles')
+                    .update({ estado: 'Activo' })
+                    .eq('id', profileId);
+
+                setEstado('Activo')
+
+                if (updateError) {
+                    console.error('Error updating fichaje:', updateError);
+                    return;
+                }
+
+            }
+        }
+    }
+
+    function reanudarTimer() {
+        reanudar();
+        sessionStorage.setItem('run', 'true');
+    }
+
+    //Establecer a inactivo
+    async function salida() {
+
+        const date = new Date();
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+
+        const formatHour = new Intl.DateTimeFormat("es-ES", {
+            hour: "2-digit",
+            minute: "2-digit"
+        }).format(date)
+
+        const { data, error } = await supabase
+            .from('fichaje_jornada')
+            .select('id')
+            .eq('created_at', `${year}-${month}-${day}`)
+            .eq('user_id', user.id)
+
+        if (error) {
+            console.log('Error fetching fichaje: ', error);
+        }
+
+        if (data && data.length > 0) {
+            const fichajeId = data[0].id;
+
+            const { data: dataFichajeLastEvent, error: errorFichajeLastEvent } = await supabase
+                .from('fichaje_eventos')
+                .select('evento')
+                .eq('fichaje_id', fichajeId)
+                .order('id', { ascending: false })
+                .limit(1);
+
+            if (errorFichajeLastEvent) {
+                console.log('Error fetching Evento Pausa: ', errorFichajeLastEvent);
+            }
+
+            if (dataFichajeLastEvent && dataFichajeLastEvent.length > 0 && dataFichajeLastEvent[0].evento == 'Inicio Pausa') {
+
+                const { error: errorInsertFichajeEvent } = await supabase
+                    .from('fichaje_eventos')
+                    .insert({ fichaje_id: fichajeId, evento: 'Fin Pausa', hora: formatHour, localizacion: localizacionFichaje });
+
+                if (errorInsertFichajeEvent) {
+                    console.log('Error insert Fichaje Evento: ', errorInsertFichajeEvent);
+                }
+
+                const { error: errorInsertFichajeEvent2 } = await supabase
+                    .from('fichaje_eventos')
+                    .insert({ fichaje_id: fichajeId, evento: 'Jornada Finalizada', hora: formatHour, localizacion: localizacionFichaje });
+
+                if (errorInsertFichajeEvent2) {
+                    console.log('Error insert Fichaje Evento: ', errorInsertFichajeEvent2);
+                }
+
+            } else {
+
+                const { error: errorInsertFichajeEvent } = await supabase
+                    .from('fichaje_eventos')
+                    .insert({ fichaje_id: fichajeId, evento: 'Jornada Finalizada', hora: formatHour, localizacion: localizacionFichaje });
+
+                if (errorInsertFichajeEvent) {
+                    console.log('Error insert Fichaje Evento: ', errorInsertFichajeEvent);
+                }
+
+            }
+
+            const { data: dataEstado, error: errorEstado } = await supabase
+                .from('profiles')
+                .select('id')
+                .eq('user_id', user.id);
+
+            if (errorEstado) {
+                console.error('Error fetching state:', error);
+                return;
+            }
+
+            if (dataEstado && dataEstado.length > 0) {
+                const profileId = dataEstado[0].id;
+                //console.log(fichajeId)
+
+                const { error: updateError } = await supabase
+                    .from('profiles')
+                    .update({ estado: 'Jornada Finalizada' })
+                    .eq('id', profileId);
+
+                setEstado('Jornada Finalizada');
+
+                if (updateError) {
+                    console.error('Error updating fichaje:', updateError);
+                    return;
+                }
+            }
         }
     }
 
     function stopTimer() {
         salida();
-        setEstado('Jornada Finalizada');
         sessionStorage.setItem('run', 'false');
         sessionStorage.setItem('time', '0')
     }
@@ -325,11 +554,11 @@ export default function ContainerFichaje ({ estado, setEstado, user }: { estado:
                         {
                             (estado == 'Pausa') && (
                                 <>
-                                    <button className={styles.entrada} onClick={startTimer}>
+                                    <button className={styles.entrada} onClick={reanudarTimer}>
                                         <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M8.5 6L18.5 12L8.5 18V6Z" fill="white" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                         </svg>
-                                        FICHAR ENTRADA
+                                        REANUDAR
                                     </button>
                                     <button className={styles.salida} onClick={handleOpen}>FICHAR SALIDA</button>
                                 </>

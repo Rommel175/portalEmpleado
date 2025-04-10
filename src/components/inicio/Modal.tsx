@@ -12,7 +12,7 @@ export default function Modal({ user }: { user: User }) {
     const [currentDate, setCurrentDate] = useState<string>("");
     const [currentTime, setCurrentTime] = useState<string>("");
     const [estado, setEstado] = useState('');
-    const [localizacion, setLocalizacion] = useState('');
+    const [localizacionFichaje, setLocalizacionFichaje] = useState('oficina');
     const [horaFinalAprox, setHoraFinalAprox] = useState({
         value: '',
         hasError: false
@@ -25,9 +25,6 @@ export default function Modal({ user }: { user: User }) {
     useEffect(() => {
         const fetchData = async () => {
             const date = new Date();
-            const day = String(date.getDate()).padStart(2, '0');
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const year = date.getFullYear();
 
             const formatDate = new Intl.DateTimeFormat("es-ES", {
                 day: "2-digit",
@@ -43,35 +40,6 @@ export default function Modal({ user }: { user: User }) {
             }).format(date)
 
             setCurrentTime(formatHour)
-
-            const { data: dataLocation, error: errorLocation } = await supabase
-                .from('historialFichajes')
-                .select('localizacionFichaje')
-                .eq('created_at', `${year}-${month}-${day}`)
-                .eq('user_id', user.id);
-
-            if (errorLocation) {
-                console.error('Error fetching fichaje state:', dataLocation);
-                return;
-            }
-
-            /*if (!dataLocation || dataLocation.length == 0) {
-                const { data: dataInsert, error: errorInsert } = await supabase
-                    .from('historialFichajes')
-                    .insert({ created_at: `${year}-${month}-${day}`, user_id: user.id });
-
-                if (errorInsert) {
-                    console.error('Error insert fichaje:', errorInsert);
-                }
-
-                if (dataInsert) {
-                    console.log(dataInsert)
-                }
-            }*/
-
-            if (dataLocation && dataLocation.length > 0) {
-                setLocalizacion(dataLocation[0].localizacionFichaje)
-            }
 
             const { data: dataEstado, error: errorEstado } = await supabase
                 .from('profiles')
@@ -90,73 +58,116 @@ export default function Modal({ user }: { user: User }) {
         fetchData();
     }, []);
 
-    async function accionFichar() {
+    async function fichar() {
         const date = new Date();
         const day = String(date.getDate()).padStart(2, '0');
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const year = date.getFullYear();
 
         const { data, error } = await supabase
-            .from('historialFichajes')
+            .from('fichaje_jornada')
             .select('id')
             .eq('created_at', `${year}-${month}-${day}`)
-            .eq('user_id', user.id);
+            .eq('user_id', user.id)
 
         if (error) {
-            console.error('Error fetching Historial state:', error);
-            return;
-        }
-
-        if (data && data.length > 0) {
-            const fichajeId = data[0].id;
-
-            const { error: updateError } = await supabase
-                .from('historialFichajes')
-                .update({ horaEntrada: currentTime, localizacionFichaje: localizacion, horaAproxSalida: horaFinalAprox.value })
-                .eq('id', fichajeId);
-
-            if (updateError) {
-                console.error('Error updating Historial fichaje:', updateError);
-                return;
-            }
+            console.log('Error fetching fichaje: ', error);
         }
 
         if (!data || data.length == 0) {
-            const { data: dataInsert, error: errorInsert } = await supabase
-                .from('historialFichajes')
-                .insert({ created_at: `${year}-${month}-${day}`, user_id: user.id, horaEntrada: currentTime, localizacionFichaje: localizacion, horaAproxSalida: horaFinalAprox.value });
+            const { error: errorInsertFichaje } = await supabase
+                .from('fichaje_jornada')
+                .insert({ created_at: `${year}-${month}-${day}`, user_id: user.id, hora_aprox_salida: horaFinalAprox.value })
 
-            if (errorInsert) {
-                console.error('Error insert fichaje:', errorInsert);
+            if (errorInsertFichaje) {
+                console.log('Error insert fichaje: ', errorInsertFichaje)
             }
 
-            if (dataInsert) {
-                console.log(dataInsert)
+            const { data: dataFichaje, error: errorFichaje } = await supabase
+                .from('fichaje_jornada')
+                .select('id')
+                .eq('user_id', user.id)
+                .eq('created_at', `${year}-${month}-${day}`)
+
+            if (errorFichaje) {
+                console.log('Error fetching fichaje');
             }
-        }
 
-        const { data: dataEstado, error: errorEstado } = await supabase
-            .from('profiles')
-            .select('id')
-            .eq('user_id', user.id)
+            if (dataFichaje && dataFichaje.length > 0) {
+                const idFichaje = dataFichaje[0].id;
 
-        if (errorEstado) {
-            console.log('Error fetching esatdo: ', errorEstado);
-        }
+                const { error: errorInsertFichajeEvent } = await supabase
+                    .from('fichaje_eventos')
+                    .insert({ fichaje_id: idFichaje, evento: 'Inicio Jornada', hora: currentTime, localizacion: localizacionFichaje });
 
-        if (dataEstado && dataEstado.length > 0) {
-            const profileId = dataEstado[0].id;
+                if (errorInsertFichajeEvent) {
+                    console.log('Error insert Fichaje_event: ', errorInsertFichajeEvent)
+                }
 
-            const { error: errorUpdatingEstado } = await supabase
+                const { data: dataEstado, error: errorEstado } = await supabase
+                    .from('profiles')
+                    .select('id')
+                    .eq('user_id', user.id)
+
+                if (errorEstado) {
+                    console.log('Error fetching esatdo: ', errorEstado);
+                }
+
+                if (dataEstado && dataEstado.length > 0) {
+                    const profileId = dataEstado[0].id;
+
+                    const { error: errorUpdatingEstado } = await supabase
+                        .from('profiles')
+                        .update({ estado: 'Activo' })
+                        .eq('id', profileId)
+
+                    if (errorUpdatingEstado) {
+                        console.log('Error updating estado: ', errorUpdatingEstado)
+                    }
+                }
+            }
+
+        } else {
+
+            const fichajeId = data[0].id;
+
+            const { error: errorInsertFichajeEvent } = await supabase
+                .from('fichaje_eventos')
+                .insert({ fichaje_id: fichajeId, evento: 'Inicio Jornada', hora: currentTime, localizacion: localizacionFichaje });
+
+            if (errorInsertFichajeEvent) {
+                console.log('Error insert Fichaje_event: ', errorInsertFichajeEvent)
+            }
+
+            const { data: dataEstado, error: errorEstado } = await supabase
                 .from('profiles')
-                .update({ estado: 'Activo' })
-                .eq('id', profileId)
+                .select('id')
+                .eq('user_id', user.id)
 
-            if (errorUpdatingEstado) {
-                console.log('Error updating estado: ', errorUpdatingEstado)
+            if (errorEstado) {
+                console.log('Error fetching esatdo: ', errorEstado);
+            }
+
+            if (dataEstado && dataEstado.length > 0) {
+                const profileId = dataEstado[0].id;
+
+                const { error: errorUpdatingEstado } = await supabase
+                    .from('profiles')
+                    .update({ estado: 'Activo' })
+                    .eq('id', profileId)
+
+                if (errorUpdatingEstado) {
+                    console.log('Error updating estado: ', errorUpdatingEstado)
+                }
             }
         }
+
+        //PENDENTE HACER LÓGICA PARA EVITAR DUPLICIDAD
     }
+
+    useEffect(() => {
+        console.log(localizacionFichaje)
+    }, [localizacionFichaje])
 
     function handleClose() {
         setIsOpen(false);
@@ -169,12 +180,12 @@ export default function Modal({ user }: { user: User }) {
         }
 
         setIsOpen(false);
-        accionFichar();
+        fichar();
         router.push('/');
     }
 
     function handleChangeLocation(e: React.ChangeEvent<HTMLSelectElement>) {
-        setLocalizacion(e.target.value);
+        setLocalizacionFichaje(e.target.value);
     }
 
     function handleChangeHoraAprox(e: React.ChangeEvent<HTMLInputElement>) {
@@ -211,7 +222,7 @@ export default function Modal({ user }: { user: User }) {
 
                         <div className={styles.location}>
                             <label htmlFor="location">Localización</label>
-                            <select name="location" value={localizacion || ''} onChange={handleChangeLocation}>
+                            <select name="location" value={localizacionFichaje || ''} onChange={handleChangeLocation}>
                                 <option value="oficina">Oficina</option>
                                 <option value="casa">Casa</option>
                                 <option value="viaje">Viaje</option>
