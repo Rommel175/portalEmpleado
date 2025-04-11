@@ -10,7 +10,6 @@ import ContainerFichaje from "./fichaje/ContanerFichaje";
 
 export default function ContainerSuperior({ user }: { user: User }) {
     const [estado, setEstado] = useState('');
-    //const [eventoFichaje, setEventoFichaje] = useState('');
     const [localizacionFichaje, setLocalizacionFichaje] = useState('');
     const [horaInicio, setHoraInicio] = useState('');
     const [horaFinalAprox, setHoraFinalAprox] = useState('');
@@ -40,7 +39,7 @@ export default function ContainerSuperior({ user }: { user: User }) {
 
                 const { data: dataFichajeEvent, error: errorFichajeEvent } = await supabase
                     .from('fichaje_eventos')
-                    .select('hora, localizacion')
+                    .select('hora, localizacion, id')
                     .eq('fichaje_id', fichajeId);
 
                 if (errorFichajeEvent) {
@@ -48,9 +47,10 @@ export default function ContainerSuperior({ user }: { user: User }) {
                 }
 
                 if (dataFichajeEvent && dataFichajeEvent.length > 0) {
-                    setLocalizacionFichaje(dataFichajeEvent[0].localizacion);
+                    setLocalizacionFichaje(dataFichajeEvent[dataFichajeEvent.length - 1].localizacion);
                     setHoraInicio(dataFichajeEvent[0].hora);
-                    //setEventoFichaje(dataFichajeEvent[0].evento)
+                    //console.log("Último evento:", dataFichajeEvent[dataFichajeEvent.length - 1].id);
+
                 }
             }
 
@@ -75,8 +75,8 @@ export default function ContainerSuperior({ user }: { user: User }) {
 
     return (
         <div className={styles.containerSuperior}>
-            <ContainerDatos user={user} estado={estado} localizacionFichaje={localizacionFichaje} setLocalizacionFichaje={setLocalizacionFichaje} horaInicio={horaInicio} horaFinalAprox={horaFinalAprox} /*eventoFichaje={eventoFichaje} setEventoFichaje={setEventoFichaje}*/ />
-            <ContainerFichaje user={user} estado={estado} setEstado={setEstado} localizacionFichaje={localizacionFichaje} /*eventoFichaje={eventoFichaje} setEventoFichaje={setEventoFichaje}*/ />
+            <ContainerDatos user={user} estado={estado} localizacionFichaje={localizacionFichaje} setLocalizacionFichaje={setLocalizacionFichaje} horaInicio={horaInicio} horaFinalAprox={horaFinalAprox} />
+            <ContainerFichaje user={user} estado={estado} setEstado={setEstado} localizacionFichaje={localizacionFichaje} />
         </div>
     );
 }

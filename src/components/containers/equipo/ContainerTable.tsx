@@ -1,7 +1,89 @@
+'use client'
+
+//import { createClient } from '@/utils/supabase/client';
 import styles from './containerTable.module.css'
 import TableItem from './TableItem';
+//import { useEffect, useState } from 'react';
 
 export default function ContainerTable() {
+
+  /*type Users = {
+    name: string;
+    email: string;
+    estado: string;
+    image: string;
+    hora: string;
+    hora_aprox_salida: string;
+    localizacion: string;  // Asegúrate de incluir la localización
+  }*/
+
+  /*const [users, setUsers] = useState<Users[]>([]);
+  const supabase = createClient();
+
+  useEffect(() => {
+
+    const date = new Date();
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+
+    const fetchData = async () => {
+
+      const { data: consulta, error: errorConsulta } = await supabase
+        .from('profiles')
+        .select('user_id, name, estado, email, image');
+
+      if (errorConsulta) {
+        console.log('Error fetching auth users: ', errorConsulta);
+        return;
+      }
+
+      if (consulta && consulta.length > 0) {
+        console.log(consulta)
+
+        for (let i = 0; i < consulta.length; i++) {
+          const { data: consulta2, error: errorConsulta2 } = await supabase
+            .from('vista_fichajes')
+            .select('hora, localizacion, hora_aprox_salida')
+            .eq('user_id', consulta[i].user_id)
+            .eq('fecha', `${year}-${month}-${day}`)
+
+          if (errorConsulta2) {
+            console.log()
+          }
+        }
+      }
+
+      
+
+      const fichajesPromises = consulta.map((item) =>
+        supabase
+          .from('vista_fichajes')
+          .select('hora, localizacion, hora_aprox_salida')
+          .eq('user_id', item.user_id)
+          .eq('fecha', `${year}-${month}-${day}`)
+      );
+
+      const fichajesResults = await Promise.all(fichajesPromises);
+
+      const combinedData = consulta.map((item, index) => {
+        const fichaje = fichajesResults[index].data?.[0];
+        return {
+          ...item,
+          hora: fichaje?.hora || null,
+          localizacion: fichaje?.localizacion || null,
+          hora_aprox_salida: fichaje?.hora_aprox_salida || null,
+        };
+      })
+
+      setUsers(combinedData)
+
+
+    }
+
+    fetchData();
+  }, []);*/
+
   return (
     <div className={styles.table}>
       <div className={styles.tableNav}>

@@ -7,7 +7,7 @@ import Image from "next/image";
 import { createClient } from "@/utils/supabase/client";
 import { useEffect, useState } from "react";
 
-export default function DatosContainer({ user, estado, localizacionFichaje, setLocalizacionFichaje, horaInicio, horaFinalAprox /*, setEventoFichaje, eventoFichaje*/ }: { user: User, estado: string, localizacionFichaje: string, setLocalizacionFichaje: React.Dispatch<React.SetStateAction<string>>, horaInicio: string, horaFinalAprox: string /*, setEventoFichaje: React.Dispatch<React.SetStateAction<string>>, eventoFichaje: string*/ }) {
+export default function DatosContainer({ user, estado, localizacionFichaje, setLocalizacionFichaje, horaInicio, horaFinalAprox }: { user: User, estado: string, localizacionFichaje: string, setLocalizacionFichaje: React.Dispatch<React.SetStateAction<string>>, horaInicio: string, horaFinalAprox: string }) {
     const svg = (
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" >
             <path fillRule="evenodd" clipRule="evenodd" d="M12.0505 2.36951C10.8494 2.36951 9.69748 2.84664 8.84817 3.69594C7.99887 4.54525 7.52174 5.69715 7.52174 6.89825C7.52174 8.09934 7.99887 9.25124 8.84817 10.1005C9.69748 10.9499 10.8494 11.427 12.0505 11.427C13.2516 11.427 14.4035 10.9499 15.2528 10.1005C16.1021 9.25124 16.5792 8.09934 16.5792 6.89825C16.5792 5.69715 16.1021 4.54525 15.2528 3.69594C14.4035 2.84664 13.2516 2.36951 12.0505 2.36951ZM8.95186 6.89825C8.95186 6.07644 9.27832 5.2883 9.85943 4.7072C10.4405 4.12609 11.2287 3.79963 12.0505 3.79963C12.8723 3.79963 13.6604 4.12609 14.2415 4.7072C14.8226 5.2883 15.1491 6.07644 15.1491 6.89825C15.1491 7.72005 14.8226 8.50819 14.2415 9.08929C13.6604 9.6704 12.8723 9.99686 12.0505 9.99686C11.2287 9.99686 10.4405 9.6704 9.85943 9.08929C9.27832 8.50819 8.95186 7.72005 8.95186 6.89825ZM12.0505 11.977C9.84522 11.977 7.81253 12.4785 6.30708 13.3252C4.82356 14.1604 3.70806 15.4246 3.70806 16.9825V17.0797C3.70711 18.1876 3.70615 19.5777 4.92558 20.5711C5.52528 21.0593 6.36524 21.4073 7.49981 21.6361C8.63628 21.8668 10.1188 21.9879 12.0505 21.9879C13.9821 21.9879 15.4637 21.8668 16.6021 21.6361C17.7367 21.4073 18.5757 21.0593 19.1763 20.5711C20.3957 19.5777 20.3938 18.1876 20.3929 17.0797V16.9825C20.3929 15.4246 19.2774 14.1604 17.7948 13.3252C16.2884 12.4785 14.2567 11.977 12.0505 11.977ZM5.13819 16.9825C5.13819 16.1711 5.73122 15.2902 7.00784 14.5722C8.26254 13.8667 10.0435 13.4072 12.0514 13.4072C14.0574 13.4072 15.8384 13.8667 17.0931 14.5722C18.3707 15.2902 18.9628 16.1711 18.9628 16.9825C18.9628 18.2296 18.9246 18.9313 18.2725 19.4614C17.9197 19.7493 17.3286 20.0306 16.318 20.2346C15.3102 20.4386 13.9325 20.5578 12.0505 20.5578C10.1684 20.5578 8.78978 20.4386 7.78297 20.2346C6.77235 20.0306 6.18123 19.7493 5.82846 19.4623C5.17633 18.9313 5.13819 18.2296 5.13819 16.9825Z" fill="#0B3C70" />
@@ -21,7 +21,7 @@ export default function DatosContainer({ user, estado, localizacionFichaje, setL
     async function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
         setLocalizacionFichaje(e.target.value);
 
-        const date = new Date();
+        /*const date = new Date();
         const day = String(date.getDate()).padStart(2, '0');
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const year = date.getFullYear();
@@ -36,17 +36,27 @@ export default function DatosContainer({ user, estado, localizacionFichaje, setL
             console.log('Error fetching fichaje: ', error);
         }
 
+        if (data && data.length > 0) {
+            const { data: lastId, error: errorLastId } = await supabase
+                .from('fichaje_eventos')
+                .select('id')
+                .eq('fichaje_id', data[0].id)
+
+            console.log(lastId)
+        }
+
         if (data && data.length > 0 && data[0].id) {
             const { error } = await supabase
                 .from('fichaje_eventos')
                 .update({ localizacion: e.target.value })
                 .eq('fichaje_id', data[0].id)
+                //.eq('id', idFichajeEvent)
 
             if (error) {
                 console.error('Error updating localizacion fichaje:', error);
                 return;
             }
-        }
+        }*/
     }
 
     useEffect(() => {

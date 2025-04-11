@@ -5,8 +5,8 @@ type Prop = {
     name: string,
     email: string,
     foto?: string,
-    estado?: 'Activo' | 'Inactivo' | 'Pausa' | 'Jornada Finalizada' | 'Vacaciones',
-    localizacion?: 'Oficina' | 'Casa' | 'Viaje',
+    estado?: string,
+    localizacion?: string,
     inicio?: string,
     final?: string
 }

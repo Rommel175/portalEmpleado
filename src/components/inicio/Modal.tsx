@@ -165,10 +165,6 @@ export default function Modal({ user }: { user: User }) {
         //PENDENTE HACER LÓGICA PARA EVITAR DUPLICIDAD
     }
 
-    useEffect(() => {
-        console.log(localizacionFichaje)
-    }, [localizacionFichaje])
-
     function handleClose() {
         setIsOpen(false);
     }
