@@ -18,7 +18,7 @@ export default async function HomePage() {
     <>
       <Modal user={user}/>
       <ContainerSuperior user={user}/>
-      <ContainerEquipo />
+      <ContainerEquipo user={user}/>
     </>
   );
 }
