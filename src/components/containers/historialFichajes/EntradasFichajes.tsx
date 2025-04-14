@@ -1,9 +1,10 @@
-'use client'
+//'use client'
 
-import { useEffect, useState } from 'react';
+//import { useEffect, useState } from 'react';
 import EntradaFichajesItem from './EntradaFichajesItem';
 import styles from './entradasFichajes.module.css';
-import { createClient } from '@/utils/supabase/client';
+import { createClient } from '@/utils/supabase/server';
+//import { createClient } from '@/utils/supabase/client';
 
 type Prop = {
   date: string
@@ -15,12 +16,68 @@ type Fichaje = {
   localizacion: string
 }
 
-export default function EntradasFichajes({ date }: Prop) {
+export default async function EntradasFichajes({ date }: Prop) {
 
-  const [fichajes, setFichajes] = useState<Fichaje[]>([]);
-  const supabase = createClient();
+  //const [fichajes, setFichajes] = useState<Fichaje[]>([]);
+  const supabase = await createClient();
 
-  useEffect(() => {
+  const fichajes: Fichaje[] = [];
+
+  const { data, error } = await supabase.auth.getUser();
+
+      if (error) {
+        console.log('Error fetching user: ', error);
+      }
+
+      if (data) {
+        const { data: dataProfile, error: errorProfile } = await supabase
+          .from('profiles')
+          .select('id')
+          .eq('user_id', data.user?.id)
+
+        if (errorProfile) {
+          console.log('Error fetching profile: ', errorProfile);
+        }  
+
+        if (dataProfile && dataProfile.length > 0) {
+          const { data: dataFichaje, error: errorFichaje } = await supabase
+            .from('fichaje_jornada')
+            .select('*')
+            .eq('profile_id', dataProfile[0].id)
+            .eq('created_at', date)
+          
+          if (errorFichaje) {
+            console.log('Error fetching fichajes: ', errorFichaje)
+          }  
+
+          if (dataFichaje && dataFichaje.length > 0) {
+
+            for (let i = 0; i < dataFichaje.length; i++) {
+              const { data: dataEvento, error: errorEvento } = await supabase
+              .from('fichaje_eventos')
+              .select('*')
+              .eq('fichaje_id', dataFichaje[i].id);
+
+              if (errorEvento) {
+                console.log('Error fetching Evento: ', errorEvento);
+              }
+
+              if (dataEvento && dataEvento.length > 0) {
+                const eventosData = dataEvento.map(item => ({
+                  evento: item.evento,
+                  hora: item.hora,
+                  localizacion: item.localizacion
+                }));
+
+                fichajes.push(...eventosData);
+              }
+            }
+            
+          }
+        }
+      }
+
+  /*useEffect(() => {
     const fetchData = async () => {
       const { data, error } = await supabase.auth.getUser();
 
@@ -81,7 +138,7 @@ export default function EntradasFichajes({ date }: Prop) {
     }
 
     fetchData();
-  }, [])
+  }, [])*/
 
 
   return (
