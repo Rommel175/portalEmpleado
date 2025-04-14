@@ -9,21 +9,7 @@ export default async function FilesPage() {
   if (error) {
     redirect('/login')
   }
-
   const user = data.user;
-
-  /*const { data: conuslta, error: errorConsulta } = await supabase
-    .from('vista_fichajes')
-    .select('*')
-    .eq('fecha', '2025-04-11')
-
-  if (errorConsulta) {
-    console.log('Error fetching auth users: ', errorConsulta)
-  }  
-
-  if (conuslta && conuslta.length > 0) {
-    console.log(conuslta[0])
-  }*/
 
   return (
     <>

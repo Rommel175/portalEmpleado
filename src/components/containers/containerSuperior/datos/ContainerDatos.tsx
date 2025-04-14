@@ -7,6 +7,13 @@ import Image from "next/image";
 import { createClient } from "@/utils/supabase/client";
 import { useEffect, useState } from "react";
 
+type Profile = {
+    fullName: string,
+    email: string,
+    image: string,
+    puesto: string
+}
+
 export default function DatosContainer({ user, estado, localizacionFichaje, setLocalizacionFichaje, horaInicio, horaFinalAprox }: { user: User, estado: string, localizacionFichaje: string, setLocalizacionFichaje: React.Dispatch<React.SetStateAction<string>>, horaInicio: string, horaFinalAprox: string }) {
     const svg = (
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" >
@@ -14,49 +21,12 @@ export default function DatosContainer({ user, estado, localizacionFichaje, setL
         </svg>
     )
 
-    const [puesto, setPuesto] = useState('');
+    const [perfil, setPerfil] = useState<Profile | null>(null);
 
     const supabase = createClient();
 
     async function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
         setLocalizacionFichaje(e.target.value);
-
-        /*const date = new Date();
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
-
-        const { data, error } = await supabase
-            .from('fichaje_jornada')
-            .select('id')
-            .eq('user_id', user.id)
-            .eq('created_at', `${year}-${month}-${day}`);
-
-        if (error) {
-            console.log('Error fetching fichaje: ', error);
-        }
-
-        if (data && data.length > 0) {
-            const { data: lastId, error: errorLastId } = await supabase
-                .from('fichaje_eventos')
-                .select('id')
-                .eq('fichaje_id', data[0].id)
-
-            console.log(lastId)
-        }
-
-        if (data && data.length > 0 && data[0].id) {
-            const { error } = await supabase
-                .from('fichaje_eventos')
-                .update({ localizacion: e.target.value })
-                .eq('fichaje_id', data[0].id)
-                //.eq('id', idFichajeEvent)
-
-            if (error) {
-                console.error('Error updating localizacion fichaje:', error);
-                return;
-            }
-        }*/
     }
 
     useEffect(() => {
@@ -64,7 +34,7 @@ export default function DatosContainer({ user, estado, localizacionFichaje, setL
         const fetchPuesto = async () => {
             const { data, error } = await supabase
                 .from('profiles')
-                .select('puesto')
+                .select('puesto, full_name, image, email')
                 .eq('user_id', user.id)
 
             if (error) {
@@ -72,11 +42,22 @@ export default function DatosContainer({ user, estado, localizacionFichaje, setL
             }
 
             if (data && data.length > 0) {
-                setPuesto(data[0].puesto);
+                setPerfil({
+                    fullName: data[0].full_name,
+                    image: data[0].image,
+                    puesto: data[0].puesto,
+                    email: data[0].email
+                });
             }
 
             if (!data || data.length == 0 || !data[0].puesto) {
-                setPuesto('No especificado');
+
+                setPerfil({
+                    fullName: user.user_metadata.full_name,
+                    image: user.user_metadata.avatar_url,
+                    puesto: 'No especificado',
+                    email: user.user_metadata.email
+                });
             }
 
         }
@@ -90,13 +71,25 @@ export default function DatosContainer({ user, estado, localizacionFichaje, setL
 
             <div className={styles.content}>
 
-                <div className={styles.profile}>
-                    <Image src={user.user_metadata.avatar_url} width={60} height={60} alt='img' className={styles.personalImage} />
-                    <div className={styles.personalInfo}>
-                        <h2>{user.user_metadata.full_name}</h2>
-                        <h3>{puesto} | {user.user_metadata.email}</h3>
-                    </div>
-                </div>
+                {
+                    perfil && (
+                        <div className={styles.profile}>
+                            {perfil.image ? (
+                                <Image
+                                    src={perfil.image}
+                                    width={60}
+                                    height={60}
+                                    alt="img"
+                                    className={styles.personalImage}
+                                />
+                            ) : null}
+                            <div className={styles.personalInfo}>
+                                <h2>{perfil.fullName}</h2>
+                                <h3>{perfil.puesto} | {perfil.email}</h3>
+                            </div>
+                        </div>
+                    )
+                }
 
                 <div className={styles.line}></div>
 

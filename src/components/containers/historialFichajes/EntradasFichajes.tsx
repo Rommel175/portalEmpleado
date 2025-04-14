@@ -1,11 +1,89 @@
+'use client'
+
+import { useEffect, useState } from 'react';
 import EntradaFichajesItem from './EntradaFichajesItem';
 import styles from './entradasFichajes.module.css';
+import { createClient } from '@/utils/supabase/client';
 
 type Prop = {
   date: string
 }
 
+type Fichaje = {
+  evento: string,
+  hora: string,
+  localizacion: string
+}
+
 export default function EntradasFichajes({ date }: Prop) {
+
+  const [fichajes, setFichajes] = useState<Fichaje[]>([]);
+  const supabase = createClient();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data, error } = await supabase.auth.getUser();
+
+      if (error) {
+        console.log('Error fetching user: ', error);
+      }
+
+      if (data) {
+        const { data: dataProfile, error: errorProfile } = await supabase
+          .from('profiles')
+          .select('id')
+          .eq('user_id', data.user?.id)
+
+        if (errorProfile) {
+          console.log('Error fetching profile: ', errorProfile);
+        }  
+
+        if (dataProfile && dataProfile.length > 0) {
+          const { data: dataFichaje, error: errorFichaje } = await supabase
+            .from('fichaje_jornada')
+            .select('*')
+            .eq('profile_id', dataProfile[0].id)
+            .eq('created_at', date)
+          
+          if (errorFichaje) {
+            console.log('Error fetching fichajes: ', errorFichaje)
+          }  
+
+          if (dataFichaje && dataFichaje.length > 0) {
+            const fichajeData: Fichaje[] = [];
+
+            for (let i = 0; i < dataFichaje.length; i++) {
+              const { data: dataEvento, error: errorEvento } = await supabase
+              .from('fichaje_eventos')
+              .select('*')
+              .eq('fichaje_id', dataFichaje[i].id);
+
+              if (errorEvento) {
+                console.log('Error fetching Evento: ', errorEvento);
+              }
+
+              if (dataEvento && dataEvento.length > 0) {
+                const eventosData = dataEvento.map(item => ({
+                  evento: item.evento,
+                  hora: item.hora,
+                  localizacion: item.localizacion
+                }));
+
+                fichajeData.push(...eventosData);
+              }
+            }
+
+            setFichajes(fichajeData);
+            
+          }
+        }
+      }
+    }
+
+    fetchData();
+  }, [])
+
+
   return (
     <div className={styles.container}>
       <header className={styles.title}>
@@ -19,10 +97,11 @@ export default function EntradasFichajes({ date }: Prop) {
         </div>
       </header>
 
-      <EntradaFichajesItem action='Entrada' hour='19:00' date={date} />
-      <EntradaFichajesItem action='Pausa' hour='14:30' date={date} />
-      <EntradaFichajesItem action='Entrada' hour='16:20' date={date} />
-      <EntradaFichajesItem action='Salida' hour='18:00' date={date} />
+      {
+        fichajes.map((item, index) => {
+          return <EntradaFichajesItem key={index} action={item.evento} date={date} hour={item.hora} localizacion={item.localizacion}/>
+        })
+      }
     </div>
   );
 }

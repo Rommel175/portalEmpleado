@@ -42,7 +42,7 @@ export async function GET(request: Request) {
     if (!dataProfile || dataProfile.length === 0) {
       const { data: dataInsertProfile, error: errorInsertProfile } = await supabase
         .from('profiles')
-        .insert({ user_id: user.id, name: user.user_metadata.full_name, email: user.email, image: user.user_metadata.avatar_url, estado: 'Inactivo' })
+        .insert({ user_id: user.id, full_name: user.user_metadata.full_name, email: user.email, image: user.user_metadata.avatar_url, estado: 'Inactivo' })
 
       if (errorInsertProfile) {
         console.log('Error insert Profile: ', errorInsertProfile);

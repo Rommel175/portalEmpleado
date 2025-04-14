@@ -12,6 +12,8 @@ export default function Modal({ user }: { user: User }) {
     const [currentDate, setCurrentDate] = useState<string>("");
     const [currentTime, setCurrentTime] = useState<string>("");
     const [estado, setEstado] = useState('');
+    const [fullName, setFullName] = useState('');
+    const [idProfile, setIdProfile] = useState('');
     const [localizacionFichaje, setLocalizacionFichaje] = useState('oficina');
     const [horaFinalAprox, setHoraFinalAprox] = useState({
         value: '',
@@ -41,17 +43,19 @@ export default function Modal({ user }: { user: User }) {
 
             setCurrentTime(formatHour)
 
-            const { data: dataEstado, error: errorEstado } = await supabase
+            const { data: dataProfile, error: errorProfile } = await supabase
                 .from('profiles')
-                .select('estado')
+                .select('estado, id, full_name')
                 .eq('user_id', user.id)
 
-            if (errorEstado) {
-                console.log('Error fetching state: ', errorEstado)
+            if (errorProfile) {
+                console.log('Error fetching state: ', errorProfile)
             }
 
-            if (dataEstado && dataEstado.length > 0) {
-                setEstado(dataEstado[0].estado)
+            if (dataProfile && dataProfile.length > 0) {
+                setEstado(dataProfile[0].estado);
+                setIdProfile(dataProfile[0].id);
+                setFullName(dataProfile[0].full_name);
             }
         }
 
@@ -68,7 +72,7 @@ export default function Modal({ user }: { user: User }) {
             .from('fichaje_jornada')
             .select('id')
             .eq('created_at', `${year}-${month}-${day}`)
-            .eq('user_id', user.id)
+            .eq('profile_id', idProfile)
 
         if (error) {
             console.log('Error fetching fichaje: ', error);
@@ -77,7 +81,7 @@ export default function Modal({ user }: { user: User }) {
         if (!data || data.length == 0) {
             const { error: errorInsertFichaje } = await supabase
                 .from('fichaje_jornada')
-                .insert({ created_at: `${year}-${month}-${day}`, user_id: user.id, hora_aprox_salida: horaFinalAprox.value })
+                .insert({ created_at: `${year}-${month}-${day}`, profile_id: idProfile, hora_aprox_salida: horaFinalAprox.value })
 
             if (errorInsertFichaje) {
                 console.log('Error insert fichaje: ', errorInsertFichaje)
@@ -86,7 +90,7 @@ export default function Modal({ user }: { user: User }) {
             const { data: dataFichaje, error: errorFichaje } = await supabase
                 .from('fichaje_jornada')
                 .select('id')
-                .eq('user_id', user.id)
+                .eq('profile_id', idProfile)
                 .eq('created_at', `${year}-${month}-${day}`)
 
             if (errorFichaje) {
@@ -114,6 +118,7 @@ export default function Modal({ user }: { user: User }) {
                 }
 
                 if (dataEstado && dataEstado.length > 0) {
+
                     const profileId = dataEstado[0].id;
 
                     const { error: errorUpdatingEstado } = await supabase
@@ -200,7 +205,7 @@ export default function Modal({ user }: { user: User }) {
             <div className={styles.modalContainer}>
                 <form className={styles.form} onSubmit={handleSubmit} >
                     <header className={styles.formHeader}>
-                        <h1>!Hola {user.user_metadata.full_name}!</h1>
+                        <h1>!Hola {fullName}!</h1>
                         <h2>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Qui ad quisquam consequatur maiores suscipit voluptatum necessitatibus placeat molestias nulla incidunt dolor dolores fugit, odit assumenda reiciendis ipsum culpa alias. Ex!</h2>
                     </header>
 

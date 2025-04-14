@@ -6,12 +6,13 @@ import ContainerHeader from "../../ContainerHeader";
 import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 
-export default function ContainerFichaje({ estado, setEstado, user, localizacionFichaje /*, setEventoFichaje, eventoFichaje*/ }: { estado: string, setEstado: React.Dispatch<React.SetStateAction<string>>, user: User, localizacionFichaje: string, /*setEventoFichaje: React.Dispatch<React.SetStateAction<string>>, eventoFichaje: string*/ }) {
+export default function ContainerFichaje({ estado, setEstado, user, localizacionFichaje }: { estado: string, setEstado: React.Dispatch<React.SetStateAction<string>>, user: User, localizacionFichaje: string }) {
 
     const [isOpen, setIsOpen] = useState(false);
     const [isRunning, setRunning] = useState<boolean>(false);
     const [time, setTime] = useState<number>(0);
     const [currentDate, setCurrentDate] = useState<string>("");
+    const [idProfile, setIdProfile] = useState('');
     const supabase = createClient();
 
     //Acciones Modal Finalizar jornada
@@ -49,7 +50,24 @@ export default function ContainerFichaje({ estado, setEstado, user, localizacion
             year: "numeric"
         }).format(date)
 
-        setCurrentDate(formatDate)
+        setCurrentDate(formatDate);
+
+        const fetchProfile = async() => {
+            const { data, error } = await supabase
+                .from('profiles')
+                .select('id')
+                .eq('user_id', user.id);
+
+            if (error) {
+                console.log('Error fetching Profile: ', error)
+            }    
+
+            if (data && data.length > 0) {
+                setIdProfile(data[0].id);
+            }
+        }
+
+        fetchProfile();
 
     }, []);
 
@@ -82,26 +100,22 @@ export default function ContainerFichaje({ estado, setEstado, user, localizacion
         const formatHour = new Intl.DateTimeFormat("es-ES", {
             hour: "2-digit",
             minute: "2-digit"
-        }).format(date)
-
-
+        }).format(date);
 
         const { data, error } = await supabase
             .from('fichaje_jornada')
             .select('id')
             .eq('created_at', `${year}-${month}-${day}`)
-            .eq('user_id', user.id)
+            .eq('profile_id', idProfile)
 
         if (error) {
             console.log('Error fetching fichaje: ', error);
         }
 
-
-        //AÑADIR HORA APROX SALIDA MÁS TARDE
         if (!data || data.length == 0) {
             const { error: errorInsertFichaje } = await supabase
                 .from('fichaje_jornada')
-                .insert({ created_at: `${year}-${month}-${day}`, user_id: user.id })
+                .insert({ created_at: `${year}-${month}-${day}`, profile_id: idProfile })
 
             if (errorInsertFichaje) {
                 console.log('Error insert fichaje: ', errorInsertFichaje)
@@ -110,7 +124,7 @@ export default function ContainerFichaje({ estado, setEstado, user, localizacion
             const { data: dataFichaje, error: errorFichaje } = await supabase
                 .from('fichaje_jornada')
                 .select('id')
-                .eq('user_id', user.id)
+                .eq('profile_id', idProfile)
                 .eq('created_at', `${year}-${month}-${day}`)
 
             if (errorFichaje) {
@@ -219,7 +233,7 @@ export default function ContainerFichaje({ estado, setEstado, user, localizacion
             .from('fichaje_jornada')
             .select('id')
             .eq('created_at', `${year}-${month}-${day}`)
-            .eq('user_id', user.id)
+            .eq('profile_id', idProfile)
 
         if (error) {
             console.log('Error fetching fichaje: ', error);
@@ -288,7 +302,7 @@ export default function ContainerFichaje({ estado, setEstado, user, localizacion
             .from('fichaje_jornada')
             .select('id')
             .eq('created_at', `${year}-${month}-${day}`)
-            .eq('user_id', user.id)
+            .eq('profile_id', idProfile)
 
         if (error) {
             console.log('Error fetching fichaje: ', error);
@@ -357,7 +371,7 @@ export default function ContainerFichaje({ estado, setEstado, user, localizacion
             .from('fichaje_jornada')
             .select('id')
             .eq('created_at', `${year}-${month}-${day}`)
-            .eq('user_id', user.id)
+            .eq('profile_id', idProfile)
 
         if (error) {
             console.log('Error fetching fichaje: ', error);

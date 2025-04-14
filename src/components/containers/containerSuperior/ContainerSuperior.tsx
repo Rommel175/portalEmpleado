@@ -18,55 +18,53 @@ export default function ContainerSuperior({ user }: { user: User }) {
 
     useEffect(() => {
         const fetchData = async () => {
-            const date = new Date();
-            const day = String(date.getDate()).padStart(2, '0');
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const year = date.getFullYear();
-
-            const { data, error } = await supabase
-                .from('fichaje_jornada')
-                .select('id, hora_aprox_salida')
-                .eq('user_id', user.id)
-                .eq('created_at', `${year}-${month}-${day}`);
-
-            if (error) {
-                console.log('Error fetching fichaje: ', error);
-            }
-
-            if (data && data.length > 0) {
-                const fichajeId = data[0].id;
-                setHoraFinalAprox(data[0].hora_aprox_salida);
-
-                const { data: dataFichajeEvent, error: errorFichajeEvent } = await supabase
-                    .from('fichaje_eventos')
-                    .select('hora, localizacion, id')
-                    .eq('fichaje_id', fichajeId);
-
-                if (errorFichajeEvent) {
-                    console.log('Error fetching Fichaje Evento: ', errorFichajeEvent)
-                }
-
-                if (dataFichajeEvent && dataFichajeEvent.length > 0) {
-                    setLocalizacionFichaje(dataFichajeEvent[dataFichajeEvent.length - 1].localizacion);
-                    setHoraInicio(dataFichajeEvent[0].hora);
-                    //console.log("Último evento:", dataFichajeEvent[dataFichajeEvent.length - 1].id);
-
-                }
-            }
-
-            const { data: dataEstado, error: errorEstado } = await supabase
+            const { data: dataProfile, error: errorProfile } = await supabase
                 .from('profiles')
-                .select('estado')
-                .eq('user_id', user.id)
+                .select('id, estado')
+                .eq('user_id', user.id);
 
-            if (errorEstado) {
-                console.log('Error fetching Estado: ', errorEstado)
+            if (errorProfile) {
+                console.log('Error fetching Profile: ', errorProfile)
             }
 
-            if (dataEstado && dataEstado.length > 0) {
-                setEstado(dataEstado[0].estado);
-            } else {
-                console.log('undefined')
+            if (dataProfile && dataProfile.length > 0) {
+                setEstado(dataProfile[0].estado);
+                const date = new Date();
+                const day = String(date.getDate()).padStart(2, '0');
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const year = date.getFullYear();
+
+                const { data, error } = await supabase
+                    .from('fichaje_jornada')
+                    .select('id, hora_aprox_salida')
+                    .eq('profile_id', dataProfile[0].id)
+                    .eq('created_at', `${year}-${month}-${day}`);
+
+                if (error) {
+                    console.log('Error fetching fichaje: ', error);
+                }
+
+                if (data && data.length > 0) {
+                    const fichajeId = data[0].id;
+                    setHoraFinalAprox(data[0].hora_aprox_salida);
+
+                    const { data: dataFichajeEvent, error: errorFichajeEvent } = await supabase
+                        .from('fichaje_eventos')
+                        .select('hora, localizacion, id')
+                        .eq('fichaje_id', fichajeId);
+
+                    if (errorFichajeEvent) {
+                        console.log('Error fetching Fichaje Evento: ', errorFichajeEvent)
+                    }
+
+                    if (dataFichajeEvent && dataFichajeEvent.length > 0) {
+                        setLocalizacionFichaje(dataFichajeEvent[dataFichajeEvent.length - 1].localizacion);
+                        setHoraInicio(dataFichajeEvent[0].hora);
+                        //console.log("Último evento:", dataFichajeEvent[dataFichajeEvent.length - 1].id);
+
+                    }
+                }
+
             }
         }
 

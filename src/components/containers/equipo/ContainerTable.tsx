@@ -6,7 +6,7 @@ import TableItem from './TableItem';
 import { useEffect, useState } from 'react';
 import { User } from '@supabase/supabase-js';
 
-export default function ContainerTable( {user}: {user: User} ) {
+export default function ContainerTable({ user }: { user: User }) {
 
   type Users = {
     name: string;
@@ -23,61 +23,47 @@ export default function ContainerTable( {user}: {user: User} ) {
 
   useEffect(() => {
 
-    const date = new Date();
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-
     const fetchData = async () => {
-
-      const { data: consulta, error: errorConsulta } = await supabase
+      const { data: dataProfile, error: errorProfile } = await supabase
         .from('profiles')
-        .select('user_id, name, estado, email, image')
-        .neq('user_id', user.id);
+        .select('id, full_name, email, image, estado, fichaje_jornada(id, hora_aprox_salida, created_at, fichaje_eventos(hora, localizacion))')
+        .neq('user_id', user.id)
 
-      if (errorConsulta) {
-        console.log('Error fetching auth users: ', errorConsulta);
-        return;
+      if (errorProfile) {
+        console.log('Error fetching Profile: ', errorProfile);
       }
 
-      if (consulta && consulta.length > 0) {
-        //console.log(consulta)
+      if (dataProfile && dataProfile.length > 0) {
+        const usersData = [];
 
-        const usersData: Users[] = [];
+        for (let i = 0; i < dataProfile.length; i++) {
+          const jornadas = dataProfile[i].fichaje_jornada;
+          const ultimaJornada = jornadas?.[jornadas.length - 1];
+          const eventos = ultimaJornada?.fichaje_eventos;
 
-        for (let i = 0; i < consulta.length; i++) {
-          const { data: consulta2, error: errorConsulta2 } = await supabase
-            .from('vista_fichajes')
-            .select('hora, localizacion, hora_aprox_salida')
-            .eq('user_id', consulta[i].user_id)
-            .eq('fecha', `${year}-${month}-${day}`)
+          const localizacion = eventos && eventos.length > 0 ? eventos[eventos.length - 1].localizacion : "-";
 
-          if (errorConsulta2) {
-            console.log('Error consulta Vista: ', errorConsulta2)
-          }
+          const hora = eventos && eventos.length > 0 ? eventos[0].hora : "-";
 
-          if (consulta2 && consulta2.length > 0) {
-            console.log(consulta2)
-            usersData.push({
-              name: consulta[i].name,
-              email: consulta[i].email,
-              estado: consulta[i].estado,
-              image: consulta[i].image,
-              localizacion: consulta2[consulta2.length - 1].localizacion,
-              hora: consulta2[0].hora,
-              hora_aprox_salida: consulta2[consulta2.length - 1].hora_aprox_salida,
-            });
-          }
+          const hora_aprox_salida = ultimaJornada?.hora_aprox_salida ?? "-";
+
+          usersData.push({
+            name: dataProfile[i].full_name,
+            email: dataProfile[i].email,
+            estado: dataProfile[i].estado,
+            image: dataProfile[i].image,
+            localizacion: localizacion,
+            hora: hora,
+            hora_aprox_salida: hora_aprox_salida,
+          });
         }
 
-        setUsers(usersData)
-
+        setUsers(usersData);
       }
-
     }
 
     fetchData();
-  }, []);
+  }, [])
 
   return (
     <div className={styles.table}>
