@@ -101,7 +101,7 @@ export default async function EntradasFichajes({ date }: Prop) {
   
     const horas = Math.floor(totalSegundos / 3600);
     const minutos = Math.floor((totalSegundos % 3600) / 60);
-    return `${horas}:${minutos.toString().padStart(2, '0')}h`;
+    return `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}h`;
   }
   
 
