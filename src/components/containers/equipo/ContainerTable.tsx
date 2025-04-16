@@ -63,7 +63,7 @@ export default function ContainerTable({ equipo }: {equipo: Equipo[] }) {
       });
     }) 
 
-    console.log(usersData);
+    //console.log(usersData);
       
 
     setUsers(usersData);

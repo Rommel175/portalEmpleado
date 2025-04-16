@@ -1,75 +1,50 @@
+import { Fichaje_eventos, Profile } from '@/types/Types';
 import EntradaFichajesItem from './EntradaFichajesItem';
 import styles from './entradasFichajes.module.css';
 import { createClient } from '@/utils/supabase/server';
 
-type Prop = {
-  date: string
-}
-
-type Fichaje = {
-  evento: string,
-  hora: string,
-  localizacion: string
-}
-
-export default async function EntradasFichajes({ date }: Prop) {
+export default async function EntradasFichajes({ date, profile }: { date: string, profile: Profile[] }) {
 
   const supabase = await createClient();
 
-  const fichajes: Fichaje[] = [];
+  const fichajes: Fichaje_eventos[] = [];
 
-  const { data, error } = await supabase.auth.getUser();
+  const { data: dataFichaje, error: errorFichaje } = await supabase
+    .from('fichaje_jornada')
+    .select('*')
+    .eq('profile_id', profile[0].id)
+    .eq('created_at', date)
 
-  if (error) {
-    console.log('Error fetching user: ', error);
+  if (errorFichaje) {
+    console.log('Error fetching fichajes: ', errorFichaje)
   }
 
-  if (data) {
-    const { data: dataProfile, error: errorProfile } = await supabase
-      .from('profiles')
-      .select('id')
-      .eq('user_id', data.user?.id)
+  if (dataFichaje && dataFichaje.length > 0) {
 
-    if (errorProfile) {
-      console.log('Error fetching profile: ', errorProfile);
-    }
-
-    if (dataProfile && dataProfile.length > 0) {
-      const { data: dataFichaje, error: errorFichaje } = await supabase
-        .from('fichaje_jornada')
+    for (let i = 0; i < dataFichaje.length; i++) {
+      const { data: dataEvento, error: errorEvento } = await supabase
+        .from('fichaje_eventos')
         .select('*')
-        .eq('profile_id', dataProfile[0].id)
-        .eq('created_at', date)
+        .eq('fichaje_id', dataFichaje[i].id);
 
-      if (errorFichaje) {
-        console.log('Error fetching fichajes: ', errorFichaje)
+      if (errorEvento) {
+        console.log('Error fetching Evento: ', errorEvento);
       }
 
-      if (dataFichaje && dataFichaje.length > 0) {
+      if (dataEvento && dataEvento.length > 0) {
+        const eventosData = dataEvento.map(item => ({
+          id: item.id,
+          fichaje_id: item.fichaje_id,
+          evento: item.evento,
+          hora: item.hora,
+          localizacion: item.localizacion
+        }));
 
-        for (let i = 0; i < dataFichaje.length; i++) {
-          const { data: dataEvento, error: errorEvento } = await supabase
-            .from('fichaje_eventos')
-            .select('*')
-            .eq('fichaje_id', dataFichaje[i].id);
-
-          if (errorEvento) {
-            console.log('Error fetching Evento: ', errorEvento);
-          }
-
-          if (dataEvento && dataEvento.length > 0) {
-            const eventosData = dataEvento.map(item => ({
-              evento: item.evento,
-              hora: item.hora,
-              localizacion: item.localizacion
-            }));
-
-            fichajes.push(...eventosData);
-          }
-        }
-
+        fichajes.push(...eventosData);
       }
     }
+
+    console.log(fichajes);
   }
 
   function tiempoTotal(fichajes: { evento: string, hora: string }[]) {
@@ -98,7 +73,6 @@ export default async function EntradasFichajes({ date }: Prop) {
     const minutos = Math.floor((totalSegundos % 3600) / 60);
     return `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}h`;
   }
-
 
   return (
     <div className={styles.container}>

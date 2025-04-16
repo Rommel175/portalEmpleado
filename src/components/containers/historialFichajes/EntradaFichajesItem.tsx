@@ -1,3 +1,5 @@
+'use client'
+
 import ButtonModificar from './ButtonModificar';
 import styles from './entradaFichajesItem.module.css'
 
@@ -9,6 +11,7 @@ type Prop = {
 }
 
 export default function EntradaFichajesItem({ action, hour, date, localizacion }: Prop) {
+
     return (
         <div className={styles.item}>
             <h3>{action}</h3>

@@ -1,12 +1,14 @@
 import EntradasFichajes from '@/components/containers/historialFichajes/EntradasFichajes';
 import ContainerOptions from '@/components/containers/ContainerOptions';
 import { createClient } from '@/utils/supabase/server';
+import { redirect } from 'next/navigation';
 
 export default async function Fichajes() {
 
+
   const supabase = await createClient();
 
-  const fichajes: string[] = [];
+  const fechas: string[] = [];
 
   const { data, error } = await supabase.auth.getUser();
 
@@ -14,35 +16,44 @@ export default async function Fichajes() {
     console.log('Error fetching User:', error);
   }
 
-  if (data) {
-    const { data: dataProfile, error: errorProfile } = await supabase
-      .from('profiles')
-      .select('id')
-      .eq('user_id', data.user?.id)
+  const user = data.user;
 
-    if (errorProfile) {
-      console.log('Error fetching Profile: ', errorProfile)
-    }
+  if (!user) {
+    await supabase.auth.signOut();
+    redirect('/login');
+  }
 
-    if (dataProfile && dataProfile.length > 0) {
-      const { data: dataJornada, error: errorJornada } = await supabase
-        .from('fichaje_jornada')
-        .select('*')
-        .eq('profile_id', dataProfile[0].id)
-        .order('created_at', {ascending: false});
+  let profile = [];
 
-      if (errorJornada) {
-        console.log('Error fetching Jornada: ', errorJornada);
-      }
+  const { data: dataProfile, error: errorProfile } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('user_id', data.user?.id)
 
-      if (dataJornada && dataJornada.length > 0) {
+  if (errorProfile) {
+    console.log('Error fetching Profile: ', errorProfile)
+  }
 
-        for (let i = 0; i < dataJornada.length; i++) {
-          fichajes.push(dataJornada[i].created_at);
-        }
-      }
+  if (dataProfile && dataProfile.length > 0) {
+    profile = dataProfile
+  } else {
+    await supabase.auth.signOut();
+    redirect('/login');
+  }
 
-      
+  const { data: dataJornada, error: errorJornada } = await supabase
+    .from('fichaje_jornada')
+    .select('*')
+    .eq('profile_id', profile[0].id)
+    .order('created_at', { ascending: false });
+
+  if (errorJornada) {
+    console.log('Error fetching Jornada: ', errorJornada);
+  }
+
+  if (dataJornada && dataJornada.length > 0) {
+    for (let i = 0; i < dataJornada.length; i++) {
+      fechas.push(dataJornada[i].created_at);
     }
   }
 
@@ -50,8 +61,8 @@ export default async function Fichajes() {
     <>
       <ContainerOptions urlExportar={'#'} usuarios={false} />
       {
-        fichajes.map((fecha) => {
-          return <EntradasFichajes key={fecha} date={fecha}/>
+        fechas.map((fecha) => {
+          return <EntradasFichajes key={fecha} date={fecha} profile={profile} />
         })
       }
 
