@@ -1,7 +1,6 @@
 import Image from 'next/image';
 import styles from './navbarItem.module.css';
 import Link from 'next/link';
-import { User } from '@supabase/supabase-js';
 
 export default function NavbarItem( {image} : {image: string} ) {
     return (

@@ -1,4 +1,3 @@
-import { User } from '@supabase/supabase-js';
 import styles from './navbar.module.css';
 import NavbarItem from './NavbarItem';
 
