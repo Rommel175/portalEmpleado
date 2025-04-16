@@ -1,7 +1,7 @@
 import styles from './sidebar.module.css'
 import SidebarItemComponent from './SidebarItem';
 
-export default function SidebarComponent() {
+export default function SidebarComponent( {is_admin} : {is_admin: boolean} ) {
     return (
         <nav className={styles.nav}>
             <header className={styles.header}>
@@ -35,7 +35,7 @@ export default function SidebarComponent() {
                 <h1>PORTAL EMPLEADO</h1>
             </header>
 
-            <SidebarItemComponent/>
+            <SidebarItemComponent is_admin={is_admin} />
         </nav>
     );
 }

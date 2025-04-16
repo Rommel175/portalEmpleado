@@ -1,18 +1,17 @@
 'use client'
 
-import { User } from "@supabase/supabase-js";
 import styles from './containerFichaje.module.css'
 import ContainerHeader from "../../ContainerHeader";
 import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
+import { Profile } from "@/types/Types";
 
-export default function ContainerFichaje({ estado, setEstado, user, localizacionFichaje }: { estado: string, setEstado: React.Dispatch<React.SetStateAction<string>>, user: User, localizacionFichaje: string }) {
+export default function ContainerFichaje({ estado, setEstado, profile, localizacionFichaje }: { estado: string, setEstado: React.Dispatch<React.SetStateAction<string>>, profile: Profile[], localizacionFichaje: string }) {
 
     const [isOpen, setIsOpen] = useState(false);
     const [isRunning, setRunning] = useState<boolean>(false);
     const [time, setTime] = useState<number>(0);
     const [currentDate, setCurrentDate] = useState<string>("");
-    const [idProfile, setIdProfile] = useState('');
     const supabase = createClient();
 
     //Acciones Modal Finalizar jornada
@@ -52,23 +51,6 @@ export default function ContainerFichaje({ estado, setEstado, user, localizacion
 
         setCurrentDate(formatDate);
 
-        const fetchProfile = async() => {
-            const { data, error } = await supabase
-                .from('profiles')
-                .select('id')
-                .eq('user_id', user.id);
-
-            if (error) {
-                console.log('Error fetching Profile: ', error)
-            }    
-
-            if (data && data.length > 0) {
-                setIdProfile(data[0].id);
-            }
-        }
-
-        fetchProfile();
-
     }, []);
 
     //AL cambiar el estado fichaje realizar las accions del timer
@@ -106,7 +88,7 @@ export default function ContainerFichaje({ estado, setEstado, user, localizacion
             .from('fichaje_jornada')
             .select('id')
             .eq('created_at', `${year}-${month}-${day}`)
-            .eq('profile_id', idProfile)
+            .eq('profile_id', profile[0].id)
 
         if (error) {
             console.log('Error fetching fichaje: ', error);
@@ -115,7 +97,7 @@ export default function ContainerFichaje({ estado, setEstado, user, localizacion
         if (!data || data.length == 0) {
             const { error: errorInsertFichaje } = await supabase
                 .from('fichaje_jornada')
-                .insert({ created_at: `${year}-${month}-${day}`, profile_id: idProfile })
+                .insert({ created_at: `${year}-${month}-${day}`, profile_id: profile[0].id, hora: formatHour })
 
             if (errorInsertFichaje) {
                 console.log('Error insert fichaje: ', errorInsertFichaje)
@@ -124,7 +106,7 @@ export default function ContainerFichaje({ estado, setEstado, user, localizacion
             const { data: dataFichaje, error: errorFichaje } = await supabase
                 .from('fichaje_jornada')
                 .select('id')
-                .eq('profile_id', idProfile)
+                .eq('profile_id', profile[0].id)
                 .eq('created_at', `${year}-${month}-${day}`)
 
             if (errorFichaje) {
@@ -142,29 +124,17 @@ export default function ContainerFichaje({ estado, setEstado, user, localizacion
                     console.log('Error insert Fichaje_event: ', errorInsertFichajeEvent)
                 }
 
-                const { data: dataEstado, error: errorEstado } = await supabase
+                const { error: errorUpdatingEstado } = await supabase
                     .from('profiles')
-                    .select('id')
-                    .eq('user_id', user.id)
+                    .update({ estado: 'Activo' })
+                    .eq('id', profile[0].id)
 
-                if (errorEstado) {
-                    console.log('Error fetching esatdo: ', errorEstado);
+                setEstado('Activo')
+
+                if (errorUpdatingEstado) {
+                    console.log('Error updating estado: ', errorUpdatingEstado)
                 }
 
-                if (dataEstado && dataEstado.length > 0) {
-                    const profileId = dataEstado[0].id;
-
-                    const { error: errorUpdatingEstado } = await supabase
-                        .from('profiles')
-                        .update({ estado: 'Activo' })
-                        .eq('id', profileId)
-
-                    setEstado('Activo')
-
-                    if (errorUpdatingEstado) {
-                        console.log('Error updating estado: ', errorUpdatingEstado)
-                    }
-                }
             }
 
         } else {
@@ -184,29 +154,17 @@ export default function ContainerFichaje({ estado, setEstado, user, localizacion
                 console.log('Error insert Fichaje_event: ', errorInsertFichajeEvent)
             }
 
-            const { data: dataEstado, error: errorEstado } = await supabase
+            const { error: errorUpdatingEstado } = await supabase
                 .from('profiles')
-                .select('id')
-                .eq('user_id', user.id)
+                .update({ estado: 'Activo' })
+                .eq('id', profile[0].id)
 
-            if (errorEstado) {
-                console.log('Error fetching esatdo: ', errorEstado);
+            setEstado('Activo')
+
+            if (errorUpdatingEstado) {
+                console.log('Error updating estado: ', errorUpdatingEstado)
             }
 
-            if (dataEstado && dataEstado.length > 0) {
-                const profileId = dataEstado[0].id;
-
-                const { error: errorUpdatingEstado } = await supabase
-                    .from('profiles')
-                    .update({ estado: 'Activo' })
-                    .eq('id', profileId)
-
-                setEstado('Activo')
-
-                if (errorUpdatingEstado) {
-                    console.log('Error updating estado: ', errorUpdatingEstado)
-                }
-            }
         }
 
     };
@@ -233,7 +191,7 @@ export default function ContainerFichaje({ estado, setEstado, user, localizacion
             .from('fichaje_jornada')
             .select('id')
             .eq('created_at', `${year}-${month}-${day}`)
-            .eq('profile_id', idProfile)
+            .eq('profile_id', profile[0].id)
 
         if (error) {
             console.log('Error fetching fichaje: ', error);
@@ -250,33 +208,19 @@ export default function ContainerFichaje({ estado, setEstado, user, localizacion
                 console.log('Error insert Fichaje Evento: ', errorInsertFichajeEvent);
             }
 
-            const { data: dataEstado, error: errorEstado } = await supabase
+            const { error: updateError } = await supabase
                 .from('profiles')
-                .select('id')
-                .eq('user_id', user.id);
+                .update({ estado: 'Pausa' })
+                .eq('id', profile[0].id);
 
-            if (errorEstado) {
-                console.error('Error fetching state:', error);
+            setEstado('Pausa')
+
+            if (updateError) {
+                console.error('Error updating fichaje:', updateError);
                 return;
             }
 
-            if (dataEstado && dataEstado.length > 0) {
-                const profileId = dataEstado[0].id;
-                //console.log(fichajeId)
 
-                const { error: updateError } = await supabase
-                    .from('profiles')
-                    .update({ estado: 'Pausa' })
-                    .eq('id', profileId);
-
-                setEstado('Pausa')
-
-                if (updateError) {
-                    console.error('Error updating fichaje:', updateError);
-                    return;
-                }
-
-            }
         }
     }
 
@@ -302,7 +246,7 @@ export default function ContainerFichaje({ estado, setEstado, user, localizacion
             .from('fichaje_jornada')
             .select('id')
             .eq('created_at', `${year}-${month}-${day}`)
-            .eq('profile_id', idProfile)
+            .eq('profile_id', profile[0].id)
 
         if (error) {
             console.log('Error fetching fichaje: ', error);
@@ -319,33 +263,19 @@ export default function ContainerFichaje({ estado, setEstado, user, localizacion
                 console.log('Error insert Fichaje Evento: ', errorInsertFichajeEvent);
             }
 
-            const { data: dataEstado, error: errorEstado } = await supabase
+            const { error: updateError } = await supabase
                 .from('profiles')
-                .select('id')
-                .eq('user_id', user.id);
+                .update({ estado: 'Activo' })
+                .eq('id', profile[0].id);
 
-            if (errorEstado) {
-                console.error('Error fetching state:', error);
+            setEstado('Activo')
+
+            if (updateError) {
+                console.error('Error updating fichaje:', updateError);
                 return;
             }
 
-            if (dataEstado && dataEstado.length > 0) {
-                const profileId = dataEstado[0].id;
-                //console.log(fichajeId)
 
-                const { error: updateError } = await supabase
-                    .from('profiles')
-                    .update({ estado: 'Activo' })
-                    .eq('id', profileId);
-
-                setEstado('Activo')
-
-                if (updateError) {
-                    console.error('Error updating fichaje:', updateError);
-                    return;
-                }
-
-            }
         }
     }
 
@@ -371,7 +301,7 @@ export default function ContainerFichaje({ estado, setEstado, user, localizacion
             .from('fichaje_jornada')
             .select('id')
             .eq('created_at', `${year}-${month}-${day}`)
-            .eq('profile_id', idProfile)
+            .eq('profile_id', profile[0].id)
 
         if (error) {
             console.log('Error fetching fichaje: ', error);
@@ -421,32 +351,18 @@ export default function ContainerFichaje({ estado, setEstado, user, localizacion
 
             }
 
-            const { data: dataEstado, error: errorEstado } = await supabase
+            const { error: updateError } = await supabase
                 .from('profiles')
-                .select('id')
-                .eq('user_id', user.id);
+                .update({ estado: 'Jornada Finalizada' })
+                .eq('id', profile[0].id);
 
-            if (errorEstado) {
-                console.error('Error fetching state:', error);
+            setEstado('Jornada Finalizada');
+
+            if (updateError) {
+                console.error('Error updating fichaje:', updateError);
                 return;
             }
 
-            if (dataEstado && dataEstado.length > 0) {
-                const profileId = dataEstado[0].id;
-                //console.log(fichajeId)
-
-                const { error: updateError } = await supabase
-                    .from('profiles')
-                    .update({ estado: 'Jornada Finalizada' })
-                    .eq('id', profileId);
-
-                setEstado('Jornada Finalizada');
-
-                if (updateError) {
-                    console.error('Error updating fichaje:', updateError);
-                    return;
-                }
-            }
         }
     }
 

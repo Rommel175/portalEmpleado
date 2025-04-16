@@ -4,37 +4,15 @@ import { createClient } from '@/utils/supabase/client';
 import styles from './containerTable.module.css'
 import TableItem from './TableItem';
 import { useEffect, useState } from 'react';
-import { RealtimePostgresChangesPayload, User } from '@supabase/supabase-js';
+import { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
+import { Equipo, Fichaje_eventos, Fichaje_jornada, Profile } from '@/types/Types';
 
-export default function ContainerTable({ user }: { user: User }) {
-
-  type ProfileSupabase = {
-    id: string,
-    name: string,
-    email: string,
-    estado: string,
-    image: string
-  }
-
-  type JornadaSupabase = {
-    id: string,
-    hora_aprox_salida: string,
-    created_at: string,
-    profile_id: string
-  }
-
-  type EventosSupabase = {
-    id: string,
-    hora: string,
-    localizacion: string
-    fichaje_id: string,
-    evento: string
-  }
+export default function ContainerTable({ equipo }: {equipo: Equipo[] }) {
 
   type Users = {
-    user_id: string,
-    jornada_id: string,
-    //evento_id: string,
+    profile_id: string,
+    fichaje_id: string,
+    evento_id: string,
     name: string;
     email: string;
     estado: string;
@@ -58,52 +36,37 @@ export default function ContainerTable({ user }: { user: User }) {
 
     setCurrentDate(`${year}-${month}-${day}`);
 
-    const fetchData = async () => {
-      const { data: dataProfile, error: errorProfile } = await supabase
-        .from('profiles')
-        .select('id, full_name, email, image, estado, fichaje_jornada(id, hora_aprox_salida, created_at, profile_id,fichaje_eventos(id, hora, localizacion, fichaje_id))')
-        .neq('user_id', user.id)
 
-      if (errorProfile) {
-        console.log('Error fetching Profile: ', errorProfile);
-      }
 
-      if (dataProfile && dataProfile.length > 0) {
-        const usersData = [];
+    const usersData: Users[] = [];
 
-        for (let i = 0; i < dataProfile.length; i++) {
-          const jornadas = dataProfile[i].fichaje_jornada;
-          const ultimaJornada = jornadas?.[jornadas.length - 1];
-          if (ultimaJornada.created_at === `${year}-${month}-${day}`) {
-            console.log('AAAA')
-          }
-          const eventos = ultimaJornada?.fichaje_eventos.sort((a, b) => a.id - b.id);
+    equipo.map((equipoItem) => {
+      const jornadas = equipoItem.fichaje_jornada;
+      const ultimaJornada = jornadas?.[jornadas.length - 1];
+      const eventos = ultimaJornada?.fichaje_eventos.sort((a, b) => Number(a.id) - Number(b.id));
 
-          const localizacion = eventos && eventos.length > 0 ? eventos[eventos.length - 1].localizacion : "-";
+      const localizacion = eventos && eventos.length > 0 ? eventos[eventos.length - 1].localizacion : '-';
+      const hora = ultimaJornada?.hora ?? '-';
+      const hora_aprox_salida = ultimaJornada?.hora_aprox_salida ?? '-';
+      usersData.push({
+        profile_id: equipoItem.id,
+        fichaje_id: ultimaJornada?.id,
+        evento_id: eventos?.[eventos.length - 1].id,
+        name: equipoItem.full_name,
+        email: equipoItem.email,
+        estado: equipoItem.estado,
+        image: equipoItem.image,
+        localizacion,
+        hora,
+        hora_aprox_salida,
+        date: ultimaJornada?.created_at
+      });
+    }) 
 
-          const hora = eventos && eventos.length > 0 ? eventos[0].hora : "-";
+    console.log(usersData);
+      
 
-          const hora_aprox_salida = ultimaJornada?.hora_aprox_salida ?? "-";
-
-          usersData.push({
-            user_id: dataProfile[i].id,
-            jornada_id: ultimaJornada?.id,
-            name: dataProfile[i].full_name,
-            email: dataProfile[i].email,
-            estado: dataProfile[i].estado,
-            image: dataProfile[i].image,
-            localizacion: localizacion,
-            hora: hora,
-            hora_aprox_salida: hora_aprox_salida,
-            date: ultimaJornada.created_at
-          });
-        }
-
-        setUsers(usersData);
-      }
-    }
-
-    fetchData();
+    setUsers(usersData);
 
     const profilesRealTime = supabase
       .channel('realtime-profiles')
@@ -111,12 +74,12 @@ export default function ContainerTable({ user }: { user: User }) {
         event: 'UPDATE',
         schema: 'public',
         table: 'profiles',
-      }, (payload: RealtimePostgresChangesPayload<ProfileSupabase>) => {
+      }, (payload: RealtimePostgresChangesPayload<Profile>) => {
         console.log(payload);
         switch (payload.eventType) {
           case 'UPDATE':
             const updatedItem = payload.new;
-            setUsers((prevState) => prevState.map(user => user.user_id === updatedItem.id ? { ...user, estado: updatedItem.estado } : user));
+            setUsers((prevState) => prevState.map(user => user.profile_id === updatedItem.id ? { ...user, estado: updatedItem.estado } : user));
             break;
         }
       })
@@ -128,16 +91,16 @@ export default function ContainerTable({ user }: { user: User }) {
         event: '*',
         schema: 'public',
         table: 'fichaje_jornada',
-      }, (payload: RealtimePostgresChangesPayload<JornadaSupabase>) => {
+      }, (payload: RealtimePostgresChangesPayload<Fichaje_jornada>) => {
         console.log(payload);
         switch (payload.eventType) {
           case 'INSERT':
             const insertItem = payload.new;
-            setUsers((prevState) => prevState.map(user => user.user_id === insertItem.profile_id ? { ...user, hora_aprox_salida: insertItem.hora_aprox_salida } : user))
+            setUsers((prevState) => prevState.map(user => user.profile_id === insertItem.profile_id ? { ...user, hora_aprox_salida: insertItem.hora_aprox_salida, hora: insertItem.hora } : user))
             break;
           case 'UPDATE':
             const updatedItem = payload.new;
-            setUsers((prevState) => prevState.map(user => user.jornada_id === updatedItem.id ? { ...user, hora_aprox_salida: updatedItem.hora_aprox_salida } : user))
+            setUsers((prevState) => prevState.map(user => user.profile_id === updatedItem.id ? { ...user, hora_aprox_salida: updatedItem.hora_aprox_salida, hora: updatedItem.hora } : user))
             break;
         }
       })
@@ -150,25 +113,16 @@ export default function ContainerTable({ user }: { user: User }) {
         event: '*',
         schema: 'public',
         table: 'fichaje_eventos',
-      }, (payload: RealtimePostgresChangesPayload<EventosSupabase>) => {
+      }, (payload: RealtimePostgresChangesPayload<Fichaje_eventos>) => {
         console.log(payload);
         switch (payload.eventType) {
           case 'INSERT':
             const insertItem = payload.new;
-            setUsers((prevState) =>
-              prevState.map(user => {
-                if (user.jornada_id === insertItem.fichaje_id) {
-                  const updatedUser = { ...user, localizacion: insertItem.localizacion };
-
-                  if (insertItem.evento === 'Inicio Jornada') {
-                    updatedUser.hora = insertItem.hora;
-                  }
-
-                  return updatedUser;
-                }
-                return user;
-              })
-            );
+            setUsers((prevState) => prevState.map(user => user.fichaje_id === insertItem.fichaje_id ? {...user, localizacion: insertItem.localizacion} : user))
+            break;
+          case 'UPDATE':
+            const updatedItem = payload.new;
+            setUsers((prevState) => prevState.map(user => user.evento_id === updatedItem.id ? {...user, localizacion: updatedItem.localizacion} : user))
             break;
         }
 

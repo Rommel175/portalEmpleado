@@ -1,9 +1,10 @@
-import { User } from '@supabase/supabase-js';
 import ContainerHeader from '../ContainerHeader';
 import styles from './containerEquipo.module.css'
 import ContainerTable from './ContainerTable';
+import { Equipo } from '@/types/Types';
 
-export default function ContainerEquipo( {user} : {user: User} ) {
+export default function ContainerEquipo( {equipo} : {equipo: Equipo[]} ) {
+    console.log(equipo);
     const svg = (
         <svg
             width="24"
@@ -24,7 +25,7 @@ export default function ContainerEquipo( {user} : {user: User} ) {
         <div className={styles.container}>
             <ContainerHeader name='Equipo' svg={svg} />
             <div className={styles.content}>
-                <ContainerTable user={user} />
+                <ContainerTable equipo={equipo} />
             </div>
         </div>
     );
