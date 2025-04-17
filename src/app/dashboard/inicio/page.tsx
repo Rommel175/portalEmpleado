@@ -32,8 +32,6 @@ export default async function HomePage() {
     redirect('/login')
   }
 
-  console.log(profile)
-
   const date = new Date();
   const day = String(date.getDate()).padStart(2, '0');
   const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -56,8 +54,6 @@ export default async function HomePage() {
   }
 
   const fichaje = dataFichaje && dataFichaje.length > 0 ? dataFichaje : [];
-
-  console.log(fichaje)
 
   let eventos = [];
 

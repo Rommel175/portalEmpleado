@@ -43,8 +43,6 @@ export default async function EntradasFichajes({ date, profile }: { date: string
         fichajes.push(...eventosData);
       }
     }
-
-    console.log(fichajes);
   }
 
   function tiempoTotal(fichajes: { evento: string, date: Date }[]) {

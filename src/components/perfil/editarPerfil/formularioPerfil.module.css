@@ -1,0 +1,17 @@
+.form {
+    display: flex;
+    padding: 24px 0px;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    align-self: stretch;
+}
+
+.form > h3 {
+    color: #281D1B;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 24px; /* 120% */
+    letter-spacing: -0.4px;
+}
