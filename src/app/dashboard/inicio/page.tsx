@@ -32,15 +32,23 @@ export default async function HomePage() {
     redirect('/login')
   }
 
+  console.log(profile)
+
   const date = new Date();
   const day = String(date.getDate()).padStart(2, '0');
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const year = date.getFullYear();
 
+  const startDate = new Date(`${year}-${month}-${day}T00:00:00Z`);
+
+  const endDate = new Date(startDate);
+  endDate.setUTCDate(startDate.getUTCDate() + 1);
+
   const { data: dataFichaje, error: errorFichaje } = await supabase
     .from('fichaje_jornada')
     .select('*')
-    .eq('created_at', `${year}-${month}-${day}`)
+    .gte('date', startDate.toISOString())
+    .lt('date', endDate.toISOString())
     .eq('profile_id', profile[0].id);
 
   if (errorFichaje) {
@@ -48,6 +56,8 @@ export default async function HomePage() {
   }
 
   const fichaje = dataFichaje && dataFichaje.length > 0 ? dataFichaje : [];
+
+  console.log(fichaje)
 
   let eventos = [];
 
@@ -67,7 +77,7 @@ export default async function HomePage() {
 
   const { data: dataEquipo, error: errorEquipo } = await supabase
     .from('profiles')
-    .select('id, full_name, email, image, estado, fichaje_jornada(id, hora_aprox_salida, created_at, hora, total_trabajado, profile_id, fichaje_eventos(*))')
+    .select('id, nombre, apellido, email, image, estado, horas_semana, fichaje_jornada(id, date, date_final_aprox,total_trabajado, comentario, profile_id, fichaje_eventos(*))')
     .neq('user_id', user.id);
 
   if (errorEquipo) {
@@ -75,7 +85,6 @@ export default async function HomePage() {
   }
 
   const equipo = dataEquipo && dataEquipo.length > 0 ? dataEquipo : [];
-
 
   return (
     <>

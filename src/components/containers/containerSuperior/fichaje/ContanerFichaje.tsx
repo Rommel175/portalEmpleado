@@ -12,6 +12,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
     const [isRunning, setRunning] = useState<boolean>(false);
     const [time, setTime] = useState<number>(0);
     const [currentDate, setCurrentDate] = useState<string>("");
+    const [horaFinalAprox, setHoraFinalAprox] = useState<Date | null>(null);
     const supabase = createClient();
 
     //Acciones Modal Finalizar jornada
@@ -51,6 +52,12 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
 
         setCurrentDate(formatDate);
 
+        const horasTrabajo = profile[0].horas_semana / 5;
+
+        date.setHours(date.getHours() + horasTrabajo);
+
+        setHoraFinalAprox(date);
+
     }, []);
 
     //AL cambiar el estado fichaje realizar las accions del timer
@@ -79,15 +86,16 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const year = date.getFullYear();
 
-        const formatHour = new Intl.DateTimeFormat("es-ES", {
-            hour: "2-digit",
-            minute: "2-digit"
-        }).format(date);
+        const startDate = new Date(`${year}-${month}-${day}T00:00:00Z`);
+
+        const endDate = new Date(startDate);
+        endDate.setUTCDate(startDate.getUTCDate() + 1);
 
         const { data, error } = await supabase
             .from('fichaje_jornada')
             .select('id')
-            .eq('created_at', `${year}-${month}-${day}`)
+            .gte('date', startDate.toISOString())
+            .lt('date', endDate.toISOString())
             .eq('profile_id', profile[0].id)
 
         if (error) {
@@ -97,7 +105,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
         if (!data || data.length == 0) {
             const { error: errorInsertFichaje } = await supabase
                 .from('fichaje_jornada')
-                .insert({ created_at: `${year}-${month}-${day}`, profile_id: profile[0].id, hora: formatHour })
+                .insert({ date: date.toISOString(), profile_id: profile[0].id, date_final_aprox: horaFinalAprox?.toISOString() })
 
             if (errorInsertFichaje) {
                 console.log('Error insert fichaje: ', errorInsertFichaje)
@@ -107,18 +115,19 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
                 .from('fichaje_jornada')
                 .select('id')
                 .eq('profile_id', profile[0].id)
-                .eq('created_at', `${year}-${month}-${day}`)
+                .gte('date', startDate.toISOString())
+                .lt('date', endDate.toISOString())
 
             if (errorFichaje) {
                 console.log('Error fetching fichaje');
             }
 
             if (dataFichaje && dataFichaje.length > 0) {
-                const idFichaje = dataFichaje[0].id;
+                const fichajeId = dataFichaje[0].id;
 
                 const { error: errorInsertFichajeEvent } = await supabase
                     .from('fichaje_eventos')
-                    .insert({ fichaje_id: idFichaje, evento: 'Inicio Jornada', hora: formatHour, localizacion: localizacionFichaje });
+                    .insert({ fichaje_id: fichajeId, evento: 'Inicio Jornada', date: date.toISOString(), localizacion: localizacionFichaje });
 
                 if (errorInsertFichajeEvent) {
                     console.log('Error insert Fichaje_event: ', errorInsertFichajeEvent)
@@ -139,16 +148,11 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
 
         } else {
 
-            const formatHour = new Intl.DateTimeFormat("es-ES", {
-                hour: "2-digit",
-                minute: "2-digit"
-            }).format(date)
-
             const fichajeId = data[0].id;
 
             const { error: errorInsertFichajeEvent } = await supabase
                 .from('fichaje_eventos')
-                .insert({ fichaje_id: fichajeId, evento: 'Inicio Jornada', hora: formatHour, localizacion: localizacionFichaje });
+                .insert({ fichaje_id: fichajeId, evento: 'Inicio Jornada', date: date.toISOString(), localizacion: localizacionFichaje });
 
             if (errorInsertFichajeEvent) {
                 console.log('Error insert Fichaje_event: ', errorInsertFichajeEvent)
@@ -182,15 +186,16 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const year = date.getFullYear();
 
-        const formatHour = new Intl.DateTimeFormat("es-ES", {
-            hour: "2-digit",
-            minute: "2-digit"
-        }).format(date)
+        const startDate = new Date(`${year}-${month}-${day}T00:00:00Z`);
+
+        const endDate = new Date(startDate);
+        endDate.setUTCDate(startDate.getUTCDate() + 1);
 
         const { data, error } = await supabase
             .from('fichaje_jornada')
             .select('id')
-            .eq('created_at', `${year}-${month}-${day}`)
+            .gte('date', startDate.toISOString())
+            .lt('date', endDate.toISOString())
             .eq('profile_id', profile[0].id)
 
         if (error) {
@@ -202,7 +207,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
 
             const { error: errorInsertFichajeEvent } = await supabase
                 .from('fichaje_eventos')
-                .insert({ fichaje_id: fichajeId, evento: 'Inicio Pausa', hora: formatHour, localizacion: localizacionFichaje });
+                .insert({ fichaje_id: fichajeId, evento: 'Inicio Pausa', date: date.toISOString(), localizacion: localizacionFichaje });
 
             if (errorInsertFichajeEvent) {
                 console.log('Error insert Fichaje Evento: ', errorInsertFichajeEvent);
@@ -237,15 +242,16 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const year = date.getFullYear();
 
-        const formatHour = new Intl.DateTimeFormat("es-ES", {
-            hour: "2-digit",
-            minute: "2-digit"
-        }).format(date)
+        const startDate = new Date(`${year}-${month}-${day}T00:00:00Z`);
+
+        const endDate = new Date(startDate);
+        endDate.setUTCDate(startDate.getUTCDate() + 1);
 
         const { data, error } = await supabase
             .from('fichaje_jornada')
             .select('id')
-            .eq('created_at', `${year}-${month}-${day}`)
+            .gte('date', startDate.toISOString())
+            .lt('date', endDate.toISOString())
             .eq('profile_id', profile[0].id)
 
         if (error) {
@@ -257,7 +263,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
 
             const { error: errorInsertFichajeEvent } = await supabase
                 .from('fichaje_eventos')
-                .insert({ fichaje_id: fichajeId, evento: 'Fin Pausa', hora: formatHour, localizacion: localizacionFichaje });
+                .insert({ fichaje_id: fichajeId, evento: 'Fin Pausa', date: date.toISOString(), localizacion: localizacionFichaje });
 
             if (errorInsertFichajeEvent) {
                 console.log('Error insert Fichaje Evento: ', errorInsertFichajeEvent);
@@ -274,8 +280,6 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
                 console.error('Error updating fichaje:', updateError);
                 return;
             }
-
-
         }
     }
 
@@ -292,15 +296,16 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const year = date.getFullYear();
 
-        const formatHour = new Intl.DateTimeFormat("es-ES", {
-            hour: "2-digit",
-            minute: "2-digit"
-        }).format(date)
+        const startDate = new Date(`${year}-${month}-${day}T00:00:00Z`);
+
+        const endDate = new Date(startDate);
+        endDate.setUTCDate(startDate.getUTCDate() + 1);
 
         const { data, error } = await supabase
             .from('fichaje_jornada')
             .select('id')
-            .eq('created_at', `${year}-${month}-${day}`)
+            .gte('date', startDate.toISOString())
+            .lt('date', endDate.toISOString())
             .eq('profile_id', profile[0].id)
 
         if (error) {
@@ -325,7 +330,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
 
                 const { error: errorInsertFichajeEvent } = await supabase
                     .from('fichaje_eventos')
-                    .insert({ fichaje_id: fichajeId, evento: 'Fin Pausa', hora: formatHour, localizacion: localizacionFichaje });
+                    .insert({ fichaje_id: fichajeId, evento: 'Fin Pausa', date: date.toISOString(), localizacion: localizacionFichaje });
 
                 if (errorInsertFichajeEvent) {
                     console.log('Error insert Fichaje Evento: ', errorInsertFichajeEvent);
@@ -333,7 +338,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
 
                 const { error: errorInsertFichajeEvent2 } = await supabase
                     .from('fichaje_eventos')
-                    .insert({ fichaje_id: fichajeId, evento: 'Jornada Finalizada', hora: formatHour, localizacion: localizacionFichaje });
+                    .insert({ fichaje_id: fichajeId, evento: 'Jornada Finalizada', date: date.toISOString(), localizacion: localizacionFichaje });
 
                 if (errorInsertFichajeEvent2) {
                     console.log('Error insert Fichaje Evento: ', errorInsertFichajeEvent2);
@@ -343,7 +348,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
 
                 const { error: errorInsertFichajeEvent } = await supabase
                     .from('fichaje_eventos')
-                    .insert({ fichaje_id: fichajeId, evento: 'Jornada Finalizada', hora: formatHour, localizacion: localizacionFichaje });
+                    .insert({ fichaje_id: fichajeId, evento: 'Jornada Finalizada', date: date.toISOString(), localizacion: localizacionFichaje });
 
                 if (errorInsertFichajeEvent) {
                     console.log('Error insert Fichaje Evento: ', errorInsertFichajeEvent);
@@ -452,8 +457,23 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
                         </div>
                     </div>
                     <div className={styles.buttons}>
+
                         {
-                            (estado == 'Activo') && (
+                            (!profile[0].alta) && (
+                                <>
+                                    <button className={styles.entrada} onClick={startTimer} style={{ cursor: 'not-allowed' }} disabled>
+                                        <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M8.5 6L18.5 12L8.5 18V6Z" fill="white" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                        FICHAR ENTRADA
+                                    </button>
+                                    <button className={styles.salida} onClick={stopTimer} disabled>FICHAR SALIDA</button>
+                                </>
+                            )
+                        }
+
+                        {
+                            ((estado == 'Activo') && profile[0].alta) && (
                                 <>
                                     <button className={styles.pausa} onClick={pauseTimer}>
                                         <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -468,7 +488,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
                         }
 
                         {
-                            (estado == 'Inactivo' || estado == 'Jornada Finalizada') && (
+                            ((estado == 'Inactivo' || estado == 'Jornada Finalizada') && profile[0].alta) && (
                                 <>
                                     <button className={styles.entrada} onClick={startTimer}>
                                         <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -482,7 +502,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
                         }
 
                         {
-                            (estado == 'Pausa') && (
+                            ((estado == 'Pausa') && profile[0].alta) && (
                                 <>
                                     <button className={styles.entrada} onClick={reanudarTimer}>
                                         <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">

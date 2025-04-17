@@ -13,7 +13,7 @@ export default function ContainerSuperior({ profile, fichaje, eventos }: { profi
 
     return (
         <div className={styles.containerSuperior}>
-            <ContainerDatos estado={estado} localizacionFichaje={localizacionFichaje} setLocalizacionFichaje={setLocalizacionFichaje} horaInicio={fichaje[0]?.hora || '-'} horaFinalAprox={fichaje[0]?.hora_aprox_salida || '-'} profile={profile}/>
+            <ContainerDatos estado={estado} localizacionFichaje={localizacionFichaje} setLocalizacionFichaje={setLocalizacionFichaje} horaInicio={fichaje[0]?.date || '-'} horaFinalAprox={fichaje[0]?.date_final_aprox || '-'} profile={profile}/>
             <ContainerFichaje profile={profile} estado={estado} setEstado={setEstado} localizacionFichaje={localizacionFichaje} />
         </div>
     );

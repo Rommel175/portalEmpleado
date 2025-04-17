@@ -27,6 +27,8 @@ export async function GET(request: Request) {
 
   const user = data.user
   const email = user?.user_metadata.email;
+  const name = user?.user_metadata.full_name;
+  const full_name = name.split(' ');
 
   if (email == 'rommel.xana@gmail.com' || email == 'example.xana@gmail.com' || email.endsWith('@xanasystem.com') || email.endsWith('@xanatechnolgies.com')) {
 
@@ -42,7 +44,7 @@ export async function GET(request: Request) {
     if (!dataProfile || dataProfile.length === 0) {
       const { data: dataInsertProfile, error: errorInsertProfile } = await supabase
         .from('profiles')
-        .insert({ user_id: user.id, full_name: user.user_metadata.full_name, email: user.email, image: user.user_metadata.avatar_url, estado: 'Inactivo', alta: false })
+        .insert({ user_id: user.id, nombre: full_name[0], apellido: full_name[1], email: user.email, image: user.user_metadata.avatar_url, estado: 'Inactivo', alta: false, is_admin: false })
 
       if (errorInsertProfile) {
         console.log('Error insert Profile: ', errorInsertProfile);

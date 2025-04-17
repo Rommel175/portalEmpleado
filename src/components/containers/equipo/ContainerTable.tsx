@@ -7,10 +7,10 @@ import { useEffect, useState } from 'react';
 import { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 import { Equipo, Fichaje_eventos, Fichaje_jornada, Profile } from '@/types/Types';
 
-export default function ContainerTable({ equipo }: {equipo: Equipo[] }) {
+export default function ContainerTable({ equipo }: { equipo: Equipo[] }) {
 
   type Users = {
-    profile_id: string,
+    id: string,
     fichaje_id: string,
     evento_id: string,
     name: string;
@@ -20,7 +20,7 @@ export default function ContainerTable({ equipo }: {equipo: Equipo[] }) {
     hora: string,
     hora_aprox_salida: string,
     localizacion: string,
-    date: string
+    fecha: string
   }
 
   const [users, setUsers] = useState<Users[]>([]);
@@ -32,11 +32,8 @@ export default function ContainerTable({ equipo }: {equipo: Equipo[] }) {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
-    //console.log(`${year}-${month}-${day}`);
 
     setCurrentDate(`${year}-${month}-${day}`);
-
-
 
     const usersData: Users[] = [];
 
@@ -46,25 +43,25 @@ export default function ContainerTable({ equipo }: {equipo: Equipo[] }) {
       const eventos = ultimaJornada?.fichaje_eventos.sort((a, b) => Number(a.id) - Number(b.id));
 
       const localizacion = eventos && eventos.length > 0 ? eventos[eventos.length - 1].localizacion : '-';
-      const hora = ultimaJornada?.hora ?? '-';
-      const hora_aprox_salida = ultimaJornada?.hora_aprox_salida ?? '-';
+      const hora = ultimaJornada?.date ?? '-';
+      const hora_aprox_salida = ultimaJornada?.date_final_aprox ?? '-';
       usersData.push({
-        profile_id: equipoItem.id,
+        id: equipoItem.id,
         fichaje_id: ultimaJornada?.id,
         evento_id: eventos?.[eventos.length - 1].id,
-        name: equipoItem.full_name,
+        name: equipoItem.nombre,
         email: equipoItem.email,
         estado: equipoItem.estado,
         image: equipoItem.image,
         localizacion,
-        hora,
-        hora_aprox_salida,
-        date: ultimaJornada?.created_at
+        hora: parseHora(hora),
+        hora_aprox_salida: parseHora(hora_aprox_salida),
+        fecha: parseFecha(ultimaJornada?.date)
       });
-    }) 
+    })
 
     //console.log(usersData);
-      
+
 
     setUsers(usersData);
 
@@ -79,7 +76,8 @@ export default function ContainerTable({ equipo }: {equipo: Equipo[] }) {
         switch (payload.eventType) {
           case 'UPDATE':
             const updatedItem = payload.new;
-            setUsers((prevState) => prevState.map(user => user.profile_id === updatedItem.id ? { ...user, estado: updatedItem.estado } : user));
+            console.log(updatedItem.id)
+            setUsers((prevState) => prevState.map(user => user.id === updatedItem.id ? { ...user, estado: updatedItem.estado, name: updatedItem.nombre, email: updatedItem.email, image: updatedItem.image } : user));
             break;
         }
       })
@@ -96,17 +94,18 @@ export default function ContainerTable({ equipo }: {equipo: Equipo[] }) {
         switch (payload.eventType) {
           case 'INSERT':
             const insertItem = payload.new;
-            setUsers((prevState) => prevState.map(user => user.profile_id === insertItem.profile_id ? { ...user, hora_aprox_salida: insertItem.hora_aprox_salida, hora: insertItem.hora } : user))
+            setUsers((prevState) => prevState.map(user => user.id === insertItem.profile_id ? { ...user, hora_aprox_salida: parseHora(insertItem.date_final_aprox), hora: parseHora(insertItem.date), fecha: parseFecha(insertItem.date) } : user))
             break;
           case 'UPDATE':
             const updatedItem = payload.new;
-            setUsers((prevState) => prevState.map(user => user.profile_id === updatedItem.id ? { ...user, hora_aprox_salida: updatedItem.hora_aprox_salida, hora: updatedItem.hora } : user))
+            console.log(parseFecha(updatedItem.date))
+            setUsers((prevState) => prevState.map(user => user.fichaje_id === updatedItem.id ? { ...user, hora_aprox_salida: parseHora(updatedItem.date_final_aprox), hora: parseHora(updatedItem.date), fecha: parseFecha(updatedItem.date) } : user))
+            console.log(users)
             break;
         }
       })
       .subscribe();
 
-    //Arreglar esto:
     const eventosRealTime = supabase
       .channel('realtime-fichaje_eventos')
       .on('postgres_changes', {
@@ -118,11 +117,11 @@ export default function ContainerTable({ equipo }: {equipo: Equipo[] }) {
         switch (payload.eventType) {
           case 'INSERT':
             const insertItem = payload.new;
-            setUsers((prevState) => prevState.map(user => user.fichaje_id === insertItem.fichaje_id ? {...user, localizacion: insertItem.localizacion} : user))
+            setUsers((prevState) => prevState.map(user => user.fichaje_id === insertItem.fichaje_id ? { ...user, localizacion: insertItem.localizacion } : user))
             break;
           case 'UPDATE':
             const updatedItem = payload.new;
-            setUsers((prevState) => prevState.map(user => user.evento_id === updatedItem.id ? {...user, localizacion: updatedItem.localizacion} : user))
+            setUsers((prevState) => prevState.map(user => user.evento_id === updatedItem.id ? { ...user, localizacion: updatedItem.localizacion } : user))
             break;
         }
 
@@ -137,6 +136,16 @@ export default function ContainerTable({ equipo }: {equipo: Equipo[] }) {
     };
 
   }, [])
+
+  function parseHora(hora: string | Date): string {
+    const date = typeof hora === 'string' ? new Date(hora) : hora;
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+
+  function parseFecha(fecha: string | Date): string {
+    const date = typeof fecha === 'string' ? new Date(fecha) : fecha;
+    return date.toISOString().slice(0,10);
+  }
 
   return (
     <div className={styles.table}>
@@ -155,7 +164,7 @@ export default function ContainerTable({ equipo }: {equipo: Equipo[] }) {
 
       {
         users.map((item, index) => {
-          return <TableItem key={index} name={item.name} email={item.email} estado={item.estado} foto={item.image} localizacion={(currentDate == item.date) ? item.localizacion : ' - '} inicio={(currentDate == item.date) ? item.hora : '-'} final={(currentDate == item.date) ? item.hora_aprox_salida : '-'} />
+          return <TableItem key={index} name={item.name} email={item.email} estado={item.estado} foto={item.image} localizacion={ (currentDate == item.fecha) ? item.localizacion : '-'} inicio={ (currentDate == item.fecha) ? item.hora : '-'} final={ (currentDate == item.fecha) ? item.hora_aprox_salida : '-'} />
         })
       }
     </div>
