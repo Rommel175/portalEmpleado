@@ -45,7 +45,7 @@ export default async function Fichajes() {
     .from('fichaje_jornada')
     .select('*')
     .eq('profile_id', profile[0].id)
-    .order('created_at', { ascending: false });
+    .order('date', { ascending: false });
 
   if (errorJornada) {
     console.log('Error fetching Jornada: ', errorJornada);
@@ -53,7 +53,7 @@ export default async function Fichajes() {
 
   if (dataJornada && dataJornada.length > 0) {
     for (let i = 0; i < dataJornada.length; i++) {
-      fechas.push(dataJornada[i].created_at);
+      fechas.push(dataJornada[i].date);
     }
   }
 

@@ -30,11 +30,12 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    position: relative;
 }
 
 .personalImage {
     border-radius: 60px;
-    background: url(https://s3-alpha-sig.figma.com/img/4838/ebf9/9f5d3b04e54d4bda4b727af5ea1e799c?Expires=1743379200&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=OjuiJ9iriZqqOE72l-KP6Dww0UyXc9B5~oomNe-ku1QR-WKTmgYEk~XR4Yy~5V~MbI19w6OyflPM11uPMCXcOxWsYqgjnPTMgz5l785OXlhQxdNPb7xWGmmsO7psdWTdWejBEqynsfqy28~m-GrAtXwhyY3~yo0qiWLyWbQnE3BiSjX0DE30oP3BESuhfHg~v5JAL~DlY8Px5Yty9JsxP5PRJ014RJ6fs4RoQsa9Yu-vyhzBZxaxfqHlg~v61lNCuGBSOxhbrI3QSGkXtdWzW7W9KJMTWdSwNJ7MTQFCUN1~rkYYt5EQEP2C2~f~EwrhSlBisU23jSN4wFepiWJ2gw) lightgray 50% / cover no-repeat;  
+    background: url(https://s3-alpha-sig.figma.com/img/4838/ebf9/9f5d3b04e54d4bda4b727af5ea1e799c?Expires=1743379200&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=OjuiJ9iriZqqOE72l-KP6Dww0UyXc9B5~oomNe-ku1QR-WKTmgYEk~XR4Yy~5V~MbI19w6OyflPM11uPMCXcOxWsYqgjnPTMgz5l785OXlhQxdNPb7xWGmmsO7psdWTdWejBEqynsfqy28~m-GrAtXwhyY3~yo0qiWLyWbQnE3BiSjX0DE30oP3BESuhfHg~v5JAL~DlY8Px5Yty9JsxP5PRJ014RJ6fs4RoQsa9Yu-vyhzBZxaxfqHlg~v61lNCuGBSOxhbrI3QSGkXtdWzW7W9KJMTWdSwNJ7MTQFCUN1~rkYYt5EQEP2C2~f~EwrhSlBisU23jSN4wFepiWJ2gw) lightgray 50% / cover no-repeat;
 }
 
 .personalInfo {
@@ -58,6 +59,30 @@
     font-style: normal;
     font-weight: 400;
     line-height: normal;
+}
+
+.edit {
+    display: flex;
+    width: 20px;
+    height: 20px;
+    padding: 4.889px;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    left: 42px;
+    bottom: 0px;
+    border-radius: 60.5px;
+    border: 0.917px solid #FFFBFA;
+    background: var(--colors-Info, #285FF5);
+}
+
+.edit > a {
+    display: flex;
+    width: 10px;
+    height: 10px;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
 }
 
 .mainContent {
@@ -107,7 +132,8 @@
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
-    line-height: 20px; /* 142.857% */
+    line-height: 20px;
+    /* 142.857% */
 }
 
 .location {
@@ -123,7 +149,8 @@
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
-    line-height: 20px; /* 142.857% */
+    line-height: 20px;
+    /* 142.857% */
 }
 
 .mainContent div:nth-child(3) {

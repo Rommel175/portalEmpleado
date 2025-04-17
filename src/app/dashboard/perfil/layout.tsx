@@ -36,10 +36,16 @@ export default async function PerfilLayout({ children }: { children: React.React
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const year = date.getFullYear();
 
+  const startDate = new Date(`${year}-${month}-${day}T00:00:00Z`);
+
+  const endDate = new Date(startDate);
+  endDate.setUTCDate(startDate.getUTCDate() + 1);
+
   const { data: dataFichaje, error: errorFichaje } = await supabase
     .from('fichaje_jornada')
     .select('*')
-    .eq('created_at', `${year}-${month}-${day}`)
+    .gte('date', startDate.toISOString())
+    .lt('date', endDate.toISOString())
     .eq('profile_id', profile[0].id);
 
   if (errorFichaje) {
