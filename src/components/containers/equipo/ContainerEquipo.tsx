@@ -4,7 +4,6 @@ import ContainerTable from './ContainerTable';
 import { Equipo } from '@/types/Types';
 
 export default function ContainerEquipo( {equipo} : {equipo: Equipo[]} ) {
-    console.log(equipo);
     const svg = (
         <svg
             width="24"

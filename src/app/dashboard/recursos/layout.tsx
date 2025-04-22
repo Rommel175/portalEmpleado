@@ -31,15 +31,25 @@ export default async function RecursosLayout({ children }: { children: React.Rea
     redirect('/login')
   }
 
+  if (!profile[0].is_admin) {
+    redirect('/');
+  }
+
   const date = new Date();
   const day = String(date.getDate()).padStart(2, '0');
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const year = date.getFullYear();
 
+  const startDate = new Date(`${year}-${month}-${day}T00:00:00Z`);
+
+  const endDate = new Date(startDate);
+  endDate.setUTCDate(startDate.getUTCDate() + 1);
+
   const { data: dataFichaje, error: errorFichaje } = await supabase
     .from('fichaje_jornada')
     .select('*')
-    .eq('created_at', `${year}-${month}-${day}`)
+    .gte('date', startDate.toISOString())
+    .lt('date', endDate.toISOString())
     .eq('profile_id', profile[0].id);
 
   if (errorFichaje) {

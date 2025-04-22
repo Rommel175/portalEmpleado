@@ -59,7 +59,7 @@ export default async function Fichajes() {
 
   return (
     <>
-      <ContainerOptions urlExportar={'#'} usuarios={false} />
+      <ContainerOptions urlExportar={'#'} usuarios={false} añadirUsuario={false} />
       {
         fechas.map((fecha) => {
           return <EntradasFichajes key={fecha} date={fecha} profile={profile} />

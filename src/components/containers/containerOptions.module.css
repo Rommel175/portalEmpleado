@@ -71,3 +71,18 @@
 .filtro .tipoRegistro:hover {
     cursor: pointer;
 }
+
+.addUser {
+    display: flex;
+    padding: 8px 12px;
+    align-items: center;
+    gap: 2px;
+    border-radius: 999px;
+    background: var(--blue, #285FF5);
+    color: var(--white, #FFF);
+    text-align: center;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}

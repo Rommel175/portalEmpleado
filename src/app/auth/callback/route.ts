@@ -34,7 +34,7 @@ export async function GET(request: Request) {
 
     const { data: dataProfile, error: errorProfle } = await supabase
       .from('profiles')
-      .select('id')
+      .select('id, image')
       .eq('user_id', user.id)
 
     if (errorProfle) {
@@ -53,6 +53,19 @@ export async function GET(request: Request) {
 
       if (dataInsertProfile) {
         console.log(dataInsertProfile);
+      }
+    } else {
+      const currentImage = dataProfile[0].image;
+
+      if (currentImage !== user.user_metadata.avatar_url) {
+        const { error: errorUpdateImage } = await supabase
+          .from('profiles')
+          .update({ image: user.user_metadata.avatar_url })
+          .eq('user_id', user.id);
+
+        if (errorUpdateImage) {
+          console.log('Error actualizando imagen de perfil: ', errorUpdateImage);
+        }
       }
     }
 

@@ -13,10 +13,11 @@ export default function ContainerTable({ equipo }: { equipo: Equipo[] }) {
     id: string,
     fichaje_id: string,
     evento_id: string,
-    name: string;
-    email: string;
-    estado: string;
-    image: string;
+    nombre: string,
+    apellido: string,
+    email: string,
+    estado: string,
+    image: string,
     hora: string,
     hora_aprox_salida: string,
     localizacion: string,
@@ -38,7 +39,7 @@ export default function ContainerTable({ equipo }: { equipo: Equipo[] }) {
     const usersData: Users[] = [];
 
     equipo.map((equipoItem) => {
-      const jornadas = equipoItem.fichaje_jornada;
+      const jornadas = equipoItem.fichaje_jornada.sort((a, b) => Number(a.id) - Number(b.id));
       const ultimaJornada = jornadas?.[jornadas.length - 1];
       const eventos = ultimaJornada?.fichaje_eventos.sort((a, b) => Number(a.id) - Number(b.id));
 
@@ -49,7 +50,8 @@ export default function ContainerTable({ equipo }: { equipo: Equipo[] }) {
         id: equipoItem.id,
         fichaje_id: ultimaJornada?.id,
         evento_id: eventos?.[eventos.length - 1].id,
-        name: equipoItem.nombre,
+        nombre: equipoItem.nombre,
+        apellido: equipoItem.apellido,
         email: equipoItem.email,
         estado: equipoItem.estado,
         image: equipoItem.image,
@@ -60,9 +62,6 @@ export default function ContainerTable({ equipo }: { equipo: Equipo[] }) {
       });
     })
 
-    //console.log(usersData);
-
-
     setUsers(usersData);
 
     const profilesRealTime = supabase
@@ -72,11 +71,11 @@ export default function ContainerTable({ equipo }: { equipo: Equipo[] }) {
         schema: 'public',
         table: 'profiles',
       }, (payload: RealtimePostgresChangesPayload<Profile>) => {
-        console.log(payload);
+        //console.log(payload);
         switch (payload.eventType) {
           case 'UPDATE':
             const updatedItem = payload.new;
-            console.log(updatedItem.id)
+            //console.log(updatedItem.id)
             setUsers((prevState) => prevState.map(user => user.id === updatedItem.id ? { ...user, estado: updatedItem.estado, name: updatedItem.nombre, email: updatedItem.email, image: updatedItem.image } : user));
             break;
         }
@@ -90,7 +89,7 @@ export default function ContainerTable({ equipo }: { equipo: Equipo[] }) {
         schema: 'public',
         table: 'fichaje_jornada',
       }, (payload: RealtimePostgresChangesPayload<Fichaje_jornada>) => {
-        console.log(payload);
+        //console.log(payload);
         switch (payload.eventType) {
           case 'INSERT':
             const insertItem = payload.new;
@@ -98,9 +97,9 @@ export default function ContainerTable({ equipo }: { equipo: Equipo[] }) {
             break;
           case 'UPDATE':
             const updatedItem = payload.new;
-            console.log(parseFecha(updatedItem.date))
+            //console.log(parseFecha(updatedItem.date))
             setUsers((prevState) => prevState.map(user => user.fichaje_id === updatedItem.id ? { ...user, hora_aprox_salida: parseHora(updatedItem.date_final_aprox), hora: parseHora(updatedItem.date), fecha: parseFecha(updatedItem.date) } : user))
-            console.log(users)
+            //console.log(users)
             break;
         }
       })
@@ -113,7 +112,7 @@ export default function ContainerTable({ equipo }: { equipo: Equipo[] }) {
         schema: 'public',
         table: 'fichaje_eventos',
       }, (payload: RealtimePostgresChangesPayload<Fichaje_eventos>) => {
-        console.log(payload);
+        //console.log(payload);
         switch (payload.eventType) {
           case 'INSERT':
             const insertItem = payload.new;
@@ -144,7 +143,7 @@ export default function ContainerTable({ equipo }: { equipo: Equipo[] }) {
 
   function parseFecha(fecha: string | Date): string {
     const date = typeof fecha === 'string' ? new Date(fecha) : fecha;
-    return date.toISOString().slice(0,10);
+    return date.toISOString().slice(0, 10);
   }
 
   return (
@@ -164,7 +163,7 @@ export default function ContainerTable({ equipo }: { equipo: Equipo[] }) {
 
       {
         users.map((item, index) => {
-          return <TableItem key={index} name={item.name} email={item.email} estado={item.estado} foto={item.image} localizacion={ (currentDate == item.fecha) ? item.localizacion : '-'} inicio={ (currentDate == item.fecha) ? item.hora : '-'} final={ (currentDate == item.fecha) ? item.hora_aprox_salida : '-'} />
+          return <TableItem key={index} nombre={item.nombre} apellido={item.apellido} email={item.email} estado={item.estado} foto={item.image} localizacion={(currentDate == item.fecha) ? item.localizacion : '-'} inicio={(currentDate == item.fecha) ? item.hora : '-'} final={(currentDate == item.fecha) ? item.hora_aprox_salida : '-'} />
         })
       }
     </div>

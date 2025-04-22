@@ -36,6 +36,14 @@
     line-height: normal;
 }
 
+.tableHeader h2:nth-child(3) {
+    color: #333;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
 .tableHeader div {
     display: flex;
     width: 118px;

@@ -2,7 +2,8 @@ import styles from './tableItem.module.css'
 import Image from 'next/image';
 
 type Prop = {
-    name: string,
+    nombre: string,
+    apellido?: string,
     email: string,
     foto?: string,
     estado?: string,
@@ -11,7 +12,7 @@ type Prop = {
     final?: string
 }
 
-export default function TableItem({ name, email, foto, estado = 'Jornada Finalizada', localizacion, inicio = "-", final = "-" }: Prop) {
+export default function TableItem({ nombre, apellido, email, foto, estado = 'Jornada Finalizada', localizacion, inicio = "-", final = "-" }: Prop) {
 
     return (
         <div className={styles.items}>
@@ -19,7 +20,7 @@ export default function TableItem({ name, email, foto, estado = 'Jornada Finaliz
                 <Image src={foto ?? "https://clasicoshispanicos.com/wp-content/uploads/2021/01/siluetagrisanonimo.jpg"} width={40} height={40} alt='img_profile' />
                 <div className={styles.personalInfo}>
                     <div className={styles.name}>
-                        <h2>{name}</h2>
+                        <h2>{nombre} {apellido}</h2>
                         <svg width="10" height="11" viewBox="0 0 10 11" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M3.60176 8.38657L6.41431 5.57402L3.60176 2.76148" stroke="#333333" strokeWidth="0.623087" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>

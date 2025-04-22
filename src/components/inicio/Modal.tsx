@@ -4,7 +4,7 @@ import styles from './modal.module.css'
 import { useState, useEffect } from "react";
 import Image from 'next/image';
 import { createClient } from '@/utils/supabase/client';
-import { useRouter } from 'next/navigation';
+//import { useRouter } from 'next/navigation';
 import { Fichaje_jornada, Profile } from '@/types/Types';
 
 export default function Modal({ profile, fichaje }: { profile: Profile[], fichaje: Fichaje_jornada[] }) {
@@ -17,7 +17,7 @@ export default function Modal({ profile, fichaje }: { profile: Profile[], fichaj
     const [mensaje, setMensaje] = useState('');
 
     const supabase = createClient();
-    const router = useRouter();
+    //const router = useRouter();
 
     useEffect(() => {
         const date = new Date();
@@ -147,10 +147,11 @@ export default function Modal({ profile, fichaje }: { profile: Profile[], fichaj
         setIsOpen(false);
     }
 
-    async function handleSubmit() {
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
         setIsOpen(false);
         fichar();
-        router.push('/');
+        //router.refresh();
     }
 
     function handleChangeLocation(e: React.ChangeEvent<HTMLSelectElement>) {
@@ -168,7 +169,7 @@ export default function Modal({ profile, fichaje }: { profile: Profile[], fichaj
 
     return (
 
-        (profile[0].alta && isOpen && (!fichaje || fichaje.length == 0) && (profile[0].estado == 'Inactivo' || profile[0].estado == 'Jornada Finalizada')) &&
+        (profile[0].alta && isOpen && !profile[0].is_admin && (!fichaje || fichaje.length == 0) && (profile[0].estado == 'Inactivo' || profile[0].estado == 'Jornada Finalizada')) &&
         <div className={styles.overlay}>
 
             <div className={styles.modalContainer}>

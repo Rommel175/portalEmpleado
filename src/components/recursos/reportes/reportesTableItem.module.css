@@ -57,6 +57,15 @@
     line-height: normal;
 }
 
+.horasRestantes {
+    width: 180px;
+    color: var(--light-03, #7B8794);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
 .containerItem a {
     display: flex;
     padding: 6px 10px;

@@ -1,8 +1,8 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import styles from './editarPerfil.module.css';
-import Image from "next/image";
 import FormularioPerfil from "@/components/perfil/editarPerfil/FormularioPerfil";
+import InformacionUsuario from "@/components/perfil/editarPerfil/InformacionUsuario";
 
 export default async function profilePage() {
 
@@ -43,17 +43,11 @@ export default async function profilePage() {
                 </div>
             </nav>
 
-            <div className={styles.profile}>
-                <Image src={profile[0].image} width={60} height={60} alt="img" />
-                <div className={styles.containerInfo}>
-                    <div className={styles.personalInfo}>
-                        <h2>{profile[0].nombre} {profile[0].apellido}</h2>
-                        <h2>{profile[0].puesto} | {profile[0].email}</h2>
-                    </div>
-                </div>
-            </div>
+            <InformacionUsuario  profile={profile} />
 
-            <FormularioPerfil />
+            
+
+            <FormularioPerfil profile={profile} isAdmin={profile[0].is_admin} />
         </div>
     );
 }

@@ -5,6 +5,7 @@ import ContainerHeader from "../../ContainerHeader";
 import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { Profile } from "@/types/Types";
+import { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 
 export default function ContainerFichaje({ estado, setEstado, profile, localizacionFichaje }: { estado: string, setEstado: React.Dispatch<React.SetStateAction<string>>, profile: Profile[], localizacionFichaje: string }) {
 
@@ -31,17 +32,17 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
 
     useEffect(() => {
         const localTime = sessionStorage.getItem('time');
-        const run = sessionStorage.getItem('run');
+        //const run = sessionStorage.getItem('run');
 
         if (localTime) {
             setTime(Number(localTime));
         }
 
-        if (run === 'true') {
+        /*if (run === 'true') {
             setRunning(true);
         } else {
             setRunning(false);
-        }
+        }*/
 
         const date = new Date();
         const formatDate = new Intl.DateTimeFormat("es-ES", {
@@ -57,6 +58,26 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
         date.setHours(date.getHours() + horasTrabajo);
 
         setHoraFinalAprox(date);
+
+        const profilesRealTime = supabase
+            .channel('realtime-contenedor-fichar')
+            .on('postgres_changes', {
+                event: 'UPDATE',
+                schema: 'public',
+                table: 'profiles',
+            }, (payload: RealtimePostgresChangesPayload<Profile>) => {
+                switch (payload.eventType) {
+                    case 'UPDATE':
+                        const updatedItem = payload.new;
+                        setEstado(updatedItem.estado);
+                        break;
+                }
+            })
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(profilesRealTime);
+        };
 
     }, []);
 

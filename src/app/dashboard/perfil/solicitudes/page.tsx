@@ -4,7 +4,7 @@ import EntradaSolicitudes from '@/components/containers/historialSolicitudes/Ent
 export default function Solicitudes() {
   return (
     <>
-      <ContainerOptions ubicacion={false} urlExportar={'#'} usuarios={false}/>
+      <ContainerOptions ubicacion={false} urlExportar={'#'} usuarios={false} añadirUsuario={false} />
       <EntradaSolicitudes />
       <EntradaSolicitudes />
       <EntradaSolicitudes />
