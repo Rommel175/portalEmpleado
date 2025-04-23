@@ -22,8 +22,8 @@ export default function ReportesTableItem( {image, nombre, apellido, email, hora
 
             <p className={styles.horasRestantes}>{horas_restantes}h</p>
 
-            <Link href={`/dashboard/editar_perfil/${id}`}>
-                Ver Usuario
+            <Link href={`/dashboard/recursos/fichajes/${id}`}>
+                Ver Historial
                 <svg width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M3.3022 8.19119L6.69727 5.13563L3.3022 2.08008" stroke="#285FF5" strokeWidth="0.611111" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>

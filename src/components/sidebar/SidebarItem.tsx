@@ -41,9 +41,9 @@ export default function SidebarItemComponent({ is_admin }: { is_admin: boolean }
 
       {
         (is_admin) &&
-        <Link href={'/dashboard/recursos/gestion'} className={`${(pathname == '/dashboard/recursos/incidencias' || pathname == '/dashboard/recursos/reportes' || pathname == '/dashboard/recursos/gestion' || pathname == '/dashboard/recursos/comentarios') ? styles.active : ""}`}>
+        <Link href={'/dashboard/recursos/gestion'} className={`${(pathname == '/dashboard/recursos/incidencias' || pathname == '/dashboard/recursos/reportes' || pathname == '/dashboard/recursos/gestion' || pathname == '/dashboard/recursos/comentarios' || pathname.startsWith('/dashboard/recursos/fichajes/')) ? styles.active : ""}`}>
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M9.84905 17.2086V8.51848M15.0631 17.2086V3.30444M4.63501 17.2086V13.7325" stroke={(pathname == '/dashboard/recursos/incidencias' || pathname == '/dashboard/recursos/reportes' || pathname == '/dashboard/recursos/gestion' || pathname == '/dashboard/recursos/comentarios') ? 'white' : '#0B3C70'} strokeWidth="2.16092" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M9.84905 17.2086V8.51848M15.0631 17.2086V3.30444M4.63501 17.2086V13.7325" stroke={(pathname == '/dashboard/recursos/incidencias' || pathname == '/dashboard/recursos/reportes' || pathname == '/dashboard/recursos/gestion' || pathname == '/dashboard/recursos/comentarios' || pathname.startsWith('/dashboard/recursos/fichajes/') ) ? 'white' : '#0B3C70'} strokeWidth="2.16092" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
           Recursos Humanos
         </Link>
