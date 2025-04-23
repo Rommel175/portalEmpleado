@@ -47,15 +47,9 @@ export default async function EntradasFichajes({ date, profile }: { date: string
 
   function tiempoTotal(fichajes: { evento: string, date: Date }[]) {
     const parseHour = (date: Date) => {
-      const dateHora = date.toLocaleTimeString('es-ES', {
-        hour: '2-digit',
-        minute: '2-digit',
-        timeZone: 'Europe/Madrid'
-      });
-      const partesHora = dateHora.split(':');
-      const horas = Number(partesHora[0]);
-      const minutos = Number(partesHora[1]);
-      const segundos = Number(partesHora[2]);
+      const horas = date.getHours();
+      const minutos = date.getMinutes();
+      const segundos = date.getSeconds();
       return (horas * 3600) + (minutos * 60) + segundos;
     };
 
@@ -76,6 +70,7 @@ export default async function EntradasFichajes({ date, profile }: { date: string
     const minutos = Math.floor((totalSegundos % 3600) / 60);
     return `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}h`;
   }
+
 
   function parseHora(hora: string | Date): string {
     const date = typeof hora === 'string' ? new Date(hora) : hora;
