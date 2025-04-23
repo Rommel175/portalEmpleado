@@ -46,39 +46,46 @@ export default async function EntradasFichajes({ date, profile }: { date: string
   }
 
   function tiempoTotal(fichajes: { evento: string, date: Date }[]) {
-    let totalHorasTrabajadas = 0;
 
-    let inicioJornada = null;
-    let finJornada = null;
-    let pausaInicio = null;
+    let totalHorasTrabajadas = 0;
+    let jornadaInicio: Date | null = null;
+    let pausaInicio: Date | null = null;
     let totalPausas = 0;
 
     for (const fichaje of fichajes) {
       const hora = new Date(fichaje.date);
 
-      if (fichaje.evento === 'Inicio Jornada' && !inicioJornada) {
-        inicioJornada = hora;
-      } else if (fichaje.evento === 'Jornada Finalizada') {
-        finJornada = hora;
-      } else if (fichaje.evento === 'Inicio Pausa') {
+      if (fichaje.evento === 'Inicio Jornada') {
+        jornadaInicio = hora;
+        totalPausas = 0;
+      }
+
+      else if (fichaje.evento === 'Inicio Pausa') {
         pausaInicio = hora;
-      } else if (fichaje.evento === 'Final Pausa' && pausaInicio) {
+      }
+
+      else if (fichaje.evento === 'Final Pausa' && pausaInicio) {
         totalPausas += (hora.getTime() - pausaInicio.getTime()) / 1000 / 60 / 60;
         pausaInicio = null;
       }
-    }
 
-    if (inicioJornada && finJornada && finJornada > inicioJornada) {
-      const duracionJornada = (finJornada.getTime() - inicioJornada.getTime()) / 1000 / 60 / 60;
-      const horasNetas = duracionJornada - totalPausas;
-      totalHorasTrabajadas += horasNetas;
+      else if (fichaje.evento === 'Jornada Finalizada' && jornadaInicio) {
+        const duracionJornada = (hora.getTime() - jornadaInicio.getTime()) / 1000 / 60 / 60;
+        const horasNetas = duracionJornada - totalPausas;
+        totalHorasTrabajadas += horasNetas;
+
+        jornadaInicio = null;
+        pausaInicio = null;
+        totalPausas = 0;
+      }
     }
 
     const horas = Math.floor(totalHorasTrabajadas);
-    const minutos = Math.round((totalHorasTrabajadas - horas) * 60);
+    const minutos = Math.floor((totalHorasTrabajadas - horas) * 60);
 
     return `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}h`;
   }
+
 
 
 
