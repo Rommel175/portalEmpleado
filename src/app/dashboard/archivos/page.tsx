@@ -1,4 +1,5 @@
 import ContainerSuperior from "@/components/containers/containerSuperior/ContainerSuperior";
+import Navbar from "@/components/navbar/Navbar";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
@@ -69,6 +70,7 @@ export default async function FilesPage() {
 
   return (
     <>
+      <Navbar image={profile[0].image} title="Archivos"/>
       <div>
         <h1>Files page</h1>
       </div>

@@ -3,6 +3,7 @@ import styles from './layput.module.css'
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 import ContainerSuperior from '@/components/containers/containerSuperior/ContainerSuperior';
+import Navbar from '@/components/navbar/Navbar';
 
 export default async function RecursosLayout({ children }: { children: React.ReactNode; }) {
   const supabase = await createClient();
@@ -74,13 +75,16 @@ export default async function RecursosLayout({ children }: { children: React.Rea
   }
 
   return (
-    <div className={styles.wraper}>
-      <NavbarRecursos />
-      <div style={{ display: 'none' }}>
-        <ContainerSuperior profile={profile} fichaje={fichaje} eventos={eventos} />
-      </div>
+    <>
+      <Navbar image={profile[0].image} title='Recursos humanos'/>
+      <div className={styles.wraper}>
+        <NavbarRecursos />
+        <div style={{ display: 'none' }}>
+          <ContainerSuperior profile={profile} fichaje={fichaje} eventos={eventos} />
+        </div>
 
-      {children}
-    </div>
+        {children}
+      </div>
+    </>
   );
 }

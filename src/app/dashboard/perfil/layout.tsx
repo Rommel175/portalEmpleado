@@ -3,6 +3,7 @@ import styles from './layout.module.css'
 import { redirect } from 'next/navigation';
 import NavbarPerfil from '@/components/perfil/NavbarPerfil';
 import ContainerSuperior from '@/components/containers/containerSuperior/ContainerSuperior';
+import Navbar from '@/components/navbar/Navbar';
 
 export default async function PerfilLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
@@ -71,6 +72,7 @@ export default async function PerfilLayout({ children }: { children: React.React
 
   return (
     <>
+      <Navbar image={profile[0].image} title='Perfil'/>
       <ContainerSuperior profile={profile} fichaje={fichaje} eventos={eventos} />
 
       <div className={styles.content}>
