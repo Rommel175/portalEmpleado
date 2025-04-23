@@ -26,7 +26,6 @@
     align-items: flex-start;
     gap: 16px;
     align-self: stretch;
-    background: #FFFBFA;
 }
 
 .formItem {
@@ -52,7 +51,8 @@
 }
 
 .formItem > input[type="text"],
-.formItem > input[type="email"] {
+.formItem > input[type="email"],
+.formItem > input[type="tel"] {
     display: flex;
     padding: 8px 12px;
     align-items: center;

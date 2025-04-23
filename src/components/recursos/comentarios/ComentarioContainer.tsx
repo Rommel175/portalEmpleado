@@ -1,15 +1,24 @@
 import styles from './comentarioContainer.module.css';
+import ComentarioItem from './ComentarioItem';
 
-export default function ComentarioContainer() {
+type FichajeComentario = {
+    fecha: Date;
+    comentario: string;
+};
+
+export default function ComentarioContainer( {nombre, fichajes} : {nombre: string, fichajes: FichajeComentario[] } ) {
+
     return (
         <div className={styles.container}>
             <header className={styles.title}>
-                <h2> Nombre </h2>
+                <h2> {nombre} </h2>
             </header>
-            <div className={styles.item}>
-                <h3>fecha</h3>
-                <h3>comentario</h3>
-            </div>
+
+            {
+                fichajes.map((item, index) => {
+                    return <ComentarioItem key={index} fecha={item.fecha} comentario={item.comentario}/>
+                })
+            }
         </div>
     );
 }

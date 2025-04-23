@@ -4,7 +4,7 @@ import styles from './comentarios.module.css';
 import ComentarioContainer from "@/components/recursos/comentarios/ComentarioContainer";
 
 type FichajeComentario = {
-    fecha: string | Date;
+    fecha: Date;
     comentario: string;
 };
 
@@ -27,7 +27,7 @@ export default async function ComentariosPage() {
     const { data: dataProfile, error: errorProfile } = await supabase
         .from('profiles')
         .select('*')
-        //.neq('user_id', user.id);
+    //.neq('user_id', user.id);
 
     if (errorProfile) {
         console.log('Error fetching profiles: ', errorProfile);
@@ -48,7 +48,8 @@ export default async function ComentariosPage() {
             .select('*')
             .eq('profile_id', profile.id)
             .not('comentario', 'is', null)
-            .neq('comentario', '');
+            .neq('comentario', '')
+            .order('date', {ascending: false});
 
         if (errorFichajeJornada) {
             console.log('Error fetching Fichajes Jornada: ', errorFichajeJornada);
@@ -60,7 +61,7 @@ export default async function ComentariosPage() {
                 nombre: profile.nombre,
                 apellido: profile.apellido,
                 fichajes: fichajeJornada.map(item => ({
-                    fecha: item.fecha,
+                    fecha: item.date,
                     comentario: item.comentario,
                 })),
             });
@@ -72,10 +73,10 @@ export default async function ComentariosPage() {
     return (
         <div className={styles.container}>
             {
-                JSON.stringify(usersData)
+                usersData.map((item, index) => {
+                    return <ComentarioContainer key={index} nombre={item.nombre} fichajes={item.fichajes}/>
+                })
             }
-            
-            <ComentarioContainer />
         </div>
     );
 }

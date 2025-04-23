@@ -15,7 +15,7 @@ export default function DatosContainer({ profile, estado, localizacionFichaje, s
 
     useEffect(() => {
         const jornadaRealTime = supabase
-            .channel('realtime-fichaje_jornada2')
+            .channel('realtime-fichaje_jornada-contenedor_datos')
             .on('postgres_changes', {
                 event: '*',
                 schema: 'public',
@@ -24,7 +24,6 @@ export default function DatosContainer({ profile, estado, localizacionFichaje, s
                 switch (payload.eventType) {
                     case 'INSERT':
                         const insertItem = payload.new;
-                        //setUsers((prevState) => prevState.map(user => user.id === insertItem.profile_id ? { ...user, hora_aprox_salida: parseHora(insertItem.date_final_aprox), hora: parseHora(insertItem.date), fecha: parseFecha(insertItem.date) } : user))
                         setHoraInicio(insertItem.date);
                         setHoraFinalAprox(insertItem.date_final_aprox);
                         break;
@@ -32,7 +31,6 @@ export default function DatosContainer({ profile, estado, localizacionFichaje, s
                         const updatedItem = payload.new;
                         setHoraInicio(updatedItem.date);
                         setHoraFinalAprox(updatedItem.date);
-                        //setUsers((prevState) => prevState.map(user => user.fichaje_id === updatedItem.id ? { ...user, hora_aprox_salida: parseHora(updatedItem.date_final_aprox), hora: parseHora(updatedItem.date), fecha: parseFecha(updatedItem.date) } : user))
                         break;
                 }
             })
@@ -78,7 +76,7 @@ export default function DatosContainer({ profile, estado, localizacionFichaje, s
 
                     <div className={styles.personalInfo}>
                         <h2>{profile[0].nombre} {profile[0].apellido}</h2>
-                        <h3>{profile[0].puesto} | {profile[0].email}</h3>
+                        <h3>{profile[0].puesto || 'No especificado'} | {profile[0].email}</h3>
                     </div>
 
                     <div className={styles.edit}>

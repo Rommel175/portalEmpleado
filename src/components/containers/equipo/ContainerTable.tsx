@@ -137,11 +137,13 @@ export default function ContainerTable({ equipo }: { equipo: Equipo[] }) {
   }, [])
 
   function parseHora(hora: string | Date): string {
+    if (!hora) return '-';
     const date = typeof hora === 'string' ? new Date(hora) : hora;
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   }
 
   function parseFecha(fecha: string | Date): string {
+    if (!fecha) return '-';
     const date = typeof fecha === 'string' ? new Date(fecha) : fecha;
     return date.toISOString().slice(0, 10);
   }

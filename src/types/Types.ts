@@ -7,7 +7,7 @@ export type Profile = {
     telefono_empresa: string,
     email: string,
     telefono_personal: string,
-    emial_personal: string,
+    email_personal: string,
     horas_semana: number,
     image: string,
     estado: string,
