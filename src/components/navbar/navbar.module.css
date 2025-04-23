@@ -7,14 +7,22 @@
     align-self: stretch;
     border-radius: 6px;
     border-bottom: 1px solid rgba(123, 135, 148, 0.20);
-    background: #FFF;
+    background: var(--white, #FFF);
 }
 
 .navContainer {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
-    gap: 24px;
     align-self: stretch;
+}
+
+.navContainer > h1 {
+    color: var(--primary, #0B3C70);
+    font-family: Poppins;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
 }
 

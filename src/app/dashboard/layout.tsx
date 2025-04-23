@@ -3,7 +3,6 @@ import styles from './layout.module.css';
 import { Poppins } from 'next/font/google';
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
-import Navbar from '@/components/navbar/Navbar';
 
 const poppins = Poppins({
   weight: ['700', '600', '500', '400'],
@@ -27,13 +26,12 @@ export default async function DashboardLayout({ children }: { children: React.Re
     console.log('Error fetching profiles: ', errorProfile);
   }
 
-  const profile = dataProfile && dataProfile.length > 0 ? dataProfile[0] : null;
+  const profile = dataProfile && dataProfile.length > 0 ? dataProfile[0] : [];
 
   return (
     <div className={`${styles.wraper} ${poppins.className}`}>
       <SidebarComponent is_admin={profile?.is_admin} />
       <div className={styles.container}>
-        <Navbar image={profile?.image} />
         {children}
       </div>
 

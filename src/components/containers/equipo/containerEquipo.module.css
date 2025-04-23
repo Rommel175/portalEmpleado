@@ -1,9 +1,22 @@
 .container {
     display: flex;
+    padding: 24px;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
+    gap: 18px;
     align-self: stretch;
+    border-radius: 12px;
+    background: var(--white, #FFF);
+}
+
+.container > h3 {
+    align-self: stretch;
+    color: var(--primary, #0B3C70);
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
 }
 
 .content {

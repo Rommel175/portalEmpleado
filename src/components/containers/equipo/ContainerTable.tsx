@@ -150,7 +150,7 @@ export default function ContainerTable({ equipo }: { equipo: Equipo[] }) {
 
   return (
     <div className={styles.table}>
-      <div className={styles.tableNav}>
+      <div className={styles.tableHeader}>
         <h3>Usuario</h3>
         <h3>Estado</h3>
         <h3>Localización</h3>

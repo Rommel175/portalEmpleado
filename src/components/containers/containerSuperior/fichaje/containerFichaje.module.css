@@ -1,20 +1,159 @@
 .container {
     display: flex;
-    width: 24%;
+    width: 31%;
+    padding: 18px 24px;
     flex-direction: column;
-    justify-content: center;
     align-items: flex-start;
+    gap: 18px;
+    align-self: stretch;
+    border-radius: 12px;
+    background: var(--white, #FFF);
 }
 
-.content {
+.title {
     display: flex;
-    padding: 18px;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 32px;
+    justify-content: space-between;
+    align-items: center;
     align-self: stretch;
-    border-radius: 0px 0px 6px 6px;
-    background: #FFF;
+}
+
+.title > h2 {
+    color: var(--primary, #0B3C70);
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.title > div {
+    display: flex;
+    width: 40px;
+    height: 40px;
+    padding: 9.091px 10.909px;
+    justify-content: center;
+    align-items: center;
+    gap: 3.636px;
+    aspect-ratio: 1/1;
+    border-radius: 10.909px;
+    background: var(--primary, #0B3C70);
+}
+
+.date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    align-self: stretch;
+}
+
+.date h3 {
+    color: var(--dark-02, #9C9FA1);
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    width: 100%;
+}
+
+.counter {
+    display: flex;
+    padding: 6px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+    border-radius: 6px;
+    border: 1px solid var(--light-02, #E7E7E7);
+}
+
+.counter h2 {
+    color: var(--dark-01, #252525);
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    align-self: stretch;
+}
+
+.entrada {
+    display: flex;
+    height: 44px;
+    padding: 10px 12px;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    align-self: stretch;
+    border-radius: 100px;
+    background: var(--primary, #0B3C70);
+    color: var(--white, #FFF);
+    text-align: center;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.pausa {
+    display: flex;
+    height: 44px;
+    padding: 10px 12px;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    align-self: stretch;
+    border-radius: 100px;
+    background: #FFE7D5;
+    color: var(--colors-Warning, #FF7300);
+    text-align: center;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.salida {
+    display: flex;
+    height: 44px;
+    padding: 10px 12px;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    align-self: stretch;
+    border-radius: 100px;
+    background: var(--light-01, #F9F9F9);
+    color: var(--primary, #0B3C70);
+    text-align: center;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.salida:disabled {
+    background: var(--light-01, #F9F9F9);
+    color: var(--dark-03, #B6BEC9);
+    text-align: center;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.salida:disabled:hover {
+    cursor: not-allowed;
+}
+
+.entrada:hover,
+.pausa:hover,
+.salida:hover {
+    cursor: pointer;
 }
 
 .overlay {
@@ -126,121 +265,5 @@
 }
 
 .buttonsModal button:hover {
-    cursor: pointer;
-}
-
-.date {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-    align-self: stretch;
-}
-
-.date h3 {
-    color: #7B8794;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-}
-
-.counter {
-    display: flex;
-    padding: 6px;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    align-self: stretch;
-    border-radius: 6px;
-    border: 1px solid #D8D8D8;
-}
-
-.counter h2 {
-    color: #3C3C3B;
-    font-size: 22px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-}
-
-.buttons {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-    align-self: stretch;
-}
-
-.entrada {
-    display: flex;
-    padding: 10px 12px;
-    justify-content: center;
-    align-items: center;
-    gap: 4px;
-    align-self: stretch;
-    border-radius: 100px;
-    background: #0B3C70;
-    color: #FFF;
-    text-align: center;
-    font-size: 15px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-}
-
-.pausa {
-    display: flex;
-    padding: 10px 12px;
-    justify-content: center;
-    align-items: center;
-    gap: 4px;
-    align-self: stretch;
-    border-radius: 100px;
-    border: 1px solid #FFDFDF;
-    background: #FFE7D5;
-    color: #FF6E00;
-    text-align: center;
-    font-family: Poppins;
-    font-size: 15px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-}
-
-.salida {
-    display: flex;
-    padding: 10px 12px;
-    justify-content: center;
-    align-items: center;
-    gap: 4px;
-    align-self: stretch;
-    border-radius: 100px;
-    border: 1px solid #F6F6F6;
-    background: #F6F6F6;
-    color: #0B3C70;
-    text-align: center;
-    font-size: 15px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-}
-
-.salida:disabled {
-    color: #B3B7BA;
-    text-align: center;
-    font-size: 15px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-}
-
-.salida:disabled:hover {
-    cursor: not-allowed;
-}
-
-.entrada:hover,
-.pausa:hover,
-.salida:hover {
     cursor: pointer;
 }

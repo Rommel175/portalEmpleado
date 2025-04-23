@@ -46,7 +46,7 @@ export default function TableItem({ nombre, apellido, email, foto, estado = 'Jor
 
                 {
                     (estado == 'Inactivo') && (
-                        <div className={styles.estadoActivo}>
+                        <div className={styles.estadoInactivo}>
                             <svg width="7" height="7" viewBox="0 0 7 7" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <circle cx="3.5" cy="3.5" r="3" fill="#E94544" />
                             </svg>
@@ -59,7 +59,7 @@ export default function TableItem({ nombre, apellido, email, foto, estado = 'Jor
 
                 {
                     (estado == 'Pausa') && (
-                        <div className={styles.estadoActivo}>
+                        <div className={styles.estadoPausa}>
                             <svg width="7" height="7" viewBox="0 0 7 7" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <circle cx="3.5" cy="3.5" r="3" fill="#FF6E00" />
                             </svg>
@@ -72,7 +72,7 @@ export default function TableItem({ nombre, apellido, email, foto, estado = 'Jor
 
                 {
                     (estado == 'Jornada Finalizada') && (
-                        <div className={styles.estadoActivo}>
+                        <div className={styles.estadoFinJornada}>
                             <svg width="7" height="7" viewBox="0 0 7 7" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <circle cx="3.5" cy="3.5" r="3" fill="#828282" />
                             </svg>
@@ -85,7 +85,7 @@ export default function TableItem({ nombre, apellido, email, foto, estado = 'Jor
 
                 {
                     (estado == 'Vacaciones') && (
-                        <div className={styles.estadoActivo}>
+                        <div className={styles.estadoVacaciones}>
                             <svg width="7" height="7" viewBox="0 0 7 7" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <circle cx="3.5" cy="3.5" r="3" fill="#4DD4EC" />
                             </svg>

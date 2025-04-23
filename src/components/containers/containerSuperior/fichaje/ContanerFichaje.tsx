@@ -1,7 +1,6 @@
 'use client'
 
 import styles from './containerFichaje.module.css'
-import ContainerHeader from "../../ContainerHeader";
 import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { Profile } from "@/types/Types";
@@ -256,7 +255,6 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
     }
 
     //Reanudar jornada
-
     async function reanudar() {
         const date = new Date();
         const day = String(date.getDate()).padStart(2, '0');
@@ -420,32 +418,6 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
         return `${hours}:${minutes}:${seconds}`
     }
 
-
-    const svg = (
-        <svg
-            width="23"
-            height="23"
-            viewBox="0 0 23 23"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-        >
-            <path
-                d="M11.1113 18.8034C15.3596 18.8034 18.8036 15.3594 18.8036 11.1111C18.8036 6.86273 15.3596 3.41876 11.1113 3.41876C6.86291 3.41876 3.41895 6.86273 3.41895 11.1111C3.41895 15.3594 6.86291 18.8034 11.1113 18.8034Z"
-                stroke="#0B3C70"
-                strokeWidth="1.28742"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-            />
-            <path
-                d="M10.2566 7.69189V11.9654H14.5301"
-                stroke="#0B3C70"
-                strokeWidth="1.28742"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-            />
-        </svg>
-    )
-
     return (
         <>
             {
@@ -469,74 +441,79 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
             }
 
             <div className={styles.container}>
-                <ContainerHeader name={'Fichar'} svg={svg} />
-                <div className={styles.content}>
-                    <div className={styles.date}>
-                        <h3>{currentDate}</h3>
-                        <div className={styles.counter}>
-                            <h2>{formatTimer(time)}</h2>
-                        </div>
+                <div className={styles.title}>
+                    <h2>Fichar</h2>
+                    <div>
+                        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7.36377 5.54553L16.4547 11.0001L7.36377 16.4546V5.54553Z" fill="white" stroke="white" strokeWidth="1.81818" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
                     </div>
-                    <div className={styles.buttons}>
-
-                        {
-                            (!profile[0].alta) && (
-                                <>
-                                    <button className={styles.entrada} onClick={startTimer} style={{ cursor: 'not-allowed' }} disabled>
-                                        <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M8.5 6L18.5 12L8.5 18V6Z" fill="white" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                        </svg>
-                                        FICHAR ENTRADA
-                                    </button>
-                                    <button className={styles.salida} onClick={stopTimer} disabled>FICHAR SALIDA</button>
-                                </>
-                            )
-                        }
-
-                        {
-                            ((estado == 'Activo') && profile[0].alta) && (
-                                <>
-                                    <button className={styles.pausa} onClick={pauseTimer}>
-                                        <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M14.5 19V5H18.5V19H14.5ZM6.5 19V5H10.5V19H6.5Z" fill="#FF6E00" />
-                                        </svg>
-                                        PAUSA
-                                    </button>
-                                    <button className={styles.salida} onClick={handleOpen}>FICHAR SALIDA</button>
-                                </>
-                            )
-
-                        }
-
-                        {
-                            ((estado == 'Inactivo' || estado == 'Jornada Finalizada') && profile[0].alta) && (
-                                <>
-                                    <button className={styles.entrada} onClick={startTimer}>
-                                        <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M8.5 6L18.5 12L8.5 18V6Z" fill="white" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                        </svg>
-                                        FICHAR ENTRADA
-                                    </button>
-                                    <button className={styles.salida} onClick={stopTimer} disabled>FICHAR SALIDA</button>
-                                </>
-                            )
-                        }
-
-                        {
-                            ((estado == 'Pausa') && profile[0].alta) && (
-                                <>
-                                    <button className={styles.entrada} onClick={reanudarTimer}>
-                                        <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M8.5 6L18.5 12L8.5 18V6Z" fill="white" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                        </svg>
-                                        REANUDAR
-                                    </button>
-                                    <button className={styles.salida} onClick={handleOpen}>FICHAR SALIDA</button>
-                                </>
-                            )
-                        }
-
+                </div>
+                <div className={styles.date}>
+                    <h3>{currentDate}</h3>
+                    <div className={styles.counter}>
+                        <h2>{formatTimer(time)}</h2>
                     </div>
+                </div>
+                <div className={styles.buttons}>
+
+                    {
+                        (!profile[0].alta) && (
+                            <>
+                                <button className={styles.entrada} onClick={startTimer} style={{ cursor: 'not-allowed' }} disabled>
+                                    <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M8.5 6L18.5 12L8.5 18V6Z" fill="white" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                    FICHAR ENTRADA
+                                </button>
+                                <button className={styles.salida} onClick={stopTimer} disabled>FICHAR SALIDA</button>
+                            </>
+                        )
+                    }
+
+                    {
+                        ((estado == 'Activo') && profile[0].alta) && (
+                            <>
+                                <button className={styles.pausa} onClick={pauseTimer}>
+                                    <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M14.5 19V5H18.5V19H14.5ZM6.5 19V5H10.5V19H6.5Z" fill="#FF6E00" />
+                                    </svg>
+                                    PAUSA
+                                </button>
+                                <button className={styles.salida} onClick={handleOpen}>FICHAR SALIDA</button>
+                            </>
+                        )
+
+                    }
+
+                    {
+                        ((estado == 'Inactivo' || estado == 'Jornada Finalizada') && profile[0].alta) && (
+                            <>
+                                <button className={styles.entrada} onClick={startTimer}>
+                                    <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M8.5 6L18.5 12L8.5 18V6Z" fill="white" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                    FICHAR ENTRADA
+                                </button>
+                                <button className={styles.salida} onClick={stopTimer} disabled>FICHAR SALIDA</button>
+                            </>
+                        )
+                    }
+
+                    {
+                        ((estado == 'Pausa') && profile[0].alta) && (
+                            <>
+                                <button className={styles.entrada} onClick={reanudarTimer}>
+                                    <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M8.5 6L18.5 12L8.5 18V6Z" fill="white" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                    REANUDAR
+                                </button>
+                                <button className={styles.salida} onClick={handleOpen}>FICHAR SALIDA</button>
+                            </>
+                        )
+                    }
+
                 </div>
             </div>
         </>
