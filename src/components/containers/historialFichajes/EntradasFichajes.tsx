@@ -47,7 +47,11 @@ export default async function EntradasFichajes({ date, profile }: { date: string
 
   function tiempoTotal(fichajes: { evento: string, date: Date }[]) {
     const parseHour = (date: Date) => {
-      const dateHora = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      const dateHora = date.toLocaleTimeString('es-ES', {
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZone: 'Europe/Madrid'
+      });
       const partesHora = dateHora.split(':');
       const horas = Number(partesHora[0]);
       const minutos = Number(partesHora[1]);
