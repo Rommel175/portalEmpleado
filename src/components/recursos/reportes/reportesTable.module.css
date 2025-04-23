@@ -20,24 +20,29 @@
 }
 
 .tableHeader h2:first-child {
-    color: #333;
+    color: var(--dark-01, #252525);
     font-size: 13px;
     font-style: normal;
     font-weight: 500;
     line-height: normal;
-    width: 240px;
+    width: 300px;
 }
 
 .tableHeader h2:nth-child(2) {
-    color: #333;
+    color: var(--dark-01, #252525);
     font-size: 13px;
     font-style: normal;
     font-weight: 500;
     line-height: normal;
+    width: 180px;
 }
 
 .tableHeader h2:nth-child(3) {
-    color: #333;
+    display: flex;
+    width: 180px;
+    align-items: center;
+    gap: 2px;
+    color: var(--dark-01, #252525);
     font-size: 13px;
     font-style: normal;
     font-weight: 500;

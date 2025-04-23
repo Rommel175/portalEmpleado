@@ -4,7 +4,8 @@
     justify-content: space-between;
     align-items: center;
     align-self: stretch;
-    border-bottom: 1px solid #FFF;
+    border-bottom: 1px solid var(--white, #FFF);
+    background: var(--white, #FFF);
 }
 
 .usuario {
@@ -35,7 +36,7 @@
 }
 
 .name h2 {
-    color: #252525;
+    color: var(--dark-01, #252525);
     font-size: 16px;
     font-style: normal;
     font-weight: 500;
@@ -43,7 +44,7 @@
 }
 
 .personalInfo h4 {
-    color: #7B8794;
+    color: var(--dark-02, #9C9FA1);
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
@@ -64,13 +65,16 @@
     justify-content: center;
     align-items: center;
     gap: 8px;
-    border-radius: 6px;
-    border: 1.5px solid rgba(255, 255, 255, 0.00);
-    background: #F6F6F6;
+    border-radius: 999px;
+    background: var(--white, #FFF);
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.06), 0px 0px 0px 1px rgba(0, 0, 0, 0.06);
 }
 
 .estadoActivo h2 {
-    color: #333;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    color: var(--dark-01, #252525);
     text-align: center;
     text-overflow: ellipsis;
     font-size: 14px;
@@ -84,14 +88,17 @@
     padding: 4px 12px;
     justify-content: center;
     align-items: center;
-    gap: 4px;
-    border-radius: 6px;
-    border: 1px solid #FFD0CF;
-    background: #FFDFDF;
+    gap: 8px;
+    border-radius: 999px;
+    background: var(--white, #FFF);
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.06), 0px 0px 0px 1px rgba(0, 0, 0, 0.06);
 }
 
 .estadoInactivo h2 {
-    color: #E94544;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    color: var(--dark-01, #252525);
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
@@ -100,17 +107,20 @@
 
 .estadoPausa {
     display: flex;
-    padding: 4px 18px;
+    padding: 4px 12px;
     justify-content: center;
     align-items: center;
-    gap: 4px;
-    border-radius: 6px;
-    border: 1px solid #FFD8BB;
-    background: #FFE7D5;
+    gap: 8px;
+    border-radius: 999px;
+    background: var(--white, #FFF);
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.06), 0px 0px 0px 1px rgba(0, 0, 0, 0.06);
 }
 
 .estadoPausa h2 {
-    color: #FF8446;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    color: var(--dark-01, #252525);
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
@@ -122,14 +132,17 @@
     padding: 4px 12px;
     justify-content: center;
     align-items: center;
-    gap: 4px;
-    border-radius: 6px;
-    border: 1px solid #BEF5FF;
-    background: #D8F9FF;
+    gap: 8px;
+    border-radius: 999px;
+    background: var(--white, #FFF);
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.06), 0px 0px 0px 1px rgba(0, 0, 0, 0.06);
 }
 
 .estadoVacaciones h2 {
-    color: #0B3C70;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    color: var(--dark-01, #252525);
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
@@ -138,17 +151,20 @@
 
 .estadoFinJornada {
     display: flex;
-    padding: 4px 10px;
+    padding: 4px 12px;
     justify-content: center;
     align-items: center;
-    gap: 4px;
-    border-radius: 6px;
-    border: 1px solid #E6E6E6;
-    background: #F6F6F6;
+    gap: 8px;
+    border-radius: 999px;
+    background: var(--white, #FFF);
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.06), 0px 0px 0px 1px rgba(0, 0, 0, 0.06);
 }
 
 .estadoFinJornada h2 {
-    color: #0B3C70;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    color: var(--dark-01, #252525);
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
@@ -160,26 +176,26 @@
 }
 
 .localizacion h2 {
-    color: #0B3C70;
+    color: var(--primary, #0B3C70);
     font-size: 14px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 20px; /* 142.857% */
+    font-weight: 500;
+    line-height: normal;
 }
 
 .jornada {
     display: flex;
     width: 132px;
-    padding: 6px;
+    padding: 6px 12px;
     justify-content: center;
     align-items: center;
     gap: 10px;
     border-radius: 6px;
-    border: 1px solid #EDEDED;
+    border: 1px solid var(--light-02, #E7E7E7);
 }
 
 .jornada h2 {
-    color: #333;
+    color: var(--dark-02, #9C9FA1);
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
