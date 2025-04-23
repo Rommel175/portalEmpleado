@@ -46,30 +46,40 @@ export default async function EntradasFichajes({ date, profile }: { date: string
   }
 
   function tiempoTotal(fichajes: { evento: string, date: Date }[]) {
-    const parseHour = (date: Date) => {
-      const horas = date.getHours();
-      const minutos = date.getMinutes();
-      const segundos = date.getSeconds();
-      return (horas * 3600) + (minutos * 60) + segundos;
-    };
+    let totalHorasTrabajadas = 0;
 
-    let totalSegundos = 0;
-    let inicio: number | null = null;
+    let inicioJornada = null;
+    let finJornada = null;
+    let pausaInicio = null;
+    let totalPausas = 0;
 
-    for (const f of fichajes) {
-      if (f.evento === "Inicio Jornada") {
-        inicio = parseHour(f.date);
-      } else if (f.evento === "Jornada Finalizada" && inicio !== null) {
-        const fin = parseHour(f.date);
-        totalSegundos += fin - inicio;
-        inicio = null;
+    for (const fichaje of fichajes) {
+      const hora = new Date(fichaje.date);
+
+      if (fichaje.evento === 'Inicio Jornada' && !inicioJornada) {
+        inicioJornada = hora;
+      } else if (fichaje.evento === 'Jornada Finalizada') {
+        finJornada = hora;
+      } else if (fichaje.evento === 'Inicio Pausa') {
+        pausaInicio = hora;
+      } else if (fichaje.evento === 'Final Pausa' && pausaInicio) {
+        totalPausas += (hora.getTime() - pausaInicio.getTime()) / 1000 / 60 / 60;
+        pausaInicio = null;
       }
     }
 
-    const horas = Math.floor(totalSegundos / 3600);
-    const minutos = Math.floor((totalSegundos % 3600) / 60);
+    if (inicioJornada && finJornada && finJornada > inicioJornada) {
+      const duracionJornada = (finJornada.getTime() - inicioJornada.getTime()) / 1000 / 60 / 60;
+      const horasNetas = duracionJornada - totalPausas;
+      totalHorasTrabajadas += horasNetas;
+    }
+
+    const horas = Math.floor(totalHorasTrabajadas);
+    const minutos = Math.round((totalHorasTrabajadas - horas) * 60);
+
     return `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}h`;
   }
+
 
 
   function parseHora(hora: string | Date): string {
