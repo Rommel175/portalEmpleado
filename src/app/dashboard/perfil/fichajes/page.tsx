@@ -75,26 +75,57 @@ export default function Fichajes() {
             }
             break;
           case 'Hoy':
-            if (endDate) {
+            if (!startDate) return;
+            const startToday = new Date(startDate);
+            startToday.setHours(0, 0, 0, 0);
 
-              const { data: dataHoy, error: errorHoy } = await supabase
-                .from('fichaje_jornada')
-                .select('*')
-                .eq('profile_id', dataProfile[0].id)
-                .filter('date', 'gte', `${startDate}T00:00:00`)
-                .filter('date', 'lt', `${startDate}T23:59:59`)
-                .order('date', { ascending: false });
+            const endToday = new Date(startDate);
+            endToday.setDate(endToday.getDate() + 1);
+            endToday.setHours(0, 0, 0, 0);
 
-              if (errorHoy) {
-                console.log('Error fetching Jornada: ', errorHoy);
-              }
+            const { data: dataHoy, error: errorHoy } = await supabase
+              .from('fichaje_jornada')
+              .select('*')
+              .eq('profile_id', dataProfile[0].id)
+              .gte('date', startToday.toISOString())
+              .lt('date', endToday.toISOString())
+              .order('date', { ascending: false });
 
-              if (dataHoy && dataHoy.length > 0) {
-                const fetchedFechas = dataHoy.map(jornada => jornada.date);
-                setFechas(fetchedFechas);
-              }
-            } else {
-              console.log('No endDate provided');
+            if (errorHoy) {
+              console.log('Error fetching Jornada: ', errorHoy);
+            }
+
+            if (dataHoy && dataHoy.length > 0) {
+              const fetchedFechas = dataHoy.map(jornada => jornada.date);
+              setFechas(fetchedFechas);
+              console.log(dataHoy)
+            }
+            break;
+          case 'Ayer':
+            if (!startDate) return;
+            const startYesterday = new Date(startDate);
+            startYesterday.setHours(0, 0, 0, 0);
+
+            const endYesterday = new Date(startDate);
+            endYesterday.setDate(endYesterday.getDate() + 1);
+            endYesterday.setHours(0, 0, 0, 0);
+
+            const { data: dataAyer, error: errorAyer } = await supabase
+              .from('fichaje_jornada')
+              .select('*')
+              .eq('profile_id', dataProfile[0].id)
+              .gte('date', startYesterday.toISOString())
+              .lt('date', endYesterday.toISOString())
+              .order('date', { ascending: false });
+
+            if (errorAyer) {
+              console.log('Error fetching Jornada: ', errorAyer);
+            }
+
+            if (dataAyer && dataAyer.length > 0) {
+              const fetchedFechas = dataAyer.map(jornada => jornada.date);
+              setFechas(fetchedFechas);
+              console.log(dataAyer)
             }
             break;
         }
@@ -102,7 +133,7 @@ export default function Fichajes() {
     };
 
     fetchData();
-  }, [option]);
+  }, [option, startDate, endDate]);
 
   return (
     <>
