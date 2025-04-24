@@ -38,7 +38,7 @@ export default function DatosContainer({ profile, estado, localizacionFichaje, s
         return () => {
             supabase.removeChannel(jornadaRealTime);
         };
-    }, [supabase])
+    }, [])
 
     async function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
         setLocalizacionFichaje(e.target.value);

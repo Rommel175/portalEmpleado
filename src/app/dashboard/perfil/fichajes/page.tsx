@@ -5,6 +5,17 @@ import { redirect } from 'next/navigation';
 
 export default async function Fichajes() {
 
+  const date = new Date();
+
+  const startOfWeek = new Date(date);
+  const day = startOfWeek.getDay();
+  const diffToMonday = day === 0 ? -6 : 1 - day;
+  startOfWeek.setDate(startOfWeek.getDate() + diffToMonday);
+  startOfWeek.setHours(0, 0, 0, 0);
+
+  const endOfWeek = new Date(startOfWeek);
+  endOfWeek.setDate(startOfWeek.getDate() + 5);
+  endOfWeek.setHours(0, 0, 0, 0);
 
   const supabase = await createClient();
 
@@ -45,6 +56,8 @@ export default async function Fichajes() {
     .from('fichaje_jornada')
     .select('*')
     .eq('profile_id', profile[0].id)
+    .gte('date', startOfWeek.toISOString())
+    .lt('date', endOfWeek.toISOString())
     .order('date', { ascending: false });
 
   if (errorJornada) {
