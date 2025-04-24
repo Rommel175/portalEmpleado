@@ -5,11 +5,16 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import styles from './customDate.module.css';
 
+type Props = {
+    startDate: Date | null,
+    setStartDate: React.Dispatch<React.SetStateAction<Date | null>>,
+    endDate: Date | null,
+    setEndDate: React.Dispatch<React.SetStateAction<Date | null>>,
+    option: string,
+    setOption: React.Dispatch<React.SetStateAction<string>>
+}
 
-export default function CustomDate() {
-    const [startDate, setStartDate] = useState<Date | null>(null);
-    const [endDate, setEndDate] = useState<Date | null>(null);
-    const [option, setOption] = useState('Esta semana');
+export default function CustomDate({startDate, setStartDate, endDate, setEndDate, option, setOption}: Props) {
     const [show, setShow] = useState(false);
     const datepickerRef = useRef<HTMLDivElement | null>(null);
 

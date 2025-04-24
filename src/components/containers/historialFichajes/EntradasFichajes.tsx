@@ -1,52 +1,64 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import { Fichaje_eventos, Profile } from '@/types/Types';
 import EntradaFichajesItem from './EntradaFichajesItem';
 import styles from './entradasFichajes.module.css';
-import { createClient } from '@/utils/supabase/server';
+import { createClient } from '@/utils/supabase/client';
 
-export default async function EntradasFichajes({ date, profile }: { date: string, profile: Profile[] }) {
+export default function EntradasFichajes({ date, profile }: { date: string, profile: Profile[] }) {
+  const [fichajes, setFichajes] = useState<Fichaje_eventos[]>([]);
+  const supabase = createClient();
 
-  const supabase = await createClient();
+  useEffect(() => {
+    const fetchData = async () => {
 
-  const fichajes: Fichaje_eventos[] = [];
-
-  const { data: dataFichaje, error: errorFichaje } = await supabase
-    .from('fichaje_jornada')
-    .select('*')
-    .eq('profile_id', profile[0].id)
-    .eq('date::date', date)
-
-  if (errorFichaje) {
-    console.log('Error fetching fichajes: ', errorFichaje)
-  }
-
-  if (dataFichaje && dataFichaje.length > 0) {
-
-    for (let i = 0; i < dataFichaje.length; i++) {
-      const { data: dataEvento, error: errorEvento } = await supabase
-        .from('fichaje_eventos')
+      const { data: dataFichaje, error: errorFichaje } = await supabase
+        .from('fichaje_jornada')
         .select('*')
-        .eq('fichaje_id', dataFichaje[i].id);
+        .eq('profile_id', profile[0].id)
+        .eq('date::date', date);
 
-      if (errorEvento) {
-        console.log('Error fetching Evento: ', errorEvento);
+      if (errorFichaje) {
+        console.log('Error fetching fichajes: ', errorFichaje);
+        return;
       }
 
-      if (dataEvento && dataEvento.length > 0) {
-        const eventosData = dataEvento.map(item => ({
-          id: item.id,
-          fichaje_id: item.fichaje_id,
-          evento: item.evento,
-          date: new Date(item.date),
-          localizacion: item.localizacion
-        }));
+      const fetchedFichajes: Fichaje_eventos[] = [];
 
-        fichajes.push(...eventosData);
+      if (dataFichaje && dataFichaje.length > 0) {
+        for (let i = 0; i < dataFichaje.length; i++) {
+          const { data: dataEvento, error: errorEvento } = await supabase
+            .from('fichaje_eventos')
+            .select('*')
+            .eq('fichaje_id', dataFichaje[i].id);
+
+          if (errorEvento) {
+            console.log('Error fetching Evento: ', errorEvento);
+            continue;
+          }
+
+          if (dataEvento && dataEvento.length > 0) {
+            const eventosData = dataEvento.map(item => ({
+              id: item.id,
+              fichaje_id: item.fichaje_id,
+              evento: item.evento,
+              date: new Date(item.date),
+              localizacion: item.localizacion,
+            }));
+
+            fetchedFichajes.push(...eventosData);
+          }
+        }
       }
-    }
-  }
+
+      setFichajes(fetchedFichajes);
+    };
+
+    fetchData();
+  }, [date, profile]);
 
   function tiempoTotal(fichajes: { evento: string, date: Date }[]) {
-
     let totalHorasTrabajadas = 0;
     let jornadaInicio: Date | null = null;
     let pausaInicio: Date | null = null;
@@ -86,15 +98,12 @@ export default async function EntradasFichajes({ date, profile }: { date: string
     return `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}h`;
   }
 
-
-
-
   function parseHora(hora: string | Date): string {
     const date = typeof hora === 'string' ? new Date(hora) : hora;
     return date.toLocaleTimeString('es-ES', {
       hour: '2-digit',
       minute: '2-digit',
-      timeZone: 'Europe/Madrid'
+      timeZone: 'Europe/Madrid',
     });
   }
 

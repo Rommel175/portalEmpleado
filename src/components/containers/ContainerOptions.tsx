@@ -10,10 +10,16 @@ type Prop = {
   semanal?: boolean,
   urlExportar?: string,
   usuarios?: boolean,
-  añadirUsuario?: boolean
+  añadirUsuario?: boolean,
+  startDate: Date | null,
+  setStartDate: React.Dispatch<React.SetStateAction<Date | null>>,
+  endDate: Date | null,
+  setEndDate: React.Dispatch<React.SetStateAction<Date | null>>,
+  option: string,
+  setOption: React.Dispatch<React.SetStateAction<string>>,
 }
 
-export default function ContainerOptions({ exportar = true, recientes = true, tipoRegistro = true, ubicacion = true, semanal = true, urlExportar, usuarios = true, añadirUsuario = true }: Prop) {
+export default function ContainerOptions({ exportar = true, recientes = true, tipoRegistro = true, ubicacion = true, semanal = true, urlExportar, usuarios = true, añadirUsuario = true, startDate, setStartDate, endDate, setEndDate, option, setOption }: Prop) {
   return (
     <div className={styles.options}>
       {
@@ -99,7 +105,7 @@ export default function ContainerOptions({ exportar = true, recientes = true, ti
 
         {
           (semanal) &&
-          <CustomDate />
+          <CustomDate startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate} option={option} setOption={setOption} />
         }
 
       </div>
