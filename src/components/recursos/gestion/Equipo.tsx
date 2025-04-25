@@ -37,6 +37,8 @@ export default function EquipoAdmin({ equipo }: { equipo: Equipo[] }) {
 
         const usersData: Users[] = [];
 
+        console.log(equipo)
+
         equipo.map((equipoItem) => {
             const jornadas = equipoItem.fichaje_jornada.sort((a, b) => Number(a.id) - Number(b.id));
             const ultimaJornada = jornadas?.[jornadas.length - 1];
@@ -45,6 +47,7 @@ export default function EquipoAdmin({ equipo }: { equipo: Equipo[] }) {
             const localizacion = eventos && eventos.length > 0 ? eventos[eventos.length - 1].localizacion : '-';
             const hora = ultimaJornada?.date ?? '-';
             const hora_aprox_salida = ultimaJornada?.date_final_aprox ?? '-';
+            console.log(jornadas)
             usersData.push({
                 id: equipoItem.id,
                 fichaje_id: ultimaJornada?.id,
@@ -133,7 +136,7 @@ export default function EquipoAdmin({ equipo }: { equipo: Equipo[] }) {
             supabase.removeChannel(eventosRealTime);
         };
 
-    }, [])
+    }, [equipo])
 
     function parseHora(hora: string | Date): string {
         if (!hora) return '-';

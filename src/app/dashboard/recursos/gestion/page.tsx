@@ -6,6 +6,7 @@ import styles from './gestion.module.css';
 import EquipoAdmin from '@/components/recursos/gestion/Equipo';
 import { createClient } from '@/utils/supabase/client';
 import { Equipo } from '@/types/Types';
+import { useRouter } from 'next/navigation';
 
 export default function GestionPage() {
     const [equipo, setEquipo] = useState<Equipo[]>([]);
@@ -14,48 +15,40 @@ export default function GestionPage() {
     const [option, setOption] = useState('Esta semana');
     const [localizacion, setLocalizacion] = useState('all');
     const [reciente, setReciente] = useState(true);
+    const supabase = createClient();
+    const router = useRouter();
 
     useEffect(() => {
-        const fetchEquipo = async () => {
-            const supabase = createClient();
-            const { data: userData } = await supabase.auth.getUser();
-            const user = userData?.user;
-
+        const fetchData = async () => {
+            const { data } = await supabase.auth.getUser();
+            const user = data?.user;
+            if (!user) {
+                await supabase.auth.signOut();
+                router.push('/')
+            }
             const { data: dataEquipo, error: errorEquipo } = await supabase
                 .from('profiles')
-                .select(`
-          id, nombre, apellido, email, image, estado, horas_semana,
-          fichaje_jornada(id, date, date_final_aprox, total_trabajado, comentario, profile_id, fichaje_eventos(*))
-        `)
+                .select('id, nombre, apellido, email, image, estado, horas_semana, fichaje_jornada(id, date, date_final_aprox,total_trabajado, comentario, profile_id, fichaje_eventos(*))')
                 .neq('user_id', user?.id);
 
             if (errorEquipo) {
-                console.log('Error equipo: ', errorEquipo);
-                return;
+                console.log('Error fetching Equipo: ', errorEquipo);
             }
 
-            setEquipo(dataEquipo || []);
-        };
+            if (dataEquipo && dataEquipo.length > 0) {
+                setEquipo(dataEquipo);
+                //console.log(dataEquipo)
+            }
+        }
 
-        fetchEquipo();
-    }, []);
+        fetchData();
+
+    }, [])
+
 
     return (
         <div className={styles.container}>
-            <ContainerOptions ubicacion={false}
-                urlExportar={'#'}
-                usuarios={false}
-                añadirUsuario={false}
-                startDate={startDate}
-                setStartDate={setStartDate}
-                endDate={endDate}
-                setEndDate={setEndDate}
-                option={option}
-                setOption={setOption}
-                localizacion={localizacion}
-                setLocalizacion={setLocalizacion}
-                reciente={reciente}
-                setReciente={setReciente} />
+            <ContainerOptions ubicacion={false} urlExportar={'#'} usuarios={false} añadirUsuario={false} startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate} option={option} setOption={setOption} localizacion={localizacion} setLocalizacion={setLocalizacion} reciente={reciente} setReciente={setReciente} />
             <EquipoAdmin equipo={equipo} />
         </div>
     );
