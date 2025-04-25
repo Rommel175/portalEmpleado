@@ -68,20 +68,24 @@ export default function ReportesPage() {
 
       let totalHoras = 0;
       const users: UserData[] = [];
-      
+
       const selectedProfiles = Object.keys(checkedState)
         .filter((key) => checkedState[parseInt(key)])
         .map((key) => parseInt(key));
 
       console.log(selectedProfiles);
 
-      for (const profile of dataProfile) {
+      const showProfiles = selectedProfiles.length === 0 ? dataProfile : dataProfile.filter((profile) =>
+        selectedProfiles.includes(profile.id)
+      );
+
+      for (const profile of showProfiles) {
         const { data: fichajeJornada } = await supabase
           .from('fichaje_jornada')
           .select('*')
           .eq('profile_id', profile.id)
           .gte('date', startOfWeek.toISOString())
-          .lt('date', endOfWeek.toISOString()); 
+          .lt('date', endOfWeek.toISOString());
 
         let totalHorasNetas = 0;
 
