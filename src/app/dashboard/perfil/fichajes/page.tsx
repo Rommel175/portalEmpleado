@@ -16,10 +16,6 @@ export default function Fichajes() {
   const supabase = createClient();
 
   useEffect(() => {
-    console.log(option)
-    console.log(startDate?.toISOString().split('T')[0])
-    console.log(endDate?.toISOString().split('T')[0])
-
     const fetchData = async () => {
 
       const date = new Date();
@@ -57,7 +53,7 @@ export default function Fichajes() {
 
         switch (option) {
           case 'Esta semana':
-            const { data: dataSemana, error: errorSemana } = await supabase
+            const { data: dataThisWeek, error: errorThisWeek } = await supabase
               .from('fichaje_jornada')
               .select('*')
               .eq('profile_id', dataProfile[0].id)
@@ -65,13 +61,15 @@ export default function Fichajes() {
               .lt('date', endOfWeek.toISOString())
               .order('date', { ascending: false });
 
-            if (errorSemana) {
-              console.log('Error fetching Jornada: ', errorSemana);
+            if (errorThisWeek) {
+              console.log('Error fetching Jornada: ', errorThisWeek);
             }
 
-            if (dataSemana && dataSemana.length > 0) {
-              const fetchedFechas = dataSemana.map(jornada => jornada.date);
+            if (dataThisWeek && dataThisWeek.length > 0) {
+              const fetchedFechas = dataThisWeek.map(jornada => jornada.date);
               setFechas(fetchedFechas);
+            } else {
+              setFechas([]);
             }
             break;
           case 'Hoy':
@@ -83,7 +81,7 @@ export default function Fichajes() {
             endToday.setDate(endToday.getDate() + 1);
             endToday.setHours(0, 0, 0, 0);
 
-            const { data: dataHoy, error: errorHoy } = await supabase
+            const { data: dataToday, error: errorToday } = await supabase
               .from('fichaje_jornada')
               .select('*')
               .eq('profile_id', dataProfile[0].id)
@@ -91,14 +89,15 @@ export default function Fichajes() {
               .lt('date', endToday.toISOString())
               .order('date', { ascending: false });
 
-            if (errorHoy) {
-              console.log('Error fetching Jornada: ', errorHoy);
+            if (errorToday) {
+              console.log('Error fetching Jornada: ', errorToday);
             }
 
-            if (dataHoy && dataHoy.length > 0) {
-              const fetchedFechas = dataHoy.map(jornada => jornada.date);
+            if (dataToday && dataToday.length > 0) {
+              const fetchedFechas = dataToday.map(jornada => jornada.date);
               setFechas(fetchedFechas);
-              console.log(dataHoy)
+            } else {
+              setFechas([]);
             }
             break;
           case 'Ayer':
@@ -110,7 +109,7 @@ export default function Fichajes() {
             endYesterday.setDate(endYesterday.getDate() + 1);
             endYesterday.setHours(0, 0, 0, 0);
 
-            const { data: dataAyer, error: errorAyer } = await supabase
+            const { data: dataYesterday, error: errorYesterday } = await supabase
               .from('fichaje_jornada')
               .select('*')
               .eq('profile_id', dataProfile[0].id)
@@ -118,14 +117,189 @@ export default function Fichajes() {
               .lt('date', endYesterday.toISOString())
               .order('date', { ascending: false });
 
-            if (errorAyer) {
-              console.log('Error fetching Jornada: ', errorAyer);
+            if (errorYesterday) {
+              console.log('Error fetching Jornada: ', errorYesterday);
             }
 
-            if (dataAyer && dataAyer.length > 0) {
-              const fetchedFechas = dataAyer.map(jornada => jornada.date);
+            if (dataYesterday && dataYesterday.length > 0) {
+              const fetchedFechas = dataYesterday.map(jornada => jornada.date);
               setFechas(fetchedFechas);
-              console.log(dataAyer)
+            } else {
+              setFechas([]);
+            }
+            break;
+          case 'Semana pasada':
+            if (!startDate) return;
+            if (!endDate) return
+            const startLastWeek = new Date(startDate);
+            startLastWeek.setHours(0, 0, 0, 0);
+
+            const endLastWeek = new Date(endDate);
+            endLastWeek.setDate(endLastWeek.getDate() + 1);
+            endLastWeek.setHours(0, 0, 0, 0);
+
+            const { data: dataLastWeek, error: errorLastWeek } = await supabase
+              .from('fichaje_jornada')
+              .select('*')
+              .eq('profile_id', dataProfile[0].id)
+              .gte('date', startLastWeek.toISOString())
+              .lt('date', endLastWeek.toISOString())
+              .order('date', { ascending: false });
+
+            if (errorLastWeek) {
+              console.log('Error fetching Jornada: ', errorLastWeek);
+            }
+
+            if (dataLastWeek && dataLastWeek.length > 0) {
+              const fetchedFechas = dataLastWeek.map(jornada => jornada.date);
+              setFechas(fetchedFechas);
+            } else {
+              setFechas([]);
+            }
+            break;
+          case 'Este mes':
+            if (!startDate) return;
+            if (!endDate) return
+            const startThisMonth = new Date(startDate);
+            startThisMonth.setHours(0, 0, 0, 0);
+
+            const endThisMonth = new Date(endDate);
+            endThisMonth.setDate(endThisMonth.getDate() + 1);
+            endThisMonth.setHours(0, 0, 0, 0);
+
+            const { data: dataThisMonth, error: errorThisMonth } = await supabase
+              .from('fichaje_jornada')
+              .select('*')
+              .eq('profile_id', dataProfile[0].id)
+              .gte('date', startThisMonth.toISOString())
+              .lt('date', endThisMonth.toISOString())
+              .order('date', { ascending: false });
+
+            if (errorThisMonth) {
+              console.log('Error fetching Jornada: ', errorThisMonth);
+            }
+
+            if (dataThisMonth && dataThisMonth.length > 0) {
+              const fetchedFechas = dataThisMonth.map(jornada => jornada.date);
+              setFechas(fetchedFechas);
+            } else {
+              setFechas([]);
+            }
+            break;
+          case 'Mes pasado':
+            if (!startDate) return;
+            if (!endDate) return
+            const startLastMonth = new Date(startDate);
+            startLastMonth.setHours(0, 0, 0, 0);
+
+            const endLastMonth = new Date(endDate);
+            endLastMonth.setDate(endLastMonth.getDate() + 1);
+            endLastMonth.setHours(0, 0, 0, 0);
+
+            const { data: dataLastMonth, error: errorLastMonth } = await supabase
+              .from('fichaje_jornada')
+              .select('*')
+              .eq('profile_id', dataProfile[0].id)
+              .gte('date', startLastMonth.toISOString())
+              .lt('date', endLastMonth.toISOString())
+              .order('date', { ascending: false });
+
+            if (errorLastMonth) {
+              console.log('Error fetching Jornada: ', errorLastMonth);
+            }
+
+            if (dataLastMonth && dataLastMonth.length > 0) {
+              const fetchedFechas = dataLastMonth.map(jornada => jornada.date);
+              setFechas(fetchedFechas);
+            } else {
+              setFechas([]);
+            }
+            break;
+          case 'Este año':
+            if (!startDate) return;
+            if (!endDate) return
+            const startThisYear = new Date(startDate);
+            startThisYear.setHours(0, 0, 0, 0);
+
+            const endThisYear = new Date(endDate);
+            endThisYear.setDate(endThisYear.getDate() + 1);
+            endThisYear.setHours(0, 0, 0, 0);
+
+            const { data: dataThisYear, error: errorThisYear } = await supabase
+              .from('fichaje_jornada')
+              .select('*')
+              .eq('profile_id', dataProfile[0].id)
+              .gte('date', startThisYear.toISOString())
+              .lt('date', endThisYear.toISOString())
+              .order('date', { ascending: false });
+
+            if (errorThisYear) {
+              console.log('Error fetching Jornada: ', errorThisYear);
+            }
+
+            if (dataThisYear && dataThisYear.length > 0) {
+              const fetchedFechas = dataThisYear.map(jornada => jornada.date);
+              setFechas(fetchedFechas);
+            } else {
+              setFechas([]);
+            }
+            break;
+          case 'Año pasado':
+            if (!startDate) return;
+            if (!endDate) return
+            const startLastYear = new Date(startDate);
+            startLastYear.setHours(0, 0, 0, 0);
+
+            const endLastYear = new Date(endDate);
+            endLastYear.setDate(endLastYear.getDate() + 1);
+            endLastYear.setHours(0, 0, 0, 0);
+
+            const { data: dataLastYear, error: errorLastYear } = await supabase
+              .from('fichaje_jornada')
+              .select('*')
+              .eq('profile_id', dataProfile[0].id)
+              .gte('date', startLastYear.toISOString())
+              .lt('date', endLastYear.toISOString())
+              .order('date', { ascending: false });
+
+            if (errorLastYear) {
+              console.log('Error fetching Jornada: ', errorLastYear);
+            }
+
+            if (dataLastYear && dataLastYear.length > 0) {
+              const fetchedFechas = dataLastYear.map(jornada => jornada.date);
+              setFechas(fetchedFechas);
+            } else {
+              setFechas([]);
+            }
+            break;
+          case '':
+            if (!startDate) return;
+            if (!endDate) return
+            const startCustom = new Date(startDate);
+            startCustom.setHours(0, 0, 0, 0);
+
+            const endCustom = new Date(endDate);
+            endCustom.setDate(endCustom.getDate() + 1);
+            endCustom.setHours(0, 0, 0, 0);
+
+            const { data: dataCustom, error: errorCustom } = await supabase
+              .from('fichaje_jornada')
+              .select('*')
+              .eq('profile_id', dataProfile[0].id)
+              .gte('date', startCustom.toISOString())
+              .lt('date', endCustom.toISOString())
+              .order('date', { ascending: false });
+
+            if (errorCustom) {
+              console.log('Error fetching Jornada: ', errorCustom);
+            }
+
+            if (dataCustom && dataCustom.length > 0) {
+              const fetchedFechas = dataCustom.map(jornada => jornada.date);
+              setFechas(fetchedFechas);
+            } else {
+              setFechas([]);
             }
             break;
         }
