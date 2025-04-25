@@ -12,11 +12,13 @@ export default function Fichajes({ params }: { params: Promise<{ id: string }> }
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [option, setOption] = useState('Esta semana');
   const [fechas, setFechas] = useState<string[]>([]);
+  const [localizacion, setLocalizacion] = useState('all');
   const [profile, setProfile] = useState<Profile[]>([]);
   const supabase = createClient();
 
   useEffect(() => {
     const fetchData = async () => {
+      console.log(localizacion)
 
       const date = new Date();
       const startOfWeek = new Date(date);
@@ -300,7 +302,7 @@ export default function Fichajes({ params }: { params: Promise<{ id: string }> }
     };
 
     fetchData();
-  }, [option, startDate, endDate]);
+  }, [option, startDate, endDate, localizacion]);
 
   return (
     <>
@@ -314,10 +316,12 @@ export default function Fichajes({ params }: { params: Promise<{ id: string }> }
         setEndDate={setEndDate}
         option={option}
         setOption={setOption}
+        localizacion={localizacion}
+        setLocalizacion={setLocalizacion}
       />
       {
         fechas.map((fecha) => {
-          return <EntradasFichajes key={fecha} date={fecha} profile={profile} />
+          return <EntradasFichajes key={fecha} date={fecha} profile={profile} localizacion={localizacion} />
         })
       }
     </>

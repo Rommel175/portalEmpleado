@@ -12,12 +12,12 @@ export default function Fichajes() {
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [option, setOption] = useState('Esta semana');
   const [fechas, setFechas] = useState<string[]>([]);
+  const [localizacion, setLocalizacion] = useState('all');
   const [profile, setProfile] = useState<Profile[]>([]);
   const supabase = createClient();
 
   useEffect(() => {
     const fetchData = async () => {
-
       const date = new Date();
       const startOfWeek = new Date(date);
       const day = startOfWeek.getDay();
@@ -307,7 +307,7 @@ export default function Fichajes() {
     };
 
     fetchData();
-  }, [option, startDate, endDate]);
+  }, [option, startDate, endDate, localizacion]);
 
   return (
     <>
@@ -321,10 +321,12 @@ export default function Fichajes() {
         setEndDate={setEndDate}
         option={option}
         setOption={setOption}
+        localizacion={localizacion}
+        setLocalizacion={setLocalizacion}
       />
       {
         fechas.map((fecha) => {
-          return <EntradasFichajes key={fecha} date={fecha} profile={profile} />
+          return <EntradasFichajes key={fecha} date={fecha} profile={profile} localizacion={localizacion}/>
         })
       }
     </>

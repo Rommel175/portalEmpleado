@@ -40,7 +40,7 @@ export default function DatosContainer({ profile, estado, localizacionFichaje, s
         };
     }, [])
 
-    async function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
+    function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
         setLocalizacionFichaje(e.target.value);
     }
 

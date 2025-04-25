@@ -17,9 +17,15 @@ type Prop = {
   setEndDate: React.Dispatch<React.SetStateAction<Date | null>>,
   option: string,
   setOption: React.Dispatch<React.SetStateAction<string>>,
+  localizacion: string,
+  setLocalizacion: React.Dispatch<React.SetStateAction<string>>
 }
 
-export default function ContainerOptions({ exportar = true, recientes = true, tipoRegistro = true, ubicacion = true, semanal = true, urlExportar, usuarios = true, añadirUsuario = true, startDate, setStartDate, endDate, setEndDate, option, setOption }: Prop) {
+export default function ContainerOptions({ exportar = true, recientes = true, tipoRegistro = true, ubicacion = true, semanal = true, urlExportar, usuarios = true, añadirUsuario = true, startDate, setStartDate, endDate, setEndDate, option, setOption, localizacion, setLocalizacion }: Prop) {
+  function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
+    setLocalizacion(e.target.value);
+  }
+
   return (
     <div className={styles.options}>
       {
@@ -97,8 +103,11 @@ export default function ContainerOptions({ exportar = true, recientes = true, ti
               <path d="M8.14542 8.91215C9.04916 8.91215 9.78178 8.17953 9.78178 7.27579C9.78178 6.37205 9.04916 5.63943 8.14542 5.63943C7.24168 5.63943 6.50906 6.37205 6.50906 7.27579C6.50906 8.17953 7.24168 8.91215 8.14542 8.91215Z" stroke="#7B8794" strokeWidth="0.818182" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
 
-            <select name="location" id="location">
-              <option value="0">Ubicación</option>
+            <select name="location" id="location" value={localizacion} onChange={handleChange} >
+              <option value="all">All</option>
+              <option value="oficina">Oficina</option>
+              <option value="casa">Casa</option>
+              <option value="viaje">Viaje</option>
             </select>
           </div>
         }
