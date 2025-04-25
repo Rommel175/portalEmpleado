@@ -25,6 +25,7 @@ export default function ReportesPage() {
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [option, setOption] = useState('Esta semana');
   const [localizacion, setLocalizacion] = useState('all');
+  const [reciente, setReciente] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -155,7 +156,9 @@ export default function ReportesPage() {
         option={option}
         setOption={setOption}
         localizacion={localizacion}
-        setLocalizacion={setLocalizacion} />
+        setLocalizacion={setLocalizacion}
+        reciente={reciente}
+        setReciente={setReciente} />
       <ReportesTable users={usersData} totalHorasTrabajadas={totalHorasTrabajadas} />
     </div>
   );

@@ -9,6 +9,7 @@ export default function Solicitudes() {
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [option, setOption] = useState('Esta semana');
   const [localizacion, setLocalizacion] = useState('all');
+  const [reciente, setReciente]= useState(true);
   return (
     <>
       <ContainerOptions ubicacion={false}
@@ -22,7 +23,9 @@ export default function Solicitudes() {
         option={option}
         setOption={setOption}
         localizacion={localizacion}
-        setLocalizacion={setLocalizacion} />
+        setLocalizacion={setLocalizacion} 
+        reciente={reciente}
+        setReciente={setReciente} />
       <EntradaSolicitudes />
       <EntradaSolicitudes />
       <EntradaSolicitudes />
