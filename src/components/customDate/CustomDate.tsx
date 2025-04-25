@@ -41,7 +41,7 @@ export default function CustomDate({startDate, setStartDate, endDate, setEndDate
     const lastDayOfLastYear = new Date(today.getFullYear() - 1, 11, 31);
 
     useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
+        function handleClickOutside(event: MouseEvent) {
             if (datepickerRef.current && !datepickerRef.current.contains(event.target as Node)) {
                 setShow(false);
             }

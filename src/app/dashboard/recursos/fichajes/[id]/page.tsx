@@ -15,6 +15,7 @@ export default function Fichajes({ params }: { params: Promise<{ id: string }> }
   const [localizacion, setLocalizacion] = useState('all');
   const [reciente, setReciente] = useState(true);
   const [profile, setProfile] = useState<Profile[]>([]);
+  const [checkedState, setCheckedState] = useState<{ [key: string]: boolean }>({});
   const supabase = createClient();
 
   useEffect(() => {
@@ -111,6 +112,8 @@ export default function Fichajes({ params }: { params: Promise<{ id: string }> }
         setLocalizacion={setLocalizacion}
         reciente={reciente}
         setReciente={setReciente}
+        checkedState={checkedState}
+        setCheckedState={setCheckedState}
       />
       {
         fechas.map((fecha) => {

@@ -15,6 +15,7 @@ export default function GestionPage() {
     const [option, setOption] = useState('Esta semana');
     const [localizacion, setLocalizacion] = useState('all');
     const [reciente, setReciente] = useState(true);
+    const [checkedState, setCheckedState] = useState<{ [key: string]: boolean }>({});
     const supabase = createClient();
     const router = useRouter();
 
@@ -48,7 +49,7 @@ export default function GestionPage() {
 
     return (
         <div className={styles.container}>
-            <ContainerOptions añadirUsuario={true} startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate} option={option} setOption={setOption} localizacion={localizacion} setLocalizacion={setLocalizacion} reciente={reciente} setReciente={setReciente} />
+            <ContainerOptions añadirUsuario={true} startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate} option={option} setOption={setOption} localizacion={localizacion} setLocalizacion={setLocalizacion} reciente={reciente} setReciente={setReciente} checkedState={checkedState} setCheckedState={setCheckedState}/>
             <EquipoAdmin equipo={equipo} />
         </div>
     );

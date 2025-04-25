@@ -10,6 +10,7 @@ export default function Solicitudes() {
   const [option, setOption] = useState('Esta semana');
   const [localizacion, setLocalizacion] = useState('all');
   const [reciente, setReciente] = useState(true);
+  const [checkedState, setCheckedState] = useState<{ [key: string]: boolean }>({});
   return (
     <>
       <ContainerOptions
@@ -28,6 +29,8 @@ export default function Solicitudes() {
         setLocalizacion={setLocalizacion}
         reciente={reciente}
         setReciente={setReciente}
+        checkedState={checkedState}
+        setCheckedState={setCheckedState}
       />
       <EntradaSolicitudes />
       <EntradaSolicitudes />

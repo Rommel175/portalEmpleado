@@ -26,6 +26,7 @@ export default function ReportesPage() {
   const [option, setOption] = useState('Esta semana');
   const [localizacion, setLocalizacion] = useState('all');
   const [reciente, setReciente] = useState(true);
+  const [checkedState, setCheckedState] = useState<{ [key: string]: boolean }>({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -67,6 +68,12 @@ export default function ReportesPage() {
 
       let totalHoras = 0;
       const users: UserData[] = [];
+      
+      const selectedProfiles = Object.keys(checkedState)
+        .filter((key) => checkedState[parseInt(key)])
+        .map((key) => parseInt(key));
+
+      console.log(selectedProfiles);
 
       for (const profile of dataProfile) {
         const { data: fichajeJornada } = await supabase
@@ -74,7 +81,7 @@ export default function ReportesPage() {
           .select('*')
           .eq('profile_id', profile.id)
           .gte('date', startOfWeek.toISOString())
-          .lt('date', endOfWeek.toISOString());
+          .lt('date', endOfWeek.toISOString()); 
 
         let totalHorasNetas = 0;
 
@@ -135,7 +142,7 @@ export default function ReportesPage() {
     };
 
     fetchData();
-  }, []);
+  }, [checkedState]);
 
   function formatHoras(horasDecimales: number): string {
     const horas = Math.floor(horasDecimales);
@@ -160,7 +167,10 @@ export default function ReportesPage() {
         localizacion={localizacion}
         setLocalizacion={setLocalizacion}
         reciente={reciente}
-        setReciente={setReciente} />
+        setReciente={setReciente}
+        checkedState={checkedState}
+        setCheckedState={setCheckedState} />
+
       <ReportesTable users={usersData} totalHorasTrabajadas={totalHorasTrabajadas} />
     </div>
   );
