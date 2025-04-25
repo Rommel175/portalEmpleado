@@ -99,8 +99,11 @@ export default function Fichajes() {
     <>
       <ContainerOptions
         urlExportar={'#'}
-        usuarios={false}
-        añadirUsuario={false}
+        exportar={true}
+        recientes={true}
+        tipoRegistro={true}
+        ubicacion={true}
+        date={true}
         startDate={startDate}
         setStartDate={setStartDate}
         endDate={endDate}

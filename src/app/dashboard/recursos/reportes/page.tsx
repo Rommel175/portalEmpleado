@@ -147,8 +147,10 @@ export default function ReportesPage() {
     <div className={styles.container}>
       <ContainerOptions ubicacion={false}
         urlExportar={'#'}
-        usuarios={false}
-        añadirUsuario={false}
+        exportar={true}
+        recientes={true}
+        usuarios={true}
+        date={true}
         startDate={startDate}
         setStartDate={setStartDate}
         endDate={endDate}

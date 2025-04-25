@@ -83,7 +83,7 @@ export default function Fichajes({ params }: { params: Promise<{ id: string }> }
 
         if (jornadaError) {
           console.log('Error fetching Jornada: ', jornadaError);
-        } 
+        }
 
         setFechas(jornadaData?.map(j => j.date) || []);
       };
@@ -96,8 +96,11 @@ export default function Fichajes({ params }: { params: Promise<{ id: string }> }
     <>
       <ContainerOptions
         urlExportar={'#'}
-        usuarios={false}
-        añadirUsuario={false}
+        exportar={true}
+        recientes={true}
+        tipoRegistro={true}
+        ubicacion={true}
+        date={true}
         startDate={startDate}
         setStartDate={setStartDate}
         endDate={endDate}

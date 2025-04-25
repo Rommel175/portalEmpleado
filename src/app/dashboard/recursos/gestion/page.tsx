@@ -37,7 +37,7 @@ export default function GestionPage() {
 
             if (dataEquipo && dataEquipo.length > 0) {
                 setEquipo(dataEquipo);
-                //console.log(dataEquipo)
+                
             }
         }
 
@@ -48,7 +48,7 @@ export default function GestionPage() {
 
     return (
         <div className={styles.container}>
-            <ContainerOptions ubicacion={false} urlExportar={'#'} usuarios={false} añadirUsuario={false} startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate} option={option} setOption={setOption} localizacion={localizacion} setLocalizacion={setLocalizacion} reciente={reciente} setReciente={setReciente} />
+            <ContainerOptions añadirUsuario={true} startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate} option={option} setOption={setOption} localizacion={localizacion} setLocalizacion={setLocalizacion} reciente={reciente} setReciente={setReciente} />
             <EquipoAdmin equipo={equipo} />
         </div>
     );

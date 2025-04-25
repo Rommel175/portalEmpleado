@@ -7,7 +7,7 @@ type Prop = {
   recientes?: boolean,
   tipoRegistro?: boolean,
   ubicacion?: boolean,
-  semanal?: boolean,
+  date?: boolean,
   urlExportar?: string,
   usuarios?: boolean,
   añadirUsuario?: boolean,
@@ -23,7 +23,7 @@ type Prop = {
   setReciente: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export default function ContainerOptions({ exportar = true, recientes = true, tipoRegistro = true, ubicacion = true, semanal = true, urlExportar, usuarios = true, añadirUsuario = true, startDate, setStartDate, endDate, setEndDate, option, setOption, localizacion, setLocalizacion, reciente, setReciente }: Prop) {
+export default function ContainerOptions({ exportar = false, recientes = false, tipoRegistro = false, ubicacion = false, date = false, urlExportar, usuarios = false, añadirUsuario = false, startDate, setStartDate, endDate, setEndDate, option, setOption, localizacion, setLocalizacion, reciente, setReciente }: Prop) {
   function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
     setLocalizacion(e.target.value);
   }
@@ -115,7 +115,7 @@ export default function ContainerOptions({ exportar = true, recientes = true, ti
         }
 
         {
-          (semanal) &&
+          (date) &&
           <CustomDate startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate} option={option} setOption={setOption} />
         }
 
