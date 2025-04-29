@@ -14,12 +14,12 @@ type Props = {
     setOption: React.Dispatch<React.SetStateAction<string>>
 }
 
-export default function CustomDate({startDate, setStartDate, endDate, setEndDate, option, setOption}: Props) {
+export default function CustomDate({ startDate, setStartDate, endDate, setEndDate, option, setOption }: Props) {
     const [show, setShow] = useState(false);
     const datepickerRef = useRef<HTMLDivElement | null>(null);
+    const inputRef = useRef<HTMLInputElement | null>(null);
 
     const today = new Date();
-
     const yesterday = new Date(today);
     yesterday.setDate(today.getDate() - 1);
 
@@ -42,64 +42,66 @@ export default function CustomDate({startDate, setStartDate, endDate, setEndDate
 
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
-            if (datepickerRef.current && !datepickerRef.current.contains(event.target as Node)) {
+            if (datepickerRef.current && !datepickerRef.current.contains(event.target as Node) && inputRef.current && !inputRef.current.contains(event.target as Node)) {
                 setShow(false);
             }
-        };
+        }
 
         document.addEventListener('mousedown', handleClickOutside);
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-
     }, []);
 
     function handleOptions(option: string) {
-
         switch (option) {
             case 'today':
                 setStartDate(today);
                 setEndDate(today);
-                setOption('Hoy')
+                setOption('Hoy');
                 break;
             case 'yesterday':
                 setStartDate(yesterday);
                 setEndDate(yesterday);
-                setOption('Ayer')
+                setOption('Ayer');
                 break;
             case 'this_week':
                 setStartDate(mondayThisWeek);
                 setEndDate(today);
-                setOption('Esta semana')
+                setOption('Esta semana');
                 break;
             case 'last_week':
                 setStartDate(mondayLastWeek);
                 setEndDate(sundayLastWeek);
-                setOption('Semana pasada')
+                setOption('Semana pasada');
                 break;
             case 'this_month':
                 setStartDate(firstDayOfMonth);
                 setEndDate(today);
-                setOption('Este mes')
+                setOption('Este mes');
                 break;
             case 'last_month':
                 setStartDate(firstDayOfLastMonth);
                 setEndDate(lastDayOfLastMonth);
-                setOption('Mes pasado')
+                setOption('Mes pasado');
                 break;
             case 'this_year':
                 setStartDate(firstDayOfYear);
                 setEndDate(today);
-                setOption('Este año')
+                setOption('Este año');
                 break;
             case 'last_year':
                 setStartDate(firstDayOfLastYear);
                 setEndDate(lastDayOfLastYear);
-                setOption('Año pasado')
+                setOption('Año pasado');
                 break;
         }
 
         setShow(false);
+    }
+
+    function handleDatePicker() {
+        setShow(prevState => !prevState);
     }
 
     return (
@@ -115,10 +117,16 @@ export default function CustomDate({startDate, setStartDate, endDate, setEndDate
                     </clipPath>
                 </defs>
             </svg>
-            <input type="text" readOnly onClick={() => setShow(true)} placeholder="Fecha" value={option ? option : (startDate && endDate ? `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}` : '')} />
+            <input
+                ref={inputRef}
+                type="text"
+                readOnly
+                onClick={handleDatePicker} 
+                placeholder="Fecha"
+                value={option ? option : (startDate && endDate ? `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}` : '')}
+            />
 
-            {
-                show &&
+            {show && (
                 <div ref={datepickerRef} className={styles.container}>
                     <div className={styles.options}>
                         <button onClick={() => handleOptions('today')}>Hoy</button>
@@ -139,8 +147,7 @@ export default function CustomDate({startDate, setStartDate, endDate, setEndDate
                             setEndDate(end);
                             if (start && end) {
                                 setOption('');
-                                setShow(false)
-                                console.log(start, end)
+                                setShow(false);
                             }
                         }}
                         startDate={startDate}
@@ -149,10 +156,8 @@ export default function CustomDate({startDate, setStartDate, endDate, setEndDate
                         monthsShown={2}
                         inline
                     />
-
                 </div>
-            }
-
+            )}
         </div>
     );
 }

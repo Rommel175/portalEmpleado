@@ -62,6 +62,8 @@ export default function Fichajes() {
             case 'Semana pasada':
             case 'Este mes':
             case 'Mes pasado':
+            case 'Este año':
+            case 'Año pasado':
               if (!startDate || !endDate) return [start, end];
               start = new Date(startDate);
               end = new Date(endDate);
@@ -119,9 +121,9 @@ export default function Fichajes() {
         setCheckedState={setCheckedState}
       />
       {
-        fechas.map((fecha) => {
-          return <EntradasFichajes key={fecha} date={fecha} profile={profile} localizacion={localizacion} />
-        })
+        fechas.map((fecha) => (
+          <EntradasFichajes key={fecha} date={fecha} profile={profile} localizacion={localizacion} />
+        ))
       }
     </>
   );
