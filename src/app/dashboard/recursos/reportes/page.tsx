@@ -73,8 +73,6 @@ export default function ReportesPage() {
         .filter((key) => checkedState[parseInt(key)])
         .map((key) => parseInt(key));
 
-      console.log(selectedProfiles);
-
       const showProfiles = selectedProfiles.length === 0 ? dataProfile : dataProfile.filter((profile) =>
         selectedProfiles.includes(profile.id)
       );

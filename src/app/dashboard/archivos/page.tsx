@@ -1,3 +1,4 @@
+import ActividadCard from "@/components/cards/Actividad";
 import ContainerSuperior from "@/components/containers/containerSuperior/ContainerSuperior";
 import Navbar from "@/components/navbar/Navbar";
 import { createClient } from "@/utils/supabase/server";
@@ -68,21 +69,6 @@ export default async function FilesPage() {
     eventos = dataEventos && dataEventos.length > 0 ? dataEventos : [];
   }
 
-  const { data: fichaje2, error: error2 } = await supabase
-  .from('fichaje_jornada')
-  .select('*')
-  .filter('date', 'gte', '2025-04-24T00:00:00')
-  .filter('date', 'lt', '2025-04-25T00:00:00')
-  .eq('profile_id', profile[0].id);
-
-
-
-  if (error2) {
-    console.log('Error: ', error2)
-  }
-
-  console.log(fichaje2)
-
   return (
     <>
       <Navbar image={profile[0].image} title="Archivos" />
@@ -90,6 +76,7 @@ export default async function FilesPage() {
       <div style={{ display: 'none' }}>
         <ContainerSuperior profile={profile} fichaje={fichaje} eventos={eventos} />
       </div>
+      <ActividadCard horas={'30'} total={60}/>
     </>
   );
 }
