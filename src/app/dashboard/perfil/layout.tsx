@@ -11,7 +11,6 @@ export default async function PerfilLayout({ children }: { children: React.React
   const { data } = await supabase.auth.getUser();
   const user = data.user;
   let totalHoras = 0;
-  let totalHorasNetas = 0;
 
   if (!user) {
     redirect('/login')
@@ -92,6 +91,10 @@ export default async function PerfilLayout({ children }: { children: React.React
     .lt('date', endDate.toISOString())
     .eq('profile_id', profile[0].id);
 
+  if (errorFichajeCard) {
+    console.log('Error fetching Fichajes: ', errorFichajeCard);
+  }  
+
   if (dataFichajeCard && dataFichajeCard.length > 0) {
     for (const jornada of dataFichajeCard) {
       const { data: eventos } = await supabase
@@ -124,7 +127,6 @@ export default async function PerfilLayout({ children }: { children: React.React
         if (inicioJornada && finJornada && finJornada > inicioJornada) {
           const duracionJornada = (finJornada.getTime() - inicioJornada.getTime()) / 1000 / 60 / 60;
           const horasNetas = duracionJornada - totalPausas;
-          totalHorasNetas += horasNetas;
           totalHoras += horasNetas;
         }
       }
