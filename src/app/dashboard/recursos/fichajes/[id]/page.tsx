@@ -123,7 +123,7 @@ export default function Fichajes({ params }: { params: Promise<{ id: string }> }
         { header: 'ID', key: 'id', width: 10 },
         { header: 'Fichaje_id', key: 'fichaje_id', width: 30 },
         { header: 'Evento', key: 'evento', width: 30 },
-        { header: 'Fecha', key: 'date', width: 30 },
+        { header: 'Fecha', key: 'date', width: 65 },
         { header: 'Localizacion', key: 'localizacion', width: 30 }
       ];
 

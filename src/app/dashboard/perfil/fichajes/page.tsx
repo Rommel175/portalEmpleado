@@ -126,11 +126,19 @@ export default function Fichajes() {
         { header: 'ID', key: 'id', width: 10 },
         { header: 'Fichaje_id', key: 'fichaje_id', width: 30 },
         { header: 'Evento', key: 'evento', width: 30 },
-        { header: 'Fecha', key: 'date', width: 30 },
+        { header: 'Fecha', key: 'date', width: 65 },
         { header: 'Localizacion', key: 'localizacion', width: 30 }
       ];
 
-      fichajes.forEach((item) => {
+      const data = fichajes.map(item => [
+        item.id.toString(),
+        item.fichaje_id.toString(),
+        item.evento.toString(),
+        item.date.toString(),
+        item.localizacion.toString()
+      ]);
+
+      data.forEach((item) => {
         worksheet.addRow(item)
       });
 
