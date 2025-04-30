@@ -53,8 +53,8 @@ export default function CustomDate({ startDate, setStartDate, endDate, setEndDat
         };
     }, []);
 
-    function handleOptions(option: string) {
-        switch (option) {
+    function handleOptions(preset: string) {
+        switch (preset) {
             case 'today':
                 setStartDate(today);
                 setEndDate(today);
@@ -121,7 +121,7 @@ export default function CustomDate({ startDate, setStartDate, endDate, setEndDat
                 ref={inputRef}
                 type="text"
                 readOnly
-                onClick={handleDatePicker} 
+                onClick={handleDatePicker}
                 placeholder="Fecha"
                 value={option ? option : (startDate && endDate ? `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}` : '')}
             />

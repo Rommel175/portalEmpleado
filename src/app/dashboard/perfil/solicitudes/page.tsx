@@ -14,8 +14,6 @@ export default function Solicitudes() {
   return (
     <>
       <ContainerOptions
-        urlExportar={'#'}
-        exportar={true}
         recientes={true}
         tipoRegistro={true}
         date={true}

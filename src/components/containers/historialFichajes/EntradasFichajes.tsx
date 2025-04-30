@@ -1,13 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Fichaje_eventos, Profile } from '@/types/Types';
 import EntradaFichajesItem from './EntradaFichajesItem';
 import styles from './entradasFichajes.module.css';
 import { createClient } from '@/utils/supabase/client';
 
-export default function EntradasFichajes({ date, profile, localizacion }: { date: string, profile: Profile[], localizacion: string }) {
-  const [fichajes, setFichajes] = useState<Fichaje_eventos[]>([]);
+export default function EntradasFichajes({ date, profile, localizacion, fichajes, setFichajes }: { date: string, profile: Profile[], localizacion: string, fichajes: Fichaje_eventos[], setFichajes: React.Dispatch<React.SetStateAction<Fichaje_eventos[]>> }) {
   const supabase = createClient();
 
   useEffect(() => {
