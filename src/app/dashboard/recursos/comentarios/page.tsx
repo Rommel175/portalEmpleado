@@ -191,26 +191,6 @@ export default function ComentariosPage() {
         const headers = [['Nombre', 'Apellido', 'Fecha', 'Comentario']];
 
         const data: PdfType[] = [];
-        /*let previousUserName = '';
-        let previousUserLastName = '';
-        
-
-        usersData.forEach(user => {
-            user.fichajes.forEach(fichaje => {
-                const nombre = user.nombre ?? '';
-                const apellido = user.apellido ?? '';
-
-                data.push({
-                    nombre: nombre === previousUserName ? '' : nombre,
-                    apellido: apellido === previousUserLastName ? '' : apellido,
-                    fecha: new Date(fichaje.fecha).toString(), 
-                    comentario: fichaje.comentario ?? ''
-                });
-
-                previousUserName = nombre;
-                previousUserLastName = apellido;
-            });
-        });*/
 
         usersData.forEach(user => {
             user.fichajes.forEach(fichaje => {
