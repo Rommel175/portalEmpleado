@@ -293,13 +293,20 @@ export default function ComentariosPage() {
                     checkedState={checkedState}
                     setCheckedState={setCheckedState}
                 />
+
             </div>
 
             {
-                usersData.map((item, index) => {
-                    return <ComentarioContainer key={index} nombre={item.nombre} fichajes={item.fichajes} />
-                })
+                usersData.length == 0 ? (
+                    <p>No hay registros</p>
+                ) : (
+                    usersData.map((item, index) => {
+                        return <ComentarioContainer key={index} nombre={item.nombre} fichajes={item.fichajes} />
+                    })
+                )
+                
             }
+
         </div>
     );
 }

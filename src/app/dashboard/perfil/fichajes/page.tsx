@@ -241,10 +241,22 @@ export default function Fichajes() {
       </div>
 
       {
-        fechas.map((fecha) => (
-          <EntradasFichajes key={fecha} date={fecha} profile={profile} localizacion={localizacion} fichajes={fichajes} setFichajes={setFichajes} />
-        ))
+        fechas.length == 0 ? (
+          <p>No hay registros.</p>
+        ) : (
+          fechas.map((fecha) => (
+            <EntradasFichajes
+              key={fecha}
+              date={fecha}
+              profile={profile}
+              localizacion={localizacion}
+              fichajes={fichajes}
+              setFichajes={setFichajes}
+            />
+          ))
+        )
       }
+
     </>
   );
 }
