@@ -29,7 +29,7 @@
 }
 
 .tableHeader h2:nth-child(2) {
-    color: var(--dark-01, #252525);
+    background: var(--light-01, #F9F9F9);
     font-size: 13px;
     font-style: normal;
     font-weight: 500;

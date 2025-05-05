@@ -1,5 +1,9 @@
+'use client'
+
 import styles from './reportesTable.module.css'
 import ReportesTableItem from './ReportesTableItem';
+import ExcelJS from 'exceljs';
+import { saveAs } from 'file-saver';
 
 type UserData = {
   id: string,
@@ -11,7 +15,54 @@ type UserData = {
   horas_restantes: string
 }
 
-export default function ReportesTable( {users, totalHorasTrabajadas} : {users: UserData[], totalHorasTrabajadas: string} ) {
+export default function ReportesTable({ users, totalHorasTrabajadas }: { users: UserData[], totalHorasTrabajadas: string }) {
+
+  function handleExportExcel() {
+    const exportar = async () => {
+      const workbook = new ExcelJS.Workbook();
+      const worksheet = workbook.addWorksheet('Fichajes');
+
+      worksheet.columns = [
+        { header: 'ID', key: 'id', width: 10 },
+        { header: 'Nombre', key: 'nombre', width: 30 },
+        { header: 'Apellido', key: 'apellido', width: 30 },
+        { header: 'Email', key: 'email', width: 35 },
+        { header: 'Horas semanales', key: 'horas_semanales', width: 30 },
+        { header: 'Horas restantes', key: 'horas_restantes', width: 30 }
+      ];
+
+      worksheet.getRow(1).eachCell((cell) => {
+        cell.font = { bold: true };
+      });
+
+      const data = users.map(item => [
+        item.id?.toString() ?? '',
+        item.nombre?.toString() ?? '',
+        item.apellido?.toString() ?? '',
+        item.email?.toString() ?? '',
+        item.horas_semanales?.toString() ?? '',
+        item.horas_restantes?.toString() ?? ''
+      ]);      
+
+      data.forEach((item) => {
+        worksheet.addRow(item)
+      });
+
+      const buffer = await workbook.xlsx.writeBuffer();
+
+      const blob = new Blob([buffer], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      });
+
+      saveAs(blob, 'Reportes.xlsx');
+    }
+
+    exportar();
+  }
+
+
+
+
   return (
     <div className={styles.table}>
       <div className={styles.tableHeader}>
@@ -26,14 +77,14 @@ export default function ReportesTable( {users, totalHorasTrabajadas} : {users: U
         <div>
           <h2>Total:</h2>
           <h2>{totalHorasTrabajadas}h</h2>
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M14.3951 8.46672V14.1242C14.3951 14.3743 14.2924 14.6141 14.1095 14.791C13.9266 14.9678 13.6786 15.0672 13.42 15.0672H4.64416C4.38555 15.0672 4.13753 14.9678 3.95467 14.791C3.7718 14.6141 3.66907 14.3743 3.66907 14.1242V8.46672C3.66907 8.21664 3.7718 7.97681 3.95467 7.79998C4.13753 7.62315 4.38555 7.5238 4.64416 7.5238H6.1068C6.23611 7.5238 6.36012 7.57347 6.45155 7.66189C6.54298 7.75031 6.59435 7.87022 6.59435 7.99526C6.59435 8.1203 6.54298 8.24022 6.45155 8.32863C6.36012 8.41705 6.23611 8.46672 6.1068 8.46672H4.64416V14.1242H13.42V8.46672H11.9574C11.8281 8.46672 11.704 8.41705 11.6126 8.32863C11.5212 8.24022 11.4698 8.1203 11.4698 7.99526C11.4698 7.87022 11.5212 7.75031 11.6126 7.66189C11.704 7.57347 11.8281 7.5238 11.9574 7.5238H13.42C13.6786 7.5238 13.9266 7.62315 14.1095 7.79998C14.2924 7.97681 14.3951 8.21664 14.3951 8.46672ZM6.93929 5.97152L8.54453 4.41865V9.8811C8.54453 10.0061 8.5959 10.1261 8.68733 10.2145C8.77877 10.3029 8.90278 10.3526 9.03208 10.3526C9.16139 10.3526 9.2854 10.3029 9.37683 10.2145C9.46826 10.1261 9.51963 10.0061 9.51963 9.8811V4.41865L11.1249 5.97152C11.2164 6.05999 11.3404 6.10969 11.4698 6.10969C11.5992 6.10969 11.7233 6.05999 11.8148 5.97152C11.9062 5.88306 11.9576 5.76307 11.9576 5.63797C11.9576 5.51286 11.9062 5.39287 11.8148 5.30441L9.37702 2.94711C9.33174 2.90328 9.27797 2.8685 9.21878 2.84478C9.1596 2.82105 9.09615 2.80884 9.03208 2.80884C8.96801 2.80884 8.90457 2.82105 8.84538 2.84478C8.78619 2.8685 8.73242 2.90328 8.68714 2.94711L6.24941 5.30441C6.15792 5.39287 6.10653 5.51286 6.10653 5.63797C6.10653 5.76307 6.15792 5.88306 6.24941 5.97152C6.34089 6.05999 6.46497 6.10969 6.59435 6.10969C6.72373 6.10969 6.8478 6.05999 6.93929 5.97152Z" fill="#7B8794" />
+          <svg width="150" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" onClick={handleExportExcel}>
+            <path d="M14.395 8.46648V14.124C14.395 14.3741 14.2922 14.6139 14.1094 14.7907C13.9265 14.9676 13.6785 15.0669 13.4199 15.0669H4.64404C4.38543 15.0669 4.13741 14.9676 3.95454 14.7907C3.77168 14.6139 3.66895 14.3741 3.66895 14.124V8.46648C3.66895 8.2164 3.77168 7.97657 3.95454 7.79973C4.13741 7.6229 4.38543 7.52356 4.64404 7.52356H6.10668C6.23598 7.52356 6.35999 7.57323 6.45143 7.66165C6.54286 7.75006 6.59423 7.86998 6.59423 7.99502C6.59423 8.12006 6.54286 8.23997 6.45143 8.32839C6.35999 8.41681 6.23598 8.46648 6.10668 8.46648H4.64404V14.124H13.4199V8.46648H11.9572C11.8279 8.46648 11.7039 8.41681 11.6125 8.32839C11.5211 8.23997 11.4697 8.12006 11.4697 7.99502C11.4697 7.86998 11.5211 7.75006 11.6125 7.66165C11.7039 7.57323 11.8279 7.52356 11.9572 7.52356H13.4199C13.6785 7.52356 13.9265 7.6229 14.1094 7.79973C14.2922 7.97657 14.395 8.2164 14.395 8.46648ZM6.93917 5.97128L8.54441 4.41841V9.88086C8.54441 10.0059 8.59578 10.1258 8.68721 10.2142C8.77864 10.3026 8.90265 10.3523 9.03196 10.3523C9.16126 10.3523 9.28527 10.3026 9.37671 10.2142C9.46814 10.1258 9.51951 10.0059 9.51951 9.88086V4.41841L11.1248 5.97128C11.2162 6.05974 11.3403 6.10944 11.4697 6.10944C11.5991 6.10944 11.7231 6.05974 11.8146 5.97128C11.9061 5.88281 11.9575 5.76283 11.9575 5.63772C11.9575 5.51261 11.9061 5.39263 11.8146 5.30416L9.3769 2.94687C9.33162 2.90303 9.27785 2.86826 9.21866 2.84453C9.15947 2.82081 9.09603 2.80859 9.03196 2.80859C8.96789 2.80859 8.90445 2.82081 8.84526 2.84453C8.78607 2.86826 8.7323 2.90303 8.68702 2.94687L6.24929 5.30416C6.1578 5.39263 6.10641 5.51261 6.10641 5.63772C6.10641 5.76283 6.1578 5.88281 6.24929 5.97128C6.34077 6.05974 6.46485 6.10944 6.59423 6.10944C6.7236 6.10944 6.84768 6.05974 6.93917 5.97128Z" fill="#9C9FA1" />
           </svg>
         </div>
       </div>
       {
         users.map((item, index) => {
-          return <ReportesTableItem key={index} image={item.image} nombre={item.nombre} apellido={item.apellido} email={item.email} horas_semana={item.horas_semanales} horas_restantes={item.horas_restantes} id={item.id}/>
+          return <ReportesTableItem key={index} image={item.image} nombre={item.nombre} apellido={item.apellido} email={item.email} horas_semana={item.horas_semanales} horas_restantes={item.horas_restantes} id={item.id} />
         })
       }
     </div>
