@@ -223,10 +223,6 @@ export default function ComentariosPage() {
             });
         });
 
-
-
-        console.log(data)
-
         doc.setFontSize(16);
         doc.text('Comentarios', 14, 20);
 

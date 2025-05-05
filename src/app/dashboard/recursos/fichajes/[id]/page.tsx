@@ -127,6 +127,10 @@ export default function Fichajes({ params }: { params: Promise<{ id: string }> }
         { header: 'Localizacion', key: 'localizacion', width: 30 }
       ];
 
+      worksheet.getRow(1).eachCell((cell) => {
+        cell.font = { bold: true };
+      });
+
       fichajes.forEach((item) => {
         worksheet.addRow(item)
       });
