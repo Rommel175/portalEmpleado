@@ -1,4 +1,3 @@
-import ActividadCard from "@/components/cards/Actividad";
 import ContainerSuperior from "@/components/containers/containerSuperior/ContainerSuperior";
 import Navbar from "@/components/navbar/Navbar";
 import { createClient } from "@/utils/supabase/server";
@@ -69,6 +68,9 @@ export default async function FilesPage() {
     eventos = dataEventos && dataEventos.length > 0 ? dataEventos : [];
   }
 
+  /*const prueba = await fetch(`http://localhost:3000/api/profile?user_id=${user.id}`);
+  const profileData = await prueba.json();*/
+
   return (
     <>
       <Navbar image={profile[0].image} title="Archivos" />
@@ -76,7 +78,7 @@ export default async function FilesPage() {
       <div style={{ display: 'none' }}>
         <ContainerSuperior profile={profile} fichaje={fichaje} eventos={eventos} />
       </div>
-      <ActividadCard horas={'30'} total={60}/>
+      
     </>
   );
 }

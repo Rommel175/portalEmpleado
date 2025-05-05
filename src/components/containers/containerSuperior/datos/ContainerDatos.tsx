@@ -97,7 +97,7 @@ export default function DatosContainer({ profile, estado, localizacionFichaje, s
                 />
 
                 <div className={styles.personalInfo}>
-                    <h2>{profile[0].nombre} {profile[0].apellido}</h2>
+                    <h2>{profile[0].nombre} {profile[0].apellido || ''}</h2>
                     <h3>{profile[0].puesto || 'No especificado'} | {profile[0].email}</h3>
                 </div>
 

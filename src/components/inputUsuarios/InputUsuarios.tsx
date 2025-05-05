@@ -32,7 +32,7 @@ export default function InputUsuarios({checkedState, setCheckedState}: Props) {
                 const profileData: { name: string; id: string }[] = [];
 
                 dataProfiles.map((item) => {
-                    profileData.push({ name: `${item.nombre} ${item.apellido}`, id: item.id });
+                    profileData.push({ name: `${item.nombre} ${item.apellido || ''}`, id: item.id });
                 })
 
                 setProfiles(profileData);

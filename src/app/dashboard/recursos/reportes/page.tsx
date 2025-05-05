@@ -6,6 +6,7 @@ import styles from './reportes.module.css';
 import ReportesTable from '@/components/recursos/reportes/ReportesTable';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter } from 'next/navigation';
+import ActividadCard from '@/components/cards/Actividad';
 
 type UserData = {
   id: string,
@@ -20,13 +21,14 @@ type UserData = {
 export default function ReportesPage() {
   const [usersData, setUsersData] = useState<UserData[]>([]);
   const [totalHorasTrabajadas, setTotalHorasTrabajadas] = useState<string>('00:00');
-  const router = useRouter();
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [option, setOption] = useState('Esta semana');
   const [localizacion, setLocalizacion] = useState('all');
   const [reciente, setReciente] = useState(true);
   const [checkedState, setCheckedState] = useState<{ [key: string]: boolean }>({});
+  const [horasEquipo, setHorasEquipo] = useState(0);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -67,6 +69,7 @@ export default function ReportesPage() {
       endOfWeek.setHours(0, 0, 0, 0);
 
       let totalHoras = 0;
+      let horasEquipo = 0;
       const users: UserData[] = [];
 
       const selectedProfiles = Object.keys(checkedState)
@@ -78,6 +81,7 @@ export default function ReportesPage() {
       );
 
       for (const profile of showProfiles) {
+        horasEquipo += profile.horas_semana;
         const { data: fichajeJornada } = await supabase
           .from('fichaje_jornada')
           .select('*')
@@ -139,8 +143,11 @@ export default function ReportesPage() {
         });
       }
 
+      console.log(horasEquipo)
+
       setUsersData(users);
       setTotalHorasTrabajadas(formatHoras(totalHoras));
+      setHorasEquipo(horasEquipo);
     };
 
     fetchData();
@@ -154,6 +161,7 @@ export default function ReportesPage() {
 
   return (
     <div className={styles.container}>
+      <ActividadCard horas={totalHorasTrabajadas} total={horasEquipo}/>
       <div className={styles.options}>
         <div style={{ display: 'flex', gap: '30px' }}>
           <button>
@@ -173,8 +181,7 @@ export default function ReportesPage() {
 
         <ContainerOptions
           recientes={true}
-          tipoRegistro={true}
-          ubicacion={true}
+          usuarios={true}
           date={true}
           startDate={startDate}
           setStartDate={setStartDate}
