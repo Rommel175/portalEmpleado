@@ -15,20 +15,6 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
     const [horaFinalAprox, setHoraFinalAprox] = useState<Date | null>(null);
     const supabase = createClient();
 
-    //Acciones Modal Finalizar jornada
-    function handleCloseCancel() {
-        setIsOpen(false);
-    }
-
-    function handleCloseAccept() {
-        setIsOpen(false);
-        stopTimer();
-    }
-
-    function handleOpen() {
-        setIsOpen(true)
-    }
-
     useEffect(() => {
         const localTime = sessionStorage.getItem('time');
         //const run = sessionStorage.getItem('run');
@@ -80,6 +66,20 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
 
     }, []);
 
+    //Acciones Modal Finalizar jornada
+    function handleCloseCancel() {
+        setIsOpen(false);
+    }
+
+    function handleCloseAccept() {
+        setIsOpen(false);
+        stopTimer();
+    }
+
+    function handleOpen() {
+        setIsOpen(true)
+    }
+
     //AL cambiar el estado fichaje realizar las accions del timer
     useEffect(() => {
 
@@ -100,97 +100,23 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
 
     //Establecer a Activo 
     async function activo() {
+        const res = await fetch('/api/timer/iniciar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                profileId: profile.id,
+                horaFinalAprox,
+                localizacion: localizacionFichaje
+            })
+        });
 
-        const date = new Date();
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
+        const result = await res.json();
 
-        const startDate = new Date(`${year}-${month}-${day}T00:00:00Z`);
-
-        const endDate = new Date(startDate);
-        endDate.setUTCDate(startDate.getUTCDate() + 1);
-
-        const { data, error } = await supabase
-            .from('fichaje_jornada')
-            .select('id')
-            .gte('date', startDate.toISOString())
-            .lt('date', endDate.toISOString())
-            .eq('profile_id', profile.id)
-
-        if (error) {
-            console.log('Error fetching fichaje: ', error);
-        }
-
-        if (!data || data.length == 0) {
-            const { error: errorInsertFichaje } = await supabase
-                .from('fichaje_jornada')
-                .insert({ date: date.toISOString(), profile_id: profile.id, date_final_aprox: horaFinalAprox?.toISOString() })
-
-            if (errorInsertFichaje) {
-                console.log('Error insert fichaje: ', errorInsertFichaje)
-            }
-
-            const { data: dataFichaje, error: errorFichaje } = await supabase
-                .from('fichaje_jornada')
-                .select('id')
-                .eq('profile_id', profile.id)
-                .gte('date', startDate.toISOString())
-                .lt('date', endDate.toISOString())
-
-            if (errorFichaje) {
-                console.log('Error fetching fichaje');
-            }
-
-            if (dataFichaje && dataFichaje.length > 0) {
-                const fichajeId = dataFichaje[0].id;
-
-                const { error: errorInsertFichajeEvent } = await supabase
-                    .from('fichaje_eventos')
-                    .insert({ fichaje_id: fichajeId, evento: 'Inicio Jornada', date: date.toISOString(), localizacion: localizacionFichaje });
-
-                if (errorInsertFichajeEvent) {
-                    console.log('Error insert Fichaje_event: ', errorInsertFichajeEvent)
-                }
-
-                const { error: errorUpdatingEstado } = await supabase
-                    .from('profiles')
-                    .update({ estado: 'Activo' })
-                    .eq('id', profile.id)
-
-                setEstado('Activo')
-
-                if (errorUpdatingEstado) {
-                    console.log('Error updating estado: ', errorUpdatingEstado)
-                }
-
-            }
-
+        if (result && result.estado) {
+            setEstado(result.estado);
         } else {
-
-            const fichajeId = data[0].id;
-
-            const { error: errorInsertFichajeEvent } = await supabase
-                .from('fichaje_eventos')
-                .insert({ fichaje_id: fichajeId, evento: 'Inicio Jornada', date: date.toISOString(), localizacion: localizacionFichaje });
-
-            if (errorInsertFichajeEvent) {
-                console.log('Error insert Fichaje_event: ', errorInsertFichajeEvent)
-            }
-
-            const { error: errorUpdatingEstado } = await supabase
-                .from('profiles')
-                .update({ estado: 'Activo' })
-                .eq('id', profile.id)
-
-            setEstado('Activo')
-
-            if (errorUpdatingEstado) {
-                console.log('Error updating estado: ', errorUpdatingEstado)
-            }
-
+            console.error("Error al activar el timer:", result.error);
         }
-
     };
 
     function startTimer() {
@@ -200,52 +126,21 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
 
     //Establecr a pausa 
     async function pausa() {
+        const res = await fetch('/api/timer/pausar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                profileId: profile.id,
+                localizacion: localizacionFichaje
+            })
+        });
 
-        const date = new Date();
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
+        const result = await res.json();
 
-        const startDate = new Date(`${year}-${month}-${day}T00:00:00Z`);
-
-        const endDate = new Date(startDate);
-        endDate.setUTCDate(startDate.getUTCDate() + 1);
-
-        const { data, error } = await supabase
-            .from('fichaje_jornada')
-            .select('id')
-            .gte('date', startDate.toISOString())
-            .lt('date', endDate.toISOString())
-            .eq('profile_id', profile.id)
-
-        if (error) {
-            console.log('Error fetching fichaje: ', error);
-        }
-
-        if (data && data.length > 0) {
-            const fichajeId = data[0].id;
-
-            const { error: errorInsertFichajeEvent } = await supabase
-                .from('fichaje_eventos')
-                .insert({ fichaje_id: fichajeId, evento: 'Inicio Pausa', date: date.toISOString(), localizacion: localizacionFichaje });
-
-            if (errorInsertFichajeEvent) {
-                console.log('Error insert Fichaje Evento: ', errorInsertFichajeEvent);
-            }
-
-            const { error: updateError } = await supabase
-                .from('profiles')
-                .update({ estado: 'Pausa' })
-                .eq('id', profile.id);
-
-            setEstado('Pausa')
-
-            if (updateError) {
-                console.error('Error updating fichaje:', updateError);
-                return;
-            }
-
-
+        if (result && result.estado) {
+            setEstado(result.estado);
+        } else {
+            console.error("Error al pausar el timer:", result.error);
         }
     }
 
@@ -256,49 +151,21 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
 
     //Reanudar jornada
     async function reanudar() {
-        const date = new Date();
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
+        const res = await fetch('/api/timer/reanudar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                profileId: profile.id,
+                localizacion: localizacionFichaje
+            })
+        });
 
-        const startDate = new Date(`${year}-${month}-${day}T00:00:00Z`);
+        const result = await res.json();
 
-        const endDate = new Date(startDate);
-        endDate.setUTCDate(startDate.getUTCDate() + 1);
-
-        const { data, error } = await supabase
-            .from('fichaje_jornada')
-            .select('id')
-            .gte('date', startDate.toISOString())
-            .lt('date', endDate.toISOString())
-            .eq('profile_id', profile.id)
-
-        if (error) {
-            console.log('Error fetching fichaje: ', error);
-        }
-
-        if (data && data.length > 0) {
-            const fichajeId = data[0].id;
-
-            const { error: errorInsertFichajeEvent } = await supabase
-                .from('fichaje_eventos')
-                .insert({ fichaje_id: fichajeId, evento: 'Fin Pausa', date: date.toISOString(), localizacion: localizacionFichaje });
-
-            if (errorInsertFichajeEvent) {
-                console.log('Error insert Fichaje Evento: ', errorInsertFichajeEvent);
-            }
-
-            const { error: updateError } = await supabase
-                .from('profiles')
-                .update({ estado: 'Activo' })
-                .eq('id', profile.id);
-
-            setEstado('Activo')
-
-            if (updateError) {
-                console.error('Error updating fichaje:', updateError);
-                return;
-            }
+        if (result && result.estado) {
+            setEstado(result.estado);
+        } else {
+            console.error("Error al reanudar el timer:", result.error);
         }
     }
 
@@ -307,86 +174,23 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
         sessionStorage.setItem('run', 'true');
     }
 
-    //Establecer a inactivo
+    //Establecer a Jornada Finalizada
     async function salida() {
+        const res = await fetch('/api/timer/stop', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                profileId: profile.id,
+                localizacion: localizacionFichaje
+            })
+        });
 
-        const date = new Date();
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
+        const result = await res.json();
 
-        const startDate = new Date(`${year}-${month}-${day}T00:00:00Z`);
-
-        const endDate = new Date(startDate);
-        endDate.setUTCDate(startDate.getUTCDate() + 1);
-
-        const { data, error } = await supabase
-            .from('fichaje_jornada')
-            .select('id')
-            .gte('date', startDate.toISOString())
-            .lt('date', endDate.toISOString())
-            .eq('profile_id', profile.id)
-
-        if (error) {
-            console.log('Error fetching fichaje: ', error);
-        }
-
-        if (data && data.length > 0) {
-            const fichajeId = data[0].id;
-
-            const { data: dataFichajeLastEvent, error: errorFichajeLastEvent } = await supabase
-                .from('fichaje_eventos')
-                .select('evento')
-                .eq('fichaje_id', fichajeId)
-                .order('id', { ascending: false })
-                .limit(1);
-
-            if (errorFichajeLastEvent) {
-                console.log('Error fetching Evento Pausa: ', errorFichajeLastEvent);
-            }
-
-            if (dataFichajeLastEvent && dataFichajeLastEvent.length > 0 && dataFichajeLastEvent[0].evento == 'Inicio Pausa') {
-
-                const { error: errorInsertFichajeEvent } = await supabase
-                    .from('fichaje_eventos')
-                    .insert({ fichaje_id: fichajeId, evento: 'Fin Pausa', date: date.toISOString(), localizacion: localizacionFichaje });
-
-                if (errorInsertFichajeEvent) {
-                    console.log('Error insert Fichaje Evento: ', errorInsertFichajeEvent);
-                }
-
-                const { error: errorInsertFichajeEvent2 } = await supabase
-                    .from('fichaje_eventos')
-                    .insert({ fichaje_id: fichajeId, evento: 'Jornada Finalizada', date: date.toISOString(), localizacion: localizacionFichaje });
-
-                if (errorInsertFichajeEvent2) {
-                    console.log('Error insert Fichaje Evento: ', errorInsertFichajeEvent2);
-                }
-
-            } else {
-
-                const { error: errorInsertFichajeEvent } = await supabase
-                    .from('fichaje_eventos')
-                    .insert({ fichaje_id: fichajeId, evento: 'Jornada Finalizada', date: date.toISOString(), localizacion: localizacionFichaje });
-
-                if (errorInsertFichajeEvent) {
-                    console.log('Error insert Fichaje Evento: ', errorInsertFichajeEvent);
-                }
-
-            }
-
-            const { error: updateError } = await supabase
-                .from('profiles')
-                .update({ estado: 'Jornada Finalizada' })
-                .eq('id', profile.id);
-
-            setEstado('Jornada Finalizada');
-
-            if (updateError) {
-                console.error('Error updating fichaje:', updateError);
-                return;
-            }
-
+        if (result && result.estado) {
+            setEstado(result.estado);
+        } else {
+            console.error("Error al parar el timer:", result.error);
         }
     }
 

@@ -12,7 +12,6 @@ export default function ContainerSuperior({ profile, fichaje, eventos }: { profi
     const [localizacionFichaje, setLocalizacionFichaje] = useState(eventos?.[eventos.length - 1]?.localizacion ?? 'oficina');
     const [horaInicio, setHoraInicio] = useState(fichaje?.[0]?.date ?? '');
     const [horaFinalAprox, setHoraFinalAprox] = useState(fichaje?.[0]?.date_final_aprox);
-    //console.log(fichaje);
 
     return (
         <div className={styles.containerSuperior}>
