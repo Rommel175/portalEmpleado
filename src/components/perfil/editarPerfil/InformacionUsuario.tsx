@@ -7,12 +7,12 @@ import { useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 
-export default function InformacionUsuario({ profile }: { profile: Profile[] }) {
+export default function InformacionUsuario({ profile }: { profile: Profile }) {
 
-    const [nombre, setNombre] = useState(profile[0].nombre);
-    const [apellido, setApellido] = useState(profile[0].apellido);
-    const [puesto, setPuesto] = useState(profile[0].puesto);
-    const [email, setEmail] = useState(profile[0].email);
+    const [nombre, setNombre] = useState(profile.nombre);
+    const [apellido, setApellido] = useState(profile.apellido);
+    const [puesto, setPuesto] = useState(profile.puesto);
+    const [email, setEmail] = useState(profile.email);
 
     const supabase = createClient();
 
@@ -44,7 +44,7 @@ export default function InformacionUsuario({ profile }: { profile: Profile[] }) 
 
     return (
         <div className={styles.profile}>
-            <Image src={profile[0].image} width={60} height={60} alt="img" />
+            <Image src={profile.image} width={60} height={60} alt="img" />
             <div className={styles.containerInfo}>
                 <div className={styles.personalInfo}>
                     <h2>{nombre} {apellido}</h2>

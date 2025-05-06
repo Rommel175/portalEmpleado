@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 
-export default function DatosContainer({ profile, estado, localizacionFichaje, setLocalizacionFichaje, horaInicio, setHoraInicio, horaFinalAprox, setHoraFinalAprox }: { profile: Profile[], estado: string, localizacionFichaje: string, setLocalizacionFichaje: React.Dispatch<React.SetStateAction<string>>, horaInicio: string | Date, setHoraInicio: React.Dispatch<React.SetStateAction<Date>>, horaFinalAprox: string | Date, setHoraFinalAprox: React.Dispatch<React.SetStateAction<Date>> }) {
+export default function DatosContainer({ profile, estado, localizacionFichaje, setLocalizacionFichaje, horaInicio, setHoraInicio, horaFinalAprox, setHoraFinalAprox }: { profile: Profile, estado: string, localizacionFichaje: string, setLocalizacionFichaje: React.Dispatch<React.SetStateAction<string>>, horaInicio: string | Date, setHoraInicio: React.Dispatch<React.SetStateAction<Date>>, horaFinalAprox: string | Date, setHoraFinalAprox: React.Dispatch<React.SetStateAction<Date>> }) {
 
     const supabase = createClient();
 
@@ -89,7 +89,7 @@ export default function DatosContainer({ profile, estado, localizacionFichaje, s
             <div className={styles.profile}>
 
                 <Image
-                    src={profile[0].image}
+                    src={profile.image}
                     width={60}
                     height={60}
                     alt="img"
@@ -97,8 +97,8 @@ export default function DatosContainer({ profile, estado, localizacionFichaje, s
                 />
 
                 <div className={styles.personalInfo}>
-                    <h2>{profile[0].nombre} {profile[0].apellido || ''}</h2>
-                    <h3>{profile[0].puesto || 'No especificado'} | {profile[0].email}</h3>
+                    <h2>{profile.nombre} {profile.apellido || ''}</h2>
+                    <h3>{profile.puesto || 'No especificado'} | {profile.email}</h3>
                 </div>
 
                 <div className={styles.edit}>

@@ -1,48 +1,24 @@
 import FormularioPerfil from '@/components/perfil/editarPerfil/FormularioPerfil';
 import styles from '../editarPerfil.module.css'
-import { createClient } from "@/utils/supabase/server";
 import { redirect } from 'next/navigation';
 import InformacionUsuario from '@/components/perfil/editarPerfil/InformacionUsuario';
+import { getUserData, getUsersProfile } from '@/lib/getSupabaseData';
 
 export default async function profilesPage({ params }: { params: Promise<{ id: string }> }) {
-    const { id } = await params
-    const supabase = await createClient();
-    const { data } = await supabase.auth.getUser();
-    const user = data.user;
-
-    if (!user) {
-        redirect('/login')
-    }
-
-    const { data: dataMainPofile, error: errorMainProfile } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('user_id', user.id);
-
-    if (errorMainProfile) {
-        console.log('Error fetching Main Porfile: ', errorMainProfile);
-    }
-
+    const { profile } = await getUserData();
+    
     let isAdmin = false;
-    if (dataMainPofile && dataMainPofile.length > 0) {
-        if (!dataMainPofile[0].is_admin) {
+
+    if (profile) {
+        if (!profile.is_admin) {
             redirect('/');
         }
-
-        isAdmin = dataMainPofile[0].is_admin;
+        isAdmin = profile.is_admin;
     }
 
+    const { id } = await params;
 
-    const { data: dataProfile, error: errorProfile } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', id);
-
-    const profile = dataProfile && dataProfile.length > 0 ? dataProfile : [];
-
-    if (errorProfile) {
-        console.log('Error fetching Profile: ', errorProfile);
-    }
+    const profileUser = await getUsersProfile(id);
 
 
 
@@ -57,9 +33,9 @@ export default async function profilesPage({ params }: { params: Promise<{ id: s
                 </div>
             </nav>
 
-            <InformacionUsuario  profile={profile} />
+            <InformacionUsuario  profile={profileUser} />
 
-            <FormularioPerfil profile={profile} isAdmin={isAdmin} />
+            <FormularioPerfil profile={profileUser} isAdmin={isAdmin} />
         </div>
     );
 }

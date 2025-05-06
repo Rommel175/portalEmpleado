@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
 
 type Props = {
-    profile: Profile[],
+    profile: Profile,
     isAdmin?: boolean
 }
 
@@ -21,28 +21,28 @@ export default function FormularioPerfil({ profile, isAdmin }: Props) {
     const [telefonoPersonal, setTelefonoPersonal] = useState('');
 
     useEffect(() => {
-        if (profile[0]) {
-            setNombre(profile[0].nombre ?? '');
-            setApellido(profile[0].apellido ?? '');
-            setEmail(profile[0].email ?? '');
-            setPuesto(profile[0].puesto ?? '');
-            setHorasSemana(String(profile[0].horas_semana) ?? '');
-            setEmailPersonal(profile[0].email_personal ?? '');
-            setTelefono(profile[0].telefono_empresa ?? '');
-            setTelefonoPersonal(profile[0].telefono_personal ?? '');
+        if (profile) {
+            setNombre(profile.nombre ?? '');
+            setApellido(profile.apellido ?? '');
+            setEmail(profile.email ?? '');
+            setPuesto(profile.puesto ?? '');
+            setHorasSemana(String(profile.horas_semana) ?? '');
+            setEmailPersonal(profile.email_personal ?? '');
+            setTelefono(profile.telefono_empresa ?? '');
+            setTelefonoPersonal(profile.telefono_personal ?? '');
         }
     }, [profile]);
 
     function resetForm() {
-        if (profile[0]) {
-            setNombre(profile[0].nombre ?? '');
-            setApellido(profile[0].apellido ?? '');
-            setEmail(profile[0].email ?? '');
-            setPuesto(profile[0].puesto ?? '');
-            setHorasSemana(String(profile[0].horas_semana) ?? '');
-            setEmailPersonal(profile[0].email_personal ?? '');
-            setTelefono(profile[0].telefono_empresa ?? '');
-            setTelefonoPersonal(profile[0].telefono_personal ?? '');
+        if (profile) {
+            setNombre(profile.nombre ?? '');
+            setApellido(profile.apellido ?? '');
+            setEmail(profile.email ?? '');
+            setPuesto(profile.puesto ?? '');
+            setHorasSemana(String(profile.horas_semana) ?? '');
+            setEmailPersonal(profile.email_personal ?? '');
+            setTelefono(profile.telefono_empresa ?? '');
+            setTelefonoPersonal(profile.telefono_personal ?? '');
         }
     }
 
@@ -64,7 +64,7 @@ export default function FormularioPerfil({ profile, isAdmin }: Props) {
         const { error: errorUpdate } = await supabase
             .from('profiles')
             .update({ nombre: nombre, apellido: apellido, email: email, puesto: puesto, horas_semana: horasSemana, email_personal: emailPersonal, telefono_empresa: telefono, telefono_personal: telefonoPersonal })
-            .eq('id', profile[0].id)
+            .eq('id', profile.id)
 
         if (errorUpdate) {
             console.log('Error updating Profile: ', errorUpdate);
@@ -73,15 +73,13 @@ export default function FormularioPerfil({ profile, isAdmin }: Props) {
         const { data: fichaje, error: errorFichaje } = await supabase
             .from('fichaje_jornada')
             .select('id, date')
-            .eq('profile_id', profile[0].id)
+            .eq('profile_id', profile.id)
             .gte('date', startDate.toISOString())
             .lt('date', endDate.toISOString())
 
         if (errorFichaje) {
             console.log('Error fetching jornada: ', errorFichaje)
         }
-
-        console.log(fichaje);
 
         if (fichaje && fichaje.length > 0) {
             const date = new Date(fichaje[0].date);

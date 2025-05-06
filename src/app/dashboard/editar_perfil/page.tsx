@@ -1,36 +1,11 @@
-import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
 import styles from './editarPerfil.module.css';
 import FormularioPerfil from "@/components/perfil/editarPerfil/FormularioPerfil";
 import InformacionUsuario from "@/components/perfil/editarPerfil/InformacionUsuario";
+import { getUserData } from '@/lib/getSupabaseData';
 
 export default async function profilePage() {
 
-    const supabase = await createClient();
-    const { data } = await supabase.auth.getUser();
-    const user = data.user;
-
-    if (!user) {
-        redirect('/login')
-    }
-
-    const { data: dataProfile, error: errorProfile } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('user_id', user.id);
-
-    if (errorProfile) {
-        console.log('Error fetching Profile: ', errorProfile);
-    }
-
-    let profile = []
-
-    if (dataProfile && dataProfile.length > 0) {
-        profile = dataProfile;
-    } else {
-        await supabase.auth.signOut();
-        redirect('/login');
-    }
+    const { profile } = await getUserData();
 
     return (
         <div className={styles.wraper}>
@@ -47,7 +22,7 @@ export default async function profilePage() {
 
             
 
-            <FormularioPerfil profile={profile} isAdmin={profile[0].is_admin} />
+            <FormularioPerfil profile={profile} isAdmin={profile.is_admin} />
         </div>
     );
 }

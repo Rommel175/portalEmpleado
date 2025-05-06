@@ -6,7 +6,7 @@ import { createClient } from "@/utils/supabase/client";
 import { Profile } from "@/types/Types";
 import { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 
-export default function ContainerFichaje({ estado, setEstado, profile, localizacionFichaje }: { estado: string, setEstado: React.Dispatch<React.SetStateAction<string>>, profile: Profile[], localizacionFichaje: string }) {
+export default function ContainerFichaje({ estado, setEstado, profile, localizacionFichaje }: { estado: string, setEstado: React.Dispatch<React.SetStateAction<string>>, profile: Profile, localizacionFichaje: string }) {
 
     const [isOpen, setIsOpen] = useState(false);
     const [isRunning, setRunning] = useState<boolean>(false);
@@ -52,7 +52,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
 
         setCurrentDate(formatDate);
 
-        const horasTrabajo = profile[0].horas_semana / 5;
+        const horasTrabajo = profile.horas_semana / 5;
 
         date.setHours(date.getHours() + horasTrabajo);
 
@@ -116,7 +116,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
             .select('id')
             .gte('date', startDate.toISOString())
             .lt('date', endDate.toISOString())
-            .eq('profile_id', profile[0].id)
+            .eq('profile_id', profile.id)
 
         if (error) {
             console.log('Error fetching fichaje: ', error);
@@ -125,7 +125,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
         if (!data || data.length == 0) {
             const { error: errorInsertFichaje } = await supabase
                 .from('fichaje_jornada')
-                .insert({ date: date.toISOString(), profile_id: profile[0].id, date_final_aprox: horaFinalAprox?.toISOString() })
+                .insert({ date: date.toISOString(), profile_id: profile.id, date_final_aprox: horaFinalAprox?.toISOString() })
 
             if (errorInsertFichaje) {
                 console.log('Error insert fichaje: ', errorInsertFichaje)
@@ -134,7 +134,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
             const { data: dataFichaje, error: errorFichaje } = await supabase
                 .from('fichaje_jornada')
                 .select('id')
-                .eq('profile_id', profile[0].id)
+                .eq('profile_id', profile.id)
                 .gte('date', startDate.toISOString())
                 .lt('date', endDate.toISOString())
 
@@ -156,7 +156,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
                 const { error: errorUpdatingEstado } = await supabase
                     .from('profiles')
                     .update({ estado: 'Activo' })
-                    .eq('id', profile[0].id)
+                    .eq('id', profile.id)
 
                 setEstado('Activo')
 
@@ -181,7 +181,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
             const { error: errorUpdatingEstado } = await supabase
                 .from('profiles')
                 .update({ estado: 'Activo' })
-                .eq('id', profile[0].id)
+                .eq('id', profile.id)
 
             setEstado('Activo')
 
@@ -216,7 +216,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
             .select('id')
             .gte('date', startDate.toISOString())
             .lt('date', endDate.toISOString())
-            .eq('profile_id', profile[0].id)
+            .eq('profile_id', profile.id)
 
         if (error) {
             console.log('Error fetching fichaje: ', error);
@@ -236,7 +236,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
             const { error: updateError } = await supabase
                 .from('profiles')
                 .update({ estado: 'Pausa' })
-                .eq('id', profile[0].id);
+                .eq('id', profile.id);
 
             setEstado('Pausa')
 
@@ -271,7 +271,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
             .select('id')
             .gte('date', startDate.toISOString())
             .lt('date', endDate.toISOString())
-            .eq('profile_id', profile[0].id)
+            .eq('profile_id', profile.id)
 
         if (error) {
             console.log('Error fetching fichaje: ', error);
@@ -291,7 +291,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
             const { error: updateError } = await supabase
                 .from('profiles')
                 .update({ estado: 'Activo' })
-                .eq('id', profile[0].id);
+                .eq('id', profile.id);
 
             setEstado('Activo')
 
@@ -325,7 +325,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
             .select('id')
             .gte('date', startDate.toISOString())
             .lt('date', endDate.toISOString())
-            .eq('profile_id', profile[0].id)
+            .eq('profile_id', profile.id)
 
         if (error) {
             console.log('Error fetching fichaje: ', error);
@@ -378,7 +378,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
             const { error: updateError } = await supabase
                 .from('profiles')
                 .update({ estado: 'Jornada Finalizada' })
-                .eq('id', profile[0].id);
+                .eq('id', profile.id);
 
             setEstado('Jornada Finalizada');
 
@@ -458,7 +458,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
                 <div className={styles.buttons}>
 
                     {
-                        (!profile[0].alta) && (
+                        (!profile.alta) && (
                             <>
                                 <button className={styles.entrada} onClick={startTimer} style={{ cursor: 'not-allowed' }} disabled>
                                     <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -472,7 +472,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
                     }
 
                     {
-                        ((estado == 'Activo') && profile[0].alta) && (
+                        ((estado == 'Activo') && profile.alta) && (
                             <>
                                 <button className={styles.pausa} onClick={pauseTimer}>
                                     <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -487,7 +487,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
                     }
 
                     {
-                        ((estado == 'Inactivo' || estado == 'Jornada Finalizada') && profile[0].alta) && (
+                        ((estado == 'Inactivo' || estado == 'Jornada Finalizada') && profile.alta) && (
                             <>
                                 <button className={styles.entrada} onClick={startTimer}>
                                     <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -501,7 +501,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
                     }
 
                     {
-                        ((estado == 'Pausa') && profile[0].alta) && (
+                        ((estado == 'Pausa') && profile.alta) && (
                             <>
                                 <button className={styles.entrada} onClick={reanudarTimer}>
                                     <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">

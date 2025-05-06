@@ -7,7 +7,7 @@ import { createClient } from '@/utils/supabase/client';
 //import { useRouter } from 'next/navigation';
 import { Fichaje_jornada, Profile } from '@/types/Types';
 
-export default function Modal({ profile, fichaje }: { profile: Profile[], fichaje: Fichaje_jornada[] }) {
+export default function Modal({ profile, fichaje }: { profile: Profile, fichaje: Fichaje_jornada[] }) {
     const [isOpen, setIsOpen] = useState(true);
     const [currentDate, setCurrentDate] = useState<string>("");
     const [currentTime, setCurrentTime] = useState<string>("");
@@ -37,7 +37,7 @@ export default function Modal({ profile, fichaje }: { profile: Profile[], fichaj
 
         setCurrentTime(formatHour);
 
-        const horasTrabajo = profile[0].horas_semana / 5;
+        const horasTrabajo = profile.horas_semana / 5;
 
         date.setHours(date.getHours() + horasTrabajo);
 
@@ -68,7 +68,7 @@ export default function Modal({ profile, fichaje }: { profile: Profile[], fichaj
             .select('id')
             .gte('date', startDate.toISOString())
             .lt('date', endDate.toISOString())
-            .eq('profile_id', profile[0].id)
+            .eq('profile_id', profile.id)
 
         if (error) {
             console.log('Error fetching fichaje: ', error);
@@ -77,7 +77,7 @@ export default function Modal({ profile, fichaje }: { profile: Profile[], fichaj
         if (!data || data.length == 0) {
             const { error: errorInsertFichaje } = await supabase
                 .from('fichaje_jornada')
-                .insert({ date: date.toISOString(), profile_id: profile[0].id, comentario: mensaje, date_final_aprox: horaFinalAprox?.toISOString()})
+                .insert({ date: date.toISOString(), profile_id: profile.id, comentario: mensaje, date_final_aprox: horaFinalAprox?.toISOString()})
 
             if (errorInsertFichaje) {
                 console.log('Error insert fichaje: ', errorInsertFichaje)
@@ -88,7 +88,7 @@ export default function Modal({ profile, fichaje }: { profile: Profile[], fichaj
                 .select('id')
                 .gte('date', startDate.toISOString())
                 .lt('date', endDate.toISOString())
-                .eq('profile_id', profile[0].id)
+                .eq('profile_id', profile.id)
 
             if (errorFichaje) {
                 console.log('Error fetching fichaje');
@@ -108,7 +108,7 @@ export default function Modal({ profile, fichaje }: { profile: Profile[], fichaj
                 const { error: errorUpdatingEstado } = await supabase
                     .from('profiles')
                     .update({ estado: 'Activo' })
-                    .eq('id', profile[0].id)
+                    .eq('id', profile.id)
 
                 if (errorUpdatingEstado) {
                     console.log('Error updating estado: ', errorUpdatingEstado)
@@ -133,7 +133,7 @@ export default function Modal({ profile, fichaje }: { profile: Profile[], fichaj
             const { error: errorUpdatingEstado } = await supabase
                 .from('profiles')
                 .update({ estado: 'Activo' })
-                .eq('id', profile[0].id)
+                .eq('id', profile.id)
 
             if (errorUpdatingEstado) {
                 console.log('Error updating estado: ', errorUpdatingEstado)
@@ -169,13 +169,13 @@ export default function Modal({ profile, fichaje }: { profile: Profile[], fichaj
 
     return (
 
-        (profile[0].alta && isOpen && !profile[0].is_admin && (!fichaje || fichaje.length == 0) && (profile[0].estado == 'Inactivo' || profile[0].estado == 'Jornada Finalizada')) &&
+        (profile.alta && isOpen && !profile.is_admin && (!fichaje || fichaje.length == 0) && (profile.estado == 'Inactivo' || profile.estado == 'Jornada Finalizada')) &&
         <div className={styles.overlay}>
 
             <div className={styles.modalContainer}>
                 <form className={styles.form} onSubmit={handleSubmit} >
                     <header className={styles.formHeader}>
-                        <h1>!Hola {profile[0].nombre}!</h1>
+                        <h1>!Hola {profile.nombre}!</h1>
                         <h2>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Qui ad quisquam consequatur maiores suscipit voluptatum necessitatibus placeat molestias nulla incidunt dolor dolores fugit, odit assumenda reiciendis ipsum culpa alias. Ex!</h2>
                     </header>
 
