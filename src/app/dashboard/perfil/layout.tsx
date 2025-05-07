@@ -11,6 +11,9 @@ export default async function PerfilLayout({ children }: { children: React.React
 
   const totalHoras = await getTotalHoras();
 
+  console.log(totalHoras)
+  //console.log(profile.horas_semana)
+
   function formatHoras(horasDecimales: number): string {
     const horas = Math.floor(horasDecimales);
     const minutos = Math.round((horasDecimales - horas) * 60);

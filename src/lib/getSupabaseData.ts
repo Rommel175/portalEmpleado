@@ -112,17 +112,9 @@ export async function getTotalHoras() {
     const profile = dataProfile;
 
     let totalHoras = 0;
+
     const date = new Date();
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-
-    const startDate = new Date(`${year}-${month}-${day}T00:00:00Z`);
-    const endDate = new Date(startDate);
-    endDate.setUTCDate(startDate.getUTCDate() + 1);
-
-    const dateCard = new Date();
-    const startOfWeek = new Date(dateCard);
+    const startOfWeek = new Date(date);
     const dayCard = startOfWeek.getDay();
     const diffToMonday = dayCard === 0 ? -6 : 1 - dayCard;
     startOfWeek.setDate(startOfWeek.getDate() + diffToMonday);
@@ -135,8 +127,8 @@ export async function getTotalHoras() {
     const { data: dataFichaje, error: errorFichaje } = await supabase
         .from('fichaje_jornada')
         .select('*')
-        .gte('date', startDate.toISOString())
-        .lt('date', endDate.toISOString())
+        .gte('date', startOfWeek.toISOString())
+        .lt('date', endOfWeek.toISOString())
         .eq('profile_id', profile[0].id);
 
     if (errorFichaje) {

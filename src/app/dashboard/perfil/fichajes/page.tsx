@@ -1,121 +1,92 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import { createClient } from '@/utils/supabase/client';
 import ContainerOptions from '@/components/containers/ContainerOptions';
 import EntradasFichajes from '@/components/containers/historialFichajes/EntradasFichajes';
-import { Fichaje_eventos, Profile } from '@/types/Types';
 import styles from './fichajes.module.css'
 import ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { Profile } from '@/types/Types';
+
+type EventosPorFechaType = {
+  fecha: string;
+  eventos: Evento[];
+};
+
+type Evento = {
+  id: number;
+  fichaje_id: number;
+  evento: string;
+  date: Date;
+  localizacion: string;
+};
 
 export default function Fichajes() {
 
+  const [eventosPorFecha, setEventosPorFecha] = useState<EventosPorFechaType[]>([]);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [option, setOption] = useState('Esta semana');
-  const [fechas, setFechas] = useState<string[]>([]);
   const [localizacion, setLocalizacion] = useState('all');
   const [reciente, setReciente] = useState(true);
-  const [profile, setProfile] = useState<Profile[]>([]);
   const [checkedState, setCheckedState] = useState<{ [key: string]: boolean }>({});
-  const supabase = createClient();
-  const [fichajes, setFichajes] = useState<Fichaje_eventos[]>([]);
+  const [profile, setProfile] = useState<Profile | null>(null);
 
   useEffect(() => {
-    const now = new Date();
-    const start = new Date(now);
-    let end = new Date(now);
-    const day = start.getDay();
-    const diffToMonday = day === 0 ? -6 : 1 - day;
-    start.setDate(start.getDate() + diffToMonday);
-    setStartDate(start)
-    end = new Date(start);
-    end.setDate(start.getDate() + 5);
-    setEndDate(end);
-  }, [])
 
-  useEffect(() => {
+    let start = startDate;
+    let end = endDate;
+
+    if (!startDate || !endDate) {
+      const now = new Date();
+      start = new Date(now);
+      const day = start.getDay();
+      const diffToMonday = day === 0 ? -6 : 1 - day;
+      start.setDate(start.getDate() + diffToMonday);
+
+      end = new Date(start);
+      end.setDate(start.getDate() + 5);
+
+      setStartDate(start);
+      setEndDate(end);
+    }
+
     const fetchData = async () => {
-      const { data: userData, error: userError } = await supabase.auth.getUser();
-      if (userError || !userData?.user) {
-        console.log('Error fetching User:', userError);
+
+      const params = new URLSearchParams({
+        option: option,
+        startDate: start ? start.toISOString() : '',
+        endDate: end ? end.toISOString() : '',
+        reciente: reciente.toString(),
+        localizacion: localizacion,
+      });
+
+
+      const res = await fetch(`/api/fichajes?${params.toString()}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (!res.ok) {
+        console.error('Error en la respuesta:', res.status);
+        return;
       }
 
-      const { data: dataProfile, error: errorProfile } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('user_id', userData?.user?.id);
+      const result = await res.json();
 
-      if (errorProfile || !dataProfile?.length) {
-        console.log('Error fetching Profile: ', errorProfile);
+      if (result.success) {
+        console.log(result.data)
+        setEventosPorFecha(result.data)
+        setProfile(result.profile)
       }
 
-      if (dataProfile && dataProfile.length > 0) {
-        setProfile(dataProfile);
-        const profileId = dataProfile?.[0].id;
-
-        function rangosPresets() {
-          const now = new Date();
-          let start = new Date(now);
-          let end = new Date(now);
-
-          switch (option) {
-            case 'Esta semana':
-              const day = start.getDay();
-              const diffToMonday = day === 0 ? -6 : 1 - day;
-              start.setDate(start.getDate() + diffToMonday);
-              end = new Date(start);
-              end.setDate(start.getDate() + 5);
-              break;
-            case 'Hoy':
-            case 'Ayer':
-              if (!startDate) return [start, end];
-              start = new Date(startDate);
-              start.setHours(0, 0, 0, 0);
-              end = new Date(start);
-              end.setDate(end.getDate() + 1);
-              break;
-            case 'Semana pasada':
-            case 'Este mes':
-            case 'Mes pasado':
-            case 'Este año':
-            case 'Año pasado':
-              if (!startDate || !endDate) return [start, end];
-              start = new Date(startDate);
-              end = new Date(endDate);
-              end.setDate(end.getDate() + 1);
-              break;
-          }
-
-          start.setHours(0, 0, 0, 0);
-          end.setHours(0, 0, 0, 0);
-          return [start, end];
-        }
-
-        const [start, end] = rangosPresets();
-
-        const { data: jornadaData, error: jornadaError } = await supabase
-          .from('fichaje_jornada')
-          .select('*')
-          .eq('profile_id', profileId)
-          .gte('date', start.toISOString())
-          .lt('date', end.toISOString())
-          .order('date', { ascending: !reciente });
-
-        if (jornadaError) {
-          console.log('Error fetching Jornada: ', jornadaError);
-        }
-
-        setFechas(jornadaData?.map(item => item.date) || []);
-      };
-
+      //console.log(result.data[0].eventos[0].evento);
     }
 
     fetchData();
-  }, [option, startDate, endDate, reciente]);
+  }, [option, localizacion, reciente])
 
   function handleExportExcel() {
     const exportar = async () => {
@@ -134,16 +105,16 @@ export default function Fichajes() {
         cell.font = { bold: true };
       });
 
-      const data = fichajes.map(item => [
-        item.id.toString(),
-        item.fichaje_id.toString(),
-        item.evento.toString(),
-        item.date.toString(),
-        item.localizacion.toString()
-      ]);
-
-      data.forEach((item) => {
-        worksheet.addRow(item)
+      eventosPorFecha.forEach(({ eventos }) => {
+        eventos.forEach(evento => {
+          worksheet.addRow({
+            id: evento.id,
+            fichaje_id: evento.fichaje_id,
+            evento: evento.evento,
+            date: new Date(evento.date).toLocaleString(),
+            localizacion: evento.localizacion,
+          });
+        });
       });
 
       const buffer = await workbook.xlsx.writeBuffer();
@@ -152,7 +123,7 @@ export default function Fichajes() {
         type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       });
 
-      saveAs(blob, `fichajes-${startDate?.toISOString().slice(0, 10)}/${endDate?.toISOString().slice(0, 10)}-${profile[0].nombre}${profile[0].apellido}.xlsx`);
+      saveAs(blob, `fichajes-${startDate?.toISOString().slice(0, 10)}/${endDate?.toISOString().slice(0, 10)}-${profile?.nombre || ''}${profile?.apellido || ''}.xlsx`);
     }
 
     exportar();
@@ -161,13 +132,15 @@ export default function Fichajes() {
   function handleExportPdf() {
     const doc = new jsPDF();
     const headers = [['ID', 'Fichaje_id', 'Evento', 'Fecha', 'Localizacion']];
-    const data = fichajes.map(item => [
-      item.id.toString(),
-      item.fichaje_id.toString(),
-      item.evento.toString(),
-      item.date.toString(),
-      item.localizacion.toString()
-    ]);
+    const data = eventosPorFecha.flatMap(({ eventos }) =>
+      eventos.map((e) => [
+        e.id.toString(),
+        e.fichaje_id.toString(),
+        e.evento.toString(),
+        e.date.toString(),
+        e.localizacion.toString()
+      ])
+    );    
 
     doc.setFontSize(16);
     doc.text('Historial de Fichajes', 14, 20);
@@ -198,7 +171,7 @@ export default function Fichajes() {
       margin: { top: 10, bottom: 10 },
     });
 
-    doc.save(`fichajes-${startDate?.toISOString().slice(0, 10)}/${endDate?.toISOString().slice(0, 10)}-${profile[0].nombre}${profile[0].apellido}.pdf`);
+    doc.save(`fichajes-${startDate?.toISOString().slice(0, 10)}/${endDate?.toISOString().slice(0, 10)}-${profile?.nombre || ''}${profile?.apellido || ''}.pdf`);
   }
 
   return (
@@ -241,17 +214,15 @@ export default function Fichajes() {
       </div>
 
       {
-        fechas.length == 0 ? (
+        eventosPorFecha.length == 0 ? (
           <p>No hay registros.</p>
         ) : (
-          fechas.map((fecha) => (
+
+          eventosPorFecha.map((item) => (
             <EntradasFichajes
-              key={fecha}
-              date={fecha}
-              profile={profile}
-              localizacion={localizacion}
-              fichajes={fichajes}
-              setFichajes={setFichajes}
+              key={item.fecha}
+              date={item.fecha}
+              eventos={item.eventos}
             />
           ))
         )
