@@ -145,34 +145,49 @@ export async function getTotalHoras() {
 
             if (errorEventos) {
                 console.log('Error fetching eventos: ', errorEventos);
+                continue;
             }
 
-            if (eventos && eventos.length > 0) {
-                let inicioJornada: Date | null = null;
-                let finJornada: Date | null = null;
-                let pausaInicio: Date | null = null;
-                let totalPausas = 0;
+            let trabajandoDesde: Date | null = null;
+            let enPausaDesde: Date | null = null;
+            let tiempoJornada = 0; // en horas
+            let tiempoPausa = 0;
 
-                for (const evento of eventos) {
-                    const hora = new Date(evento.date);
+            for (const evento of eventos || []) {
+                const hora = new Date(evento.date);
 
-                    if (evento.evento === 'Inicio Jornada' && !inicioJornada) {
-                        inicioJornada = hora;
-                    } else if (evento.evento === 'Jornada Finalizada') {
-                        finJornada = hora;
-                    } else if (evento.evento === 'Inicio Pausa') {
-                        pausaInicio = hora;
-                    } else if (evento.evento === 'Final Pausa' && pausaInicio && hora) {
-                        totalPausas += (hora.getTime() - pausaInicio.getTime()) / 1000 / 60 / 60;
-                        pausaInicio = null;
-                    }
+                switch (evento.evento) {
+                    case 'Inicio Jornada':
+                        if (!trabajandoDesde) trabajandoDesde = hora;
+                        break;
+
+                    case 'Inicio Pausa':
+                        if (trabajandoDesde && !enPausaDesde) {
+                            enPausaDesde = hora;
+                        }
+                        break;
+
+                    case 'Final Pausa':
+                        if (enPausaDesde) {
+                            tiempoPausa += (hora.getTime() - enPausaDesde.getTime()) / 1000 / 60 / 60;
+                            enPausaDesde = null;
+                        }
+                        break;
+
+                    case 'Jornada Finalizada':
+                        if (trabajandoDesde) {
+                            const duracion = (hora.getTime() - trabajandoDesde.getTime()) / 1000 / 60 / 60;
+                            tiempoJornada += duracion;
+                            trabajandoDesde = null;
+                            tiempoJornada -= tiempoPausa;
+                            tiempoPausa = 0;
+                        }
+                        break;
                 }
+            }
 
-                if (inicioJornada && finJornada && finJornada > inicioJornada) {
-                    const duracionJornada = (finJornada.getTime() - inicioJornada.getTime()) / 1000 / 60 / 60;
-                    const horasNetas = duracionJornada - totalPausas;
-                    totalHoras += horasNetas;
-                }
+            if (tiempoJornada > 0) {
+                totalHoras += tiempoJornada;
             }
         }
     }
@@ -192,6 +207,6 @@ export async function getUsersProfile(id: string) {
     }
 
     const profile = dataProfile && dataProfile.length > 0 ? dataProfile : [];
-    
+
     return profile[0]
 }

@@ -12,7 +12,7 @@ type Evento = {
 };
 
 export default function EntradasFichajes({ date, eventos }: { date: string, eventos: Evento[] }) {
-  
+
   function tiempoTotal(eventos: Evento[]) {
     let totalHorasTrabajadas = 0;
     let jornadaInicio: Date | null = null;
@@ -22,28 +22,35 @@ export default function EntradasFichajes({ date, eventos }: { date: string, even
     for (const evento of eventos) {
       const hora = new Date(evento.date);
 
-      if (evento.evento === 'Inicio Jornada') {
-        jornadaInicio = hora;
-        totalPausas = 0;
-      }
+      switch (evento.evento) {
+        case 'Inicio Jornada':
+          jornadaInicio = hora;
+          totalPausas = 0;
+          pausaInicio = null;
+          break;
+        case 'Inicio Pausa':
+          if (jornadaInicio && !pausaInicio) {
+            pausaInicio = hora;
+          }
+          break;
+        case 'Fin Pausa':
+          if (jornadaInicio && pausaInicio) {
+            const duracionPausa = (hora.getTime() - pausaInicio.getTime()) / 1000 / 60 / 60;
+            totalPausas += duracionPausa;
+            pausaInicio = null;
+          }
+          break;
+        case 'Jornada Finalizada':
+          if (jornadaInicio) {
+            const duracionJornada = (hora.getTime() - jornadaInicio.getTime()) / 1000 / 60 / 60;
+            const horasNetas = duracionJornada - totalPausas;
+            totalHorasTrabajadas += horasNetas;
 
-      else if (evento.evento === 'Inicio Pausa') {
-        pausaInicio = hora;
-      }
-
-      else if (evento.evento === 'Final Pausa' && pausaInicio) {
-        totalPausas += (hora.getTime() - pausaInicio.getTime()) / 1000 / 60 / 60;
-        pausaInicio = null;
-      }
-
-      else if (evento.evento === 'Jornada Finalizada' && jornadaInicio) {
-        const duracionJornada = (hora.getTime() - jornadaInicio.getTime()) / 1000 / 60 / 60;
-        const horasNetas = duracionJornada - totalPausas;
-        totalHorasTrabajadas += horasNetas;
-
-        jornadaInicio = null;
-        pausaInicio = null;
-        totalPausas = 0;
+            jornadaInicio = null;
+            pausaInicio = null;
+            totalPausas = 0;
+          }
+          break;
       }
     }
 

@@ -64,7 +64,7 @@ export default function Fichajes({ params }: { params: Promise<{ id: string }> }
         profileId: id
       });
 
-      const res = await fetch(`/api/fichajesDinamicos?${urlParams.toString()}`, {
+      const res = await fetch(`/api/fichajes/dinamico?${urlParams.toString()}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
@@ -77,7 +77,7 @@ export default function Fichajes({ params }: { params: Promise<{ id: string }> }
       const result = await res.json();
 
       if (result.success) {
-        console.log(result.data)
+        //console.log(result.data)
         setEventosPorFecha(result.data)
         setProfile(result.profile)
       }
@@ -175,6 +175,9 @@ export default function Fichajes({ params }: { params: Promise<{ id: string }> }
   return (
     <>
       <div className={styles.options}>
+        {
+          JSON.stringify(eventosPorFecha)
+        }
         <div style={{ display: 'flex', gap: '30px' }}>
           <button onClick={handleExportarPdf}>
             <svg width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">

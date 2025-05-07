@@ -77,7 +77,7 @@ export default function Fichajes() {
       const result = await res.json();
 
       if (result.success) {
-        console.log(result.data)
+        //console.log(result.data)
         setEventosPorFecha(result.data)
         setProfile(result.profile)
       }

@@ -106,7 +106,8 @@ export async function GET(req: NextRequest) {
                         const { data: dataEvento, error: errorEvento } = await supabase
                             .from('fichaje_eventos')
                             .select('*')
-                            .eq('fichaje_id', fichaje.id);
+                            .eq('fichaje_id', fichaje.id)
+                            .order('id', {ascending: true});
 
                         if (errorEvento) {
                             console.log('Error 4')
