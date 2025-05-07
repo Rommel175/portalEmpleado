@@ -148,46 +148,48 @@ export async function getTotalHoras() {
                 continue;
             }
 
-            let trabajandoDesde: Date | null = null;
-            let enPausaDesde: Date | null = null;
-            let tiempoJornada = 0; // en horas
-            let tiempoPausa = 0;
+            let totalHorasTrabajadas = 0;
+            let jornadaInicio: Date | null = null;
+            let pausaInicio: Date | null = null;
+            let totalPausas = 0;
 
             for (const evento of eventos || []) {
                 const hora = new Date(evento.date);
 
                 switch (evento.evento) {
                     case 'Inicio Jornada':
-                        if (!trabajandoDesde) trabajandoDesde = hora;
+                        jornadaInicio = hora;
+                        totalPausas = 0;
+                        pausaInicio = null;
                         break;
-
                     case 'Inicio Pausa':
-                        if (trabajandoDesde && !enPausaDesde) {
-                            enPausaDesde = hora;
+                        if (jornadaInicio && !pausaInicio) {
+                            pausaInicio = hora;
                         }
                         break;
-
-                    case 'Final Pausa':
-                        if (enPausaDesde) {
-                            tiempoPausa += (hora.getTime() - enPausaDesde.getTime()) / 1000 / 60 / 60;
-                            enPausaDesde = null;
+                    case 'Fin Pausa':
+                        if (jornadaInicio && pausaInicio) {
+                            const duracionPausa = (hora.getTime() - pausaInicio.getTime()) / 1000 / 60 / 60;
+                            totalPausas += duracionPausa;
+                            pausaInicio = null;
                         }
                         break;
-
                     case 'Jornada Finalizada':
-                        if (trabajandoDesde) {
-                            const duracion = (hora.getTime() - trabajandoDesde.getTime()) / 1000 / 60 / 60;
-                            tiempoJornada += duracion;
-                            trabajandoDesde = null;
-                            tiempoJornada -= tiempoPausa;
-                            tiempoPausa = 0;
+                        if (jornadaInicio) {
+                            const duracionJornada = (hora.getTime() - jornadaInicio.getTime()) / 1000 / 60 / 60;
+                            const horasNetas = duracionJornada - totalPausas;
+                            totalHorasTrabajadas += horasNetas;
+
+                            jornadaInicio = null;
+                            pausaInicio = null;
+                            totalPausas = 0;
                         }
                         break;
                 }
             }
 
-            if (tiempoJornada > 0) {
-                totalHoras += tiempoJornada;
+            if (totalHorasTrabajadas > 0) {
+                totalHoras += totalHorasTrabajadas;
             }
         }
     }

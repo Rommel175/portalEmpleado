@@ -22,7 +22,7 @@ export default function ActividadCard({ horas, total }: Props) {
 
             <div className={styles.content}>
                 <div className={styles.header}>
-                    <h3>{horaDecimal.toFixed(2)} h</h3>
+                    <h3>{horas} h</h3>
                     <div className={styles.horizontalBarContainer}>
                         <div className={styles.horizontalBar} style={{ width: `${porcentaje}%` }} />
                     </div>

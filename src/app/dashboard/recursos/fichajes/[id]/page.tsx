@@ -175,9 +175,6 @@ export default function Fichajes({ params }: { params: Promise<{ id: string }> }
   return (
     <>
       <div className={styles.options}>
-        {
-          JSON.stringify(eventosPorFecha)
-        }
         <div style={{ display: 'flex', gap: '30px' }}>
           <button onClick={handleExportarPdf}>
             <svg width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">

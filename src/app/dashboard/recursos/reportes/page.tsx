@@ -54,121 +54,52 @@ export default function ReportesPage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await supabase.auth.getUser();
-      const user = data.user;
 
-      if (!user) {
-        router.push('/login');
+      let start = startDate;
+      let end = endDate;
+
+      if (!startDate || !endDate) {
+        const now = new Date();
+        start = new Date(now);
+        const day = start.getDay();
+        const diffToMonday = day === 0 ? -6 : 1 - day;
+        start.setDate(start.getDate() + diffToMonday);
+
+        end = new Date(start);
+        end.setDate(start.getDate() + 5);
+
+        setStartDate(start);
+        setEndDate(end);
+      }
+
+      const params = new URLSearchParams({
+        option: option,
+        startDate: start ? start.toISOString() : '',
+        endDate: end ? end.toISOString() : '',
+        reciente: reciente.toString(),
+        localizacion: localizacion,
+        checkedState: JSON.stringify(checkedState),
+      });
+      
+
+      const res = await fetch(`/api/reportes?${params.toString()}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (!res.ok) {
+        console.error('Error en la respuesta:', res.status);
         return;
       }
 
-      const { data: dataProfile, error: errorProfile } = await supabase
-        .from('profiles')
-        .select('*')
-        .neq('user_id', user.id);
+      const result = await res.json();
 
-      if (errorProfile) {
-        console.error('Error fetching profiles: ', errorProfile);
-        return;
+      if (result.success) {
+        console.log(result)
+        setUsersData(result.users)
+        setTotalHorasTrabajadas(formatHoras(result.totalHoras));
+        setHorasEquipo(result.horasEquipo);
       }
-
-      if (!dataProfile || dataProfile.length === 0) {
-        await supabase.auth.signOut();
-        router.push('/login');
-        return;
-      }
-
-      const date = new Date();
-      const startOfWeek = new Date(date);
-      const day = startOfWeek.getDay();
-      const diffToMonday = day === 0 ? -6 : 1 - day;
-      startOfWeek.setDate(startOfWeek.getDate() + diffToMonday);
-      startOfWeek.setHours(0, 0, 0, 0);
-
-      const endOfWeek = new Date(startOfWeek);
-      endOfWeek.setDate(startOfWeek.getDate() + 5);
-      endOfWeek.setHours(0, 0, 0, 0);
-
-      let totalHoras = 0;
-      let horasEquipo = 0;
-      const users: UserData[] = [];
-
-      const selectedProfiles = Object.keys(checkedState)
-        .filter((key) => checkedState[parseInt(key)])
-        .map((key) => parseInt(key));
-
-      const showProfiles = selectedProfiles.length === 0 ? dataProfile : dataProfile.filter((profile) =>
-        selectedProfiles.includes(profile.id)
-      );
-
-      for (const profile of showProfiles) {
-        horasEquipo += profile.horas_semana;
-        const { data: fichajeJornada } = await supabase
-          .from('fichaje_jornada')
-          .select('*')
-          .eq('profile_id', profile.id)
-          .gte('date', startOfWeek.toISOString())
-          .lt('date', endOfWeek.toISOString());
-
-        let totalHorasNetas = 0;
-
-        if (fichajeJornada && fichajeJornada.length > 0) {
-          for (const jornada of fichajeJornada) {
-            const { data: eventos } = await supabase
-              .from('fichaje_eventos')
-              .select('evento, date')
-              .eq('fichaje_id', jornada.id)
-              .order('date', { ascending: true });
-
-            if (eventos && eventos.length > 0) {
-              let inicioJornada: Date | null = null;
-              let finJornada: Date | null = null;
-              let pausaInicio: Date | null = null;
-              let totalPausas = 0;
-
-              for (const evento of eventos) {
-                const hora = new Date(evento.date);
-
-                if (evento.evento === 'Inicio Jornada' && !inicioJornada) {
-                  inicioJornada = hora;
-                } else if (evento.evento === 'Jornada Finalizada') {
-                  finJornada = hora;
-                } else if (evento.evento === 'Inicio Pausa') {
-                  pausaInicio = hora;
-                } else if (evento.evento === 'Final Pausa' && pausaInicio && hora) {
-                  totalPausas += (hora.getTime() - pausaInicio.getTime()) / 1000 / 60 / 60;
-                  pausaInicio = null;
-                }
-              }
-
-              if (inicioJornada && finJornada && finJornada > inicioJornada) {
-                const duracionJornada = (finJornada.getTime() - inicioJornada.getTime()) / 1000 / 60 / 60;
-                const horasNetas = duracionJornada - totalPausas;
-                totalHorasNetas += horasNetas;
-                totalHoras += horasNetas;
-              }
-            }
-          }
-        }
-
-        const horasRestantes = profile.horas_semana - totalHorasNetas;
-
-        users.push({
-          id: profile.id,
-          nombre: profile.nombre,
-          apellido: profile.apellido,
-          email: profile.email,
-          image: profile.image,
-          horas_semanales: formatHoras(profile.horas_semana),
-          horas_restantes: formatHoras(parseFloat(horasRestantes.toFixed(2)))
-        });
-      }
-
-      console.log(horasEquipo)
-
-      setUsersData(users);
-      setTotalHorasTrabajadas(formatHoras(totalHoras));
-      setHorasEquipo(horasEquipo);
     };
 
     fetchData();
@@ -552,7 +483,7 @@ export default function ReportesPage() {
         columnStyles: {
           0: { cellWidth: 30 },
           1: { cellWidth: 30 },
-          2: { halign: 'center', cellWidth: 60},
+          2: { halign: 'center', cellWidth: 60 },
           3: { cellWidth: 30 },
           4: { cellWidth: 30 }
         },
