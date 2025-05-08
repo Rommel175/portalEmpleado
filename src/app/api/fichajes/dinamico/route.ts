@@ -16,6 +16,7 @@ export async function GET(req: NextRequest) {
     const reciente = req.nextUrl.searchParams.get('reciente');
     const localizacion = req.nextUrl.searchParams.get('localizacion');
     const profileId = req.nextUrl.searchParams.get('profileId');
+    let totalHoras = 0;
 
 
     const { data: dataProfile, error: errorProfile } = await supabase
@@ -108,7 +109,7 @@ export async function GET(req: NextRequest) {
                             .from('fichaje_eventos')
                             .select('*')
                             .eq('fichaje_id', fichaje.id)
-                            .order('id', {ascending: true})
+                            .order('id', { ascending: true })
 
                         if (errorEvento) {
                             console.log('Error 4')
@@ -155,11 +156,55 @@ export async function GET(req: NextRequest) {
                     fecha,
                     eventos
                 })
+
+                let totalHorasTrabajadas = 0;
+                let jornadaInicio: Date | null = null;
+                let pausaInicio: Date | null = null;
+                let totalPausas = 0;
+
+                for (const evento of eventos) {
+                    const hora = new Date(evento.date);
+
+                    switch (evento.evento) {
+                        case 'Inicio Jornada':
+                            jornadaInicio = hora;
+                            totalPausas = 0;
+                            pausaInicio = null;
+                            break;
+                        case 'Inicio Pausa':
+                            if (jornadaInicio && !pausaInicio) {
+                                pausaInicio = hora;
+                            }
+                            break;
+                        case 'Fin Pausa':
+                            if (jornadaInicio && pausaInicio) {
+                                const duracionPausa = (hora.getTime() - pausaInicio.getTime()) / 1000 / 60 / 60;
+                                totalPausas += duracionPausa;
+                                pausaInicio = null;
+                            }
+                            break;
+                        case 'Jornada Finalizada':
+                            if (jornadaInicio) {
+                                const duracionJornada = (hora.getTime() - jornadaInicio.getTime()) / 1000 / 60 / 60;
+                                const horasNetas = duracionJornada - totalPausas;
+                                totalHorasTrabajadas += horasNetas;
+
+                                jornadaInicio = null;
+                                pausaInicio = null;
+                                totalPausas = 0;
+                            }
+                            break;
+                    }
+                }
+
+                if (totalHorasTrabajadas > 0) {
+                    totalHoras += totalHorasTrabajadas;
+                }
             }
         }
 
 
 
-        return NextResponse.json({ success: true, data: resultadoFinal, profile: dataProfile[0] });
+        return NextResponse.json({ success: true, data: resultadoFinal, profile: dataProfile[0], totalHoras: totalHoras });
     }
 }

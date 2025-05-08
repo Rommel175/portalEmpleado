@@ -9,6 +9,7 @@ import { saveAs } from 'file-saver';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import styles from './fichajesUsuarios.module.css'
+import ActividadCard from '@/components/cards/Actividad';
 
 type EventosPorFechaType = {
   fecha: string;
@@ -33,6 +34,7 @@ export default function Fichajes({ params }: { params: Promise<{ id: string }> }
   const [profile, setProfile] = useState<Profile | null>(null);
   const [checkedState, setCheckedState] = useState<{ [key: string]: boolean }>({});
   const [eventosPorFecha, setEventosPorFecha] = useState<EventosPorFechaType[]>([]);
+  const [totalHoras, setTotalHoras] = useState<number>(0);
 
   useEffect(() => {
     let start = startDate;
@@ -77,9 +79,9 @@ export default function Fichajes({ params }: { params: Promise<{ id: string }> }
       const result = await res.json();
 
       if (result.success) {
-        //console.log(result.data)
         setEventosPorFecha(result.data)
         setProfile(result.profile)
+        setTotalHoras(result.totalHoras)
       }
     };
 
@@ -172,8 +174,15 @@ export default function Fichajes({ params }: { params: Promise<{ id: string }> }
     doc.save(`fichajes-${startDate?.toISOString().slice(0, 10)}/${endDate?.toISOString().slice(0, 10)}-${profile?.nombre || ''}${profile?.apellido || ''}.pdf`);
   }
 
+  function formatHoras(horasDecimales: number): string {
+    const horas = Math.floor(horasDecimales);
+    const minutos = Math.round((horasDecimales - horas) * 60);
+    return `${horas < 10 ? '0' + horas : horas}:${minutos < 10 ? '0' + minutos : minutos}`;
+  }
+
   return (
     <>
+      <ActividadCard horas={formatHoras(totalHoras)} total={profile?.horas_semana || 40} />
       <div className={styles.options}>
         <div style={{ display: 'flex', gap: '30px' }}>
           <button onClick={handleExportarPdf}>
