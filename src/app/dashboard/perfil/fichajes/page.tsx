@@ -9,6 +9,7 @@ import { saveAs } from 'file-saver';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { Profile } from '@/types/Types';
+import dayjs from 'dayjs';
 
 type EventosPorFechaType = {
   fecha: string;
@@ -39,15 +40,12 @@ export default function Fichajes() {
     let start = startDate;
     let end = endDate;
 
-    if (!startDate || !endDate) {
-      const now = new Date();
-      start = new Date(now);
-      const day = start.getDay();
-      const diffToMonday = day === 0 ? -6 : 1 - day;
-      start.setDate(start.getDate() + diffToMonday);
 
-      end = new Date(start);
-      end.setDate(start.getDate() + 5);
+    if (!startDate || !endDate) {
+      const now = dayjs();
+
+      start = now.day(1).startOf('day').toDate();
+      end = now.day(1).add(5, 'day').endOf('day').toDate(); 
 
       setStartDate(start);
       setEndDate(end);
@@ -109,7 +107,7 @@ export default function Fichajes() {
             id: evento.id,
             fichaje_id: evento.fichaje_id,
             evento: evento.evento,
-            date: new Date(evento.date).toLocaleString(),
+            date: dayjs(evento.date).toLocaleString(),
             localizacion: evento.localizacion,
           });
         });
@@ -138,7 +136,7 @@ export default function Fichajes() {
         e.date.toString(),
         e.localizacion.toString()
       ])
-    );    
+    );
 
     doc.setFontSize(16);
     doc.text('Historial de Fichajes', 14, 20);

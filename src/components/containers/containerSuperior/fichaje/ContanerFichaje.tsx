@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { Profile } from "@/types/Types";
 import { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
+import dayjs from 'dayjs';
+import 'dayjs/locale/es';
 
 export default function ContainerFichaje({ estado, setEstado, profile, localizacionFichaje }: { estado: string, setEstado: React.Dispatch<React.SetStateAction<string>>, profile: Profile, localizacionFichaje: string }) {
 
@@ -29,20 +31,17 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
             setRunning(false);
         }*/
 
-        const date = new Date();
-        const formatDate = new Intl.DateTimeFormat("es-ES", {
-            day: "2-digit",
-            month: "long",
-            year: "numeric"
-        }).format(date)
-
-        setCurrentDate(formatDate);
+        dayjs.locale('es');
+        
+        const date = dayjs();
+        
+        setCurrentDate(date.format("DD [de] MMMM [de] YYYY"));
 
         const horasTrabajo = profile.horas_semana / 5;
 
-        date.setHours(date.getHours() + horasTrabajo);
+        const horaFinal = date.add(horasTrabajo, 'hour');
 
-        setHoraFinalAprox(date);
+        setHoraFinalAprox(horaFinal.toDate());
 
         const profilesRealTime = supabase
             .channel('realtime-contenedor-fichar')

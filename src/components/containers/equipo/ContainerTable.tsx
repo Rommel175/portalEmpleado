@@ -6,35 +6,33 @@ import TableItem from './TableItem';
 import { useEffect, useState } from 'react';
 import { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 import { Equipo, Fichaje_eventos, Fichaje_jornada, Profile } from '@/types/Types';
+import dayjs from 'dayjs';
+
+type Users = {
+  id: string,
+  fichaje_id: string,
+  evento_id: string,
+  nombre: string,
+  apellido: string,
+  email: string,
+  estado: string,
+  image: string,
+  hora: string,
+  hora_aprox_salida: string,
+  localizacion: string,
+  fecha: string
+}
 
 export default function ContainerTable({ equipo }: { equipo: Equipo[] }) {
-
-  type Users = {
-    id: string,
-    fichaje_id: string,
-    evento_id: string,
-    nombre: string,
-    apellido: string,
-    email: string,
-    estado: string,
-    image: string,
-    hora: string,
-    hora_aprox_salida: string,
-    localizacion: string,
-    fecha: string
-  }
 
   const [users, setUsers] = useState<Users[]>([]);
   const [currentDate, setCurrentDate] = useState('');
   const supabase = createClient();
 
   useEffect(() => {
-    const date = new Date();
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
+    const date = dayjs();
 
-    setCurrentDate(`${year}-${month}-${day}`);
+    setCurrentDate(date.format('DD-MM-YYYY'));
 
     const usersData: Users[] = [];
 
@@ -138,14 +136,16 @@ export default function ContainerTable({ equipo }: { equipo: Equipo[] }) {
 
   function parseHora(hora: string | Date): string {
     if (!hora) return '-';
-    const date = typeof hora === 'string' ? new Date(hora) : hora;
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const date = dayjs(hora);
+    if (!date.isValid()) return '-';
+    return date.format('HH:mm')
   }
 
   function parseFecha(fecha: string | Date): string {
     if (!fecha) return '-';
-    const date = typeof fecha === 'string' ? new Date(fecha) : fecha;
-    return date.toISOString().slice(0, 10);
+    const date = dayjs(fecha);
+    if (!date.isValid()) return '-';
+    return date.format('DD-MM-YYYY')
   }
 
   return (

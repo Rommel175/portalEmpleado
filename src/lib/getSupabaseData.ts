@@ -1,5 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
+import dayjs from 'dayjs';
 
 export async function getUserData() {
     const supabase = await createClient();
@@ -27,14 +28,11 @@ export async function getUserData() {
     }
 
     const profile = dataProfile;
-    const date = new Date();
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
 
-    const startDate = new Date(`${year}-${month}-${day}T00:00:00Z`);
-    const endDate = new Date(startDate);
-    endDate.setUTCDate(startDate.getUTCDate() + 1);
+    const date = dayjs();
+    const startDate = date.startOf('day');
+    const endDate = startDate.add(1, 'day');
+
 
     const { data: dataFichaje, error: errorFichaje } = await supabase
         .from('fichaje_jornada')
@@ -113,16 +111,10 @@ export async function getTotalHoras() {
 
     let totalHoras = 0;
 
-    const date = new Date();
-    const startOfWeek = new Date(date);
-    const dayCard = startOfWeek.getDay();
-    const diffToMonday = dayCard === 0 ? -6 : 1 - dayCard;
-    startOfWeek.setDate(startOfWeek.getDate() + diffToMonday);
-    startOfWeek.setHours(0, 0, 0, 0);
+    const now = dayjs();
+    const startOfWeek = now.day(1).startOf('day');
+    const endOfWeek = now.day(1).add(5, 'day').endOf('day');
 
-    const endOfWeek = new Date(startOfWeek);
-    endOfWeek.setDate(startOfWeek.getDate() + 5);
-    endOfWeek.setHours(0, 0, 0, 0);
 
     const { data: dataFichaje, error: errorFichaje } = await supabase
         .from('fichaje_jornada')
@@ -149,12 +141,12 @@ export async function getTotalHoras() {
             }
 
             let totalHorasTrabajadas = 0;
-            let jornadaInicio: Date | null = null;
-            let pausaInicio: Date | null = null;
+            let jornadaInicio = null;
+            let pausaInicio = null;
             let totalPausas = 0;
 
             for (const evento of eventos || []) {
-                const hora = new Date(evento.date);
+                const hora = dayjs(evento.date);
 
                 switch (evento.evento) {
                     case 'Inicio Jornada':
@@ -169,14 +161,14 @@ export async function getTotalHoras() {
                         break;
                     case 'Fin Pausa':
                         if (jornadaInicio && pausaInicio) {
-                            const duracionPausa = (hora.getTime() - pausaInicio.getTime()) / 1000 / 60 / 60;
+                            const duracionPausa = hora.diff(pausaInicio, 'hour', true);
                             totalPausas += duracionPausa;
                             pausaInicio = null;
                         }
                         break;
                     case 'Jornada Finalizada':
                         if (jornadaInicio) {
-                            const duracionJornada = (hora.getTime() - jornadaInicio.getTime()) / 1000 / 60 / 60;
+                            const duracionJornada = hora.diff(jornadaInicio, 'hour', true); 
                             const horasNetas = duracionJornada - totalPausas;
                             totalHorasTrabajadas += horasNetas;
 

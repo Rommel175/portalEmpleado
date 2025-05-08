@@ -1,5 +1,7 @@
 'use client';
 
+import dayjs, { Dayjs } from 'dayjs';
+import duration from 'dayjs/plugin/duration';
 import EntradaFichajesItem from './EntradaFichajesItem';
 import styles from './entradasFichajes.module.css';
 
@@ -14,18 +16,18 @@ type Evento = {
 export default function EntradasFichajes({ date, eventos }: { date: string, eventos: Evento[] }) {
 
   function tiempoTotal(eventos: Evento[]) {
-    let totalHorasTrabajadas = 0;
-    let jornadaInicio: Date | null = null;
-    let pausaInicio: Date | null = null;
-    let totalPausas = 0;
+    dayjs.extend(duration);
+    let totalTiempoTrabajado = dayjs.duration(0);
+    let jornadaInicio: Dayjs | null = null;
+    let pausaInicio: Dayjs | null = null;
+    let tiempoPausa = dayjs.duration(0);
 
     for (const evento of eventos) {
-      const hora = new Date(evento.date);
+      const hora = dayjs(evento.date);
 
       switch (evento.evento) {
         case 'Inicio Jornada':
           jornadaInicio = hora;
-          totalPausas = 0;
           pausaInicio = null;
           break;
         case 'Inicio Pausa':
@@ -34,45 +36,45 @@ export default function EntradasFichajes({ date, eventos }: { date: string, even
           }
           break;
         case 'Fin Pausa':
-          if (jornadaInicio && pausaInicio) {
-            const duracionPausa = (hora.getTime() - pausaInicio.getTime()) / 1000 / 60 / 60;
-            totalPausas += duracionPausa;
+          if (pausaInicio) {
+            const pausaSegundos = hora.diff(pausaInicio, 'second');
+            tiempoPausa = tiempoPausa.add(pausaSegundos, 'second');
             pausaInicio = null;
           }
           break;
         case 'Jornada Finalizada':
           if (jornadaInicio) {
-            const duracionJornada = (hora.getTime() - jornadaInicio.getTime()) / 1000 / 60 / 60;
-            const horasNetas = duracionJornada - totalPausas;
-            totalHorasTrabajadas += horasNetas;
-
+            const jornadaSegundos = hora.diff(jornadaInicio, 'second');
+            totalTiempoTrabajado = totalTiempoTrabajado.add(jornadaSegundos, 'second');
             jornadaInicio = null;
-            pausaInicio = null;
-            totalPausas = 0;
           }
           break;
       }
     }
 
-    const horas = Math.floor(totalHorasTrabajadas);
-    const minutos = Math.floor((totalHorasTrabajadas - horas) * 60);
+    console.log(totalTiempoTrabajado.format('HH:mm:ss'))
+
+    totalTiempoTrabajado = totalTiempoTrabajado.subtract(tiempoPausa);
+
+    const horas = totalTiempoTrabajado.hours();
+    const minutos = totalTiempoTrabajado.minutes();
 
     return `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}h`;
   }
 
+
   function parseHora(hora: string | Date): string {
-    const date = typeof hora === 'string' ? new Date(hora) : hora;
-    return date.toLocaleTimeString('es-ES', {
-      hour: '2-digit',
-      minute: '2-digit',
-      timeZone: 'Europe/Madrid',
-    });
+    const date = dayjs(hora);
+    if (!date.isValid()) return '-';
+    return date.format('HH:mm')
   }
 
   function parseFecha(fecha: string | Date): string {
-    const date = typeof fecha === 'string' ? new Date(fecha) : fecha;
-    return date.toISOString().slice(0, 10);
+    const date = dayjs(fecha);
+    if (!date.isValid()) return '-';
+    return date.format('DD-MM-YYYY')
   }
+
 
   return (
     <div className={styles.container}>

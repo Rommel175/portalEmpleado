@@ -1,5 +1,9 @@
 import { createClient } from "@/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
+import dayjs from 'dayjs';
+import duration, { Duration } from 'dayjs/plugin/duration';
+
+dayjs.extend(duration);
 
 export async function GET(req: NextRequest) {
     const supabase = await createClient();
@@ -10,13 +14,7 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
 
-    /*const option = req.nextUrl.searchParams.get('option');
-    const startDate = req.nextUrl.searchParams.get('startDate');
-    const endDate = req.nextUrl.searchParams.get('endDate');
-    const reciente = req.nextUrl.searchParams.get('reciente');
-    const localizacion = req.nextUrl.searchParams.get('localizacion');*/
     const checkedState = JSON.parse(req.nextUrl.searchParams.get('checkedState') || '{}');
-
 
     const { data: dataProfile, error: errorProfile } = await supabase
         .from('profiles')
@@ -27,16 +25,9 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ error: errorProfile }, { status: 500 });
     }
 
-    const date = new Date();
-    const startOfWeek = new Date(date);
-    const day = startOfWeek.getDay();
-    const diffToMonday = day === 0 ? -6 : 1 - day;
-    startOfWeek.setDate(startOfWeek.getDate() + diffToMonday);
-    startOfWeek.setHours(0, 0, 0, 0);
-
-    const endOfWeek = new Date(startOfWeek);
-    endOfWeek.setDate(startOfWeek.getDate() + 5);
-    endOfWeek.setHours(0, 0, 0, 0);
+    const today = dayjs();
+    const startOfWeek = today.startOf('week').add(1, 'day').hour(0).minute(0).second(0).millisecond(0);
+    const endOfWeek = startOfWeek.add(5, 'day');
 
     let totalHoras = 0;
     let horasEquipo = 0;
@@ -46,12 +37,12 @@ export async function GET(req: NextRequest) {
         .filter((key) => checkedState[parseInt(key)])
         .map((key) => parseInt(key));
 
-    const showProfiles = selectedProfiles.length === 0 ? dataProfile : dataProfile.filter((profile) =>
-        selectedProfiles.includes(profile.id)
-    );
+    const showProfiles = selectedProfiles.length === 0
+        ? dataProfile
+        : dataProfile.filter((profile) => selectedProfiles.includes(profile.id));
 
     for (const profile of showProfiles) {
-        let totalHorasPerfil = 0;
+        let totalHorasPerfil = dayjs.duration(0);
         horasEquipo += profile.horas_semana;
 
         const { data: dataFichaje, error: errorFichaje } = await supabase
@@ -65,8 +56,6 @@ export async function GET(req: NextRequest) {
             return NextResponse.json({ error: errorFichaje }, { status: 500 });
         }
 
-        //let totalHorasNetas = 0;    
-
         if (dataFichaje && dataFichaje.length > 0) {
             for (const jornada of dataFichaje) {
                 const { data: eventos, error: errorEventos } = await supabase
@@ -76,21 +65,21 @@ export async function GET(req: NextRequest) {
                     .order('date', { ascending: true });
 
                 if (errorEventos) {
-                    return NextResponse.json({ error: errorEventos }, { status: 500 })
+                    console.log('Error fetching eventos: ', errorEventos);
+                    continue;
                 }
 
-                let totalHorasTrabajadas = 0;
-                let jornadaInicio: Date | null = null;
-                let pausaInicio: Date | null = null;
-                let totalPausas = 0;
+                let jornadaInicio: dayjs.Dayjs | null = null;
+                let pausaInicio: dayjs.Dayjs | null = null;
+                let totalPausas = dayjs.duration(0);
 
                 for (const evento of eventos || []) {
-                    const hora = new Date(evento.date);
+                    const hora = dayjs(evento.date);
 
                     switch (evento.evento) {
                         case 'Inicio Jornada':
                             jornadaInicio = hora;
-                            totalPausas = 0;
+                            totalPausas = dayjs.duration(0);
                             pausaInicio = null;
                             break;
                         case 'Inicio Pausa':
@@ -100,33 +89,28 @@ export async function GET(req: NextRequest) {
                             break;
                         case 'Fin Pausa':
                             if (jornadaInicio && pausaInicio) {
-                                const duracionPausa = (hora.getTime() - pausaInicio.getTime()) / 1000 / 60 / 60;
-                                totalPausas += duracionPausa;
+                                totalPausas = totalPausas.add(dayjs.duration(hora.diff(pausaInicio)));
                                 pausaInicio = null;
                             }
                             break;
                         case 'Jornada Finalizada':
                             if (jornadaInicio) {
-                                const duracionJornada = (hora.getTime() - jornadaInicio.getTime()) / 1000 / 60 / 60;
-                                const horasNetas = duracionJornada - totalPausas;
-                                totalHorasTrabajadas += horasNetas;
-
+                                const duracionJornada = dayjs.duration(hora.diff(jornadaInicio));
+                                const horasNetas = duracionJornada.subtract(totalPausas);
+                                totalHorasPerfil = totalHorasPerfil.add(horasNetas);
                                 jornadaInicio = null;
                                 pausaInicio = null;
-                                totalPausas = 0;
+                                totalPausas = dayjs.duration(0);
                             }
                             break;
                     }
                 }
-
-                if (totalHorasTrabajadas > 0) {
-                    totalHoras += totalHorasTrabajadas;
-                    totalHorasPerfil += totalHorasTrabajadas
-                }
             }
         }
 
-        const horasRestantes = profile.horas_semana - totalHorasPerfil;
+        const horasSemana = dayjs.duration(profile.horas_semana, 'hours');
+        const horasUsadas = totalHorasPerfil;
+        const horasRestantes = horasSemana.subtract(horasUsadas);
 
         users.push({
             id: profile.id,
@@ -134,17 +118,24 @@ export async function GET(req: NextRequest) {
             apellido: profile.apellido,
             email: profile.email,
             image: profile.image,
-            horas_semanales: formatHoras(profile.horas_semana),
-            horas_restantes: formatHoras(parseFloat(horasRestantes.toFixed(2)))
+            horas_semanales: formatHoras(horasSemana),
+            horas_restantes: formatHoras(horasRestantes)
         });
+
+        totalHoras += totalHorasPerfil.asHours();
     }
 
-    function formatHoras(horasDecimales: number): string {
-        const horas = Math.floor(horasDecimales);
-        const minutos = Math.round((horasDecimales - horas) * 60);
-        return `${horas < 10 ? '0' + horas : horas}:${minutos < 10 ? '0' + minutos : minutos}`;
+    function formatHoras(dur: Duration): string {
+        const totalMinutos = Math.round(dur.asMinutes());
+        const horas = Math.floor(totalMinutos / 60);
+        const minutos = totalMinutos % 60
+        return `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}`;
     }
 
-    return NextResponse.json({ success: true, users: users, totalHoras: totalHoras, horasEquipo: horasEquipo });
-
+    return NextResponse.json({
+        success: true,
+        users,
+        totalHoras: parseFloat(totalHoras.toFixed(2)),
+        horasEquipo
+    });
 }

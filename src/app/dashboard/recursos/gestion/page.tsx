@@ -3,35 +3,27 @@
 import { useEffect, useState } from 'react';;
 import styles from './gestion.module.css';
 import EquipoAdmin from '@/components/recursos/gestion/Equipo';
-import { createClient } from '@/utils/supabase/client';
 import { Equipo } from '@/types/Types';
-import { useRouter } from 'next/navigation';
 
 export default function GestionPage() {
     const [equipo, setEquipo] = useState<Equipo[]>([]);
-    const supabase = createClient();
-    const router = useRouter();
 
     useEffect(() => {
         const fetchData = async () => {
-            const { data } = await supabase.auth.getUser();
-            const user = data?.user;
-            if (!user) {
-                await supabase.auth.signOut();
-                router.push('/')
-            }
-            const { data: dataEquipo, error: errorEquipo } = await supabase
-                .from('profiles')
-                .select('id, nombre, apellido, email, image, estado, horas_semana, fichaje_jornada(id, date, date_final_aprox,total_trabajado, comentario, profile_id, fichaje_eventos(*))')
-                .neq('user_id', user?.id);
+            const res = await fetch('/api/equipo', {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' },
+            });
 
-            if (errorEquipo) {
-                console.log('Error fetching Equipo: ', errorEquipo);
+            if (!res.ok) {
+                console.error('Error en la respuesta:', res.status);
+                return;
             }
 
-            if (dataEquipo && dataEquipo.length > 0) {
-                setEquipo(dataEquipo);
+            const result = await res.json();
 
+            if (result.success) {
+                setEquipo(result.dataEquipo)
             }
         }
 

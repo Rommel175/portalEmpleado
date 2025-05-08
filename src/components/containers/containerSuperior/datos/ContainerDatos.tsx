@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
+import dayjs from 'dayjs';
 
 export default function DatosContainer({ profile, estado, localizacionFichaje, setLocalizacionFichaje, horaInicio, setHoraInicio, horaFinalAprox, setHoraFinalAprox }: { profile: Profile, estado: string, localizacionFichaje: string, setLocalizacionFichaje: React.Dispatch<React.SetStateAction<string>>, horaInicio: string | Date, setHoraInicio: React.Dispatch<React.SetStateAction<Date>>, horaFinalAprox: string | Date, setHoraFinalAprox: React.Dispatch<React.SetStateAction<Date>> }) {
 
@@ -46,9 +47,9 @@ export default function DatosContainer({ profile, estado, localizacionFichaje, s
 
     function parseHora(hora: string | Date): string {
         if (!hora) return '-';
-        const date = typeof hora === 'string' ? new Date(hora) : hora;
-        if (isNaN(date.getTime())) return '—';
-        return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const date = dayjs(hora)
+        if (!date.isValid()) return '—';
+        return date.format('HH:mm')
     }
 
     return (

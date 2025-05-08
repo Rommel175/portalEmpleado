@@ -12,6 +12,7 @@ import { saveAs } from 'file-saver';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { Fichaje_eventos } from '@/types/Types';
+import dayjs from 'dayjs';
 
 type UserData = {
   id: string,
@@ -58,15 +59,12 @@ export default function ReportesPage() {
       let start = startDate;
       let end = endDate;
 
-      if (!startDate || !endDate) {
-        const now = new Date();
-        start = new Date(now);
-        const day = start.getDay();
-        const diffToMonday = day === 0 ? -6 : 1 - day;
-        start.setDate(start.getDate() + diffToMonday);
 
-        end = new Date(start);
-        end.setDate(start.getDate() + 5);
+      if (!startDate || !endDate) {
+        const now = dayjs();
+
+        start = now.day(1).startOf('day').toDate();
+        end = now.day(1).add(5, 'day').endOf('day').toDate();
 
         setStartDate(start);
         setEndDate(end);
@@ -80,7 +78,7 @@ export default function ReportesPage() {
         localizacion: localizacion,
         checkedState: JSON.stringify(checkedState),
       });
-      
+
 
       const res = await fetch(`/api/reportes?${params.toString()}`, {
         method: 'GET',
@@ -95,7 +93,6 @@ export default function ReportesPage() {
       const result = await res.json();
 
       if (result.success) {
-        console.log(result)
         setUsersData(result.users)
         setTotalHorasTrabajadas(formatHoras(result.totalHoras));
         setHorasEquipo(result.horasEquipo);

@@ -1,4 +1,5 @@
 import { createClient } from "@/utils/supabase/server";
+import dayjs from "dayjs";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -28,40 +29,32 @@ export async function GET(req: NextRequest) {
 
     if (dataProfile && dataProfile.length > 0) {
         function rangosPresets() {
-            const now = new Date();
-            let start = new Date(now);
-            let end = new Date(now);
+            let start = dayjs();
+            let end = dayjs();
 
             switch (option) {
                 case 'Esta semana':
-                    const day = start.getDay();
-                    const diffToMonday = day === 0 ? -6 : 1 - day;
-                    start.setDate(start.getDate() + diffToMonday);
-                    end = new Date(start);
-                    end.setDate(start.getDate() + 5);
+                    const now = dayjs();
+                    start = now.day(1).startOf('day');
+                    end = now.day(1).add(5, 'day').endOf('day');
+                    ;
                     break;
                 case 'Hoy':
                 case 'Ayer':
                     if (!startDate) return [start, end];
-                    start = new Date(startDate);
-                    start.setHours(0, 0, 0, 0);
-                    end = new Date(start);
-                    end.setDate(end.getDate() + 1);
+                    start = dayjs(startDate).startOf('day');
+                    end = start.endOf('day');
                     break;
                 case 'Semana pasada':
                 case 'Este mes':
                 case 'Mes pasado':
                 case 'Este año':
                 case 'Año pasado':
-                    if (!startDate || !endDate) return [start, end];
-                    start = new Date(startDate);
-                    end = new Date(endDate);
-                    end.setDate(end.getDate() + 1);
+                    start = dayjs(startDate).startOf('day');
+                    end = dayjs(endDate).endOf('day');
                     break;
             }
 
-            start.setHours(0, 0, 0, 0);
-            end.setHours(0, 0, 0, 0);
             return [start, end];
         }
 
@@ -104,7 +97,7 @@ export async function GET(req: NextRequest) {
                             .from('fichaje_eventos')
                             .select('*')
                             .eq('fichaje_id', fichaje.id)
-                            .order('id', {ascending: true});
+                            .order('id', { ascending: true });
 
                         if (errorEvento) {
                             console.log('Error 4')

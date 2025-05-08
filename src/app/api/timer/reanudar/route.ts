@@ -1,4 +1,5 @@
 import { createClient } from "@/utils/supabase/server";
+import dayjs from "dayjs";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -13,15 +14,9 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { profileId, localizacion } = body;
 
-    const date = new Date();
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-
-    const startDate = new Date(`${year}-${month}-${day}T00:00:00Z`);
-
-    const endDate = new Date(startDate);
-    endDate.setUTCDate(startDate.getUTCDate() + 1);
+    const date = dayjs();
+    const startDate = date.startOf('day');
+    const endDate = startDate.add(1, 'day');
 
     const { data: dataFichaje, error: errorFichaje } = await supabase
         .from('fichaje_jornada')

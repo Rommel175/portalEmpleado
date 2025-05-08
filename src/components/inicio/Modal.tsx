@@ -4,6 +4,8 @@ import styles from './modal.module.css'
 import { useState, useEffect } from "react";
 import Image from 'next/image';
 import { Fichaje_jornada, Profile } from '@/types/Types';
+import dayjs from 'dayjs';
+import 'dayjs/locale/es';
 
 export default function Modal({ profile, fichaje }: { profile: Profile, fichaje: Fichaje_jornada[] }) {
     const [isOpen, setIsOpen] = useState(true);
@@ -15,35 +17,18 @@ export default function Modal({ profile, fichaje }: { profile: Profile, fichaje:
     const [mensaje, setMensaje] = useState('');
 
     useEffect(() => {
-        const date = new Date();
+        dayjs.locale('es');
 
-        const formatDate = new Intl.DateTimeFormat("es-ES", {
-            day: "2-digit",
-            month: "long",
-            year: "numeric"
-        }).format(date)
+        const date = dayjs();
 
-        setCurrentDate(formatDate)
-
-        const formatHour = new Intl.DateTimeFormat("es-ES", {
-            hour: "2-digit",
-            minute: "2-digit"
-        }).format(date)
-
-        setCurrentTime(formatHour);
+        setCurrentDate(date.format("DD [de] MMMM [de] YYYY"));
+        setCurrentTime(date.format("HH:mm"));
 
         const horasTrabajo = profile.horas_semana / 5;
 
-        date.setHours(date.getHours() + horasTrabajo);
-
-        setHoraFinalAprox(date);
-
-        const formatHour2 = new Intl.DateTimeFormat("es-ES", {
-            hour: "2-digit",
-            minute: "2-digit"
-        }).format(date)
-
-        setHoraFinalAproxVisualizer(formatHour2);
+        const horaFinal = date.add(horasTrabajo, 'hour');
+        setHoraFinalAprox(horaFinal.toDate())
+        setHoraFinalAproxVisualizer(horaFinal.format('HH:mm'))
                 
     }, []);
 
@@ -68,7 +53,6 @@ export default function Modal({ profile, fichaje }: { profile: Profile, fichaje:
         e.preventDefault();
         setIsOpen(false);
         fichar();
-        //router.refresh();
     }
 
     function handleChangeLocation(e: React.ChangeEvent<HTMLSelectElement>) {
