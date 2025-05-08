@@ -25,7 +25,6 @@ export async function GET(req: NextRequest) {
         .eq('id', profileId);
 
     if (errorProfile || !dataProfile.length) {
-        console.log('Error 1')
         return NextResponse.json({ error: errorProfile }, { status: 500 });
     }
 
@@ -79,7 +78,6 @@ export async function GET(req: NextRequest) {
             .order('date', { ascending: !reciente });
 
         if (jornadaError) {
-            console.log('Error 2')
             return NextResponse.json({ error: jornadaError }, { status: 500 });
         }
 
@@ -95,7 +93,6 @@ export async function GET(req: NextRequest) {
                 .eq('date::date', fecha);
 
             if (errorFichajes) {
-                console.log('Error 3')
                 return NextResponse.json({ error: errorFichajes }, { status: 500 });
             }
 
@@ -112,7 +109,7 @@ export async function GET(req: NextRequest) {
                             .order('id', { ascending: true })
 
                         if (errorEvento) {
-                            console.log('Error 4')
+                            return NextResponse.json({ error: errorEvento }, { status: 500 })
                         }
 
                         if (dataEvento && dataEvento.length > 0) {
@@ -135,7 +132,7 @@ export async function GET(req: NextRequest) {
                             .eq('localizacion', localizacion);
 
                         if (errorEvento) {
-                            console.log('Error 5')
+                            return NextResponse.json({ error: errorEvento }, { status: 500 })
                         }
 
                         if (dataEvento && dataEvento.length > 0) {

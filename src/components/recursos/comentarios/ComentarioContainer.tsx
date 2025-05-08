@@ -6,12 +6,12 @@ type FichajeComentario = {
     comentario: string;
 };
 
-export default function ComentarioContainer( {nombre, fichajes} : {nombre: string, fichajes: FichajeComentario[] } ) {
+export default function ComentarioContainer( {nombre, apellido, fichajes} : {nombre: string, apellido: string, fichajes: FichajeComentario[] } ) {
 
     return (
         <div className={styles.container}>
             <header className={styles.title}>
-                <h2> {nombre} </h2>
+                <h2> {nombre} {apellido || ''}</h2>
             </header>
 
             {

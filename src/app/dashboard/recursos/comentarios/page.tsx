@@ -1,7 +1,5 @@
 'use client'
 
-import { createClient } from "@/utils/supabase/client";
-import { useRouter } from "next/navigation";
 import styles from './comentarios.module.css';
 import ComentarioContainer from "@/components/recursos/comentarios/ComentarioContainer";
 import { useEffect, useState } from "react";
@@ -38,112 +36,56 @@ export default function ComentariosPage() {
     const [localizacion, setLocalizacion] = useState('all');
     const [reciente, setReciente] = useState(true);
     const [checkedState, setCheckedState] = useState<{ [key: string]: boolean }>({});
-    const router = useRouter();
-    const supabase = createClient();
 
     useEffect(() => {
+
+        let start = startDate;
+        let end = endDate;
+
+        if (!startDate || !endDate) {
+            const now = new Date();
+            start = new Date(now);
+            const day = start.getDay();
+            const diffToMonday = day === 0 ? -6 : 1 - day;
+            start.setDate(start.getDate() + diffToMonday);
+
+            end = new Date(start);
+            end.setDate(start.getDate() + 5);
+
+            setStartDate(start);
+            setEndDate(end);
+        }
+
         const fetchData = async () => {
-            const { data } = await supabase.auth.getUser();
-            const user = data.user;
+            const params = new URLSearchParams({
+                option: option,
+                startDate: start ? start.toISOString() : '',
+                endDate: end ? end.toISOString() : '',
+                reciente: reciente.toString(),
+                localizacion: localizacion,
+                checkedState: JSON.stringify(checkedState),
+            });
 
-            if (!user) {
-                router.push('/login');
+
+            const res = await fetch(`/api/comentarios?${params.toString()}`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' },
+            });
+
+            if (!res.ok) {
+                console.error('Error en la respuesta:', res.status);
+                return;
             }
 
-            const { data: dataProfile, error: errorProfile } = await supabase
-                .from('profiles')
-                .select('*')
-            //.neq('user_id', user.id);
+            const result = await res.json();
 
-            if (errorProfile) {
-                console.log('Error fetching profiles: ', errorProfile);
-            }
-
-            function rangosPresets() {
-                const now = new Date();
-                let start = new Date(now);
-                let end = new Date(now);
-
-                switch (option) {
-                    case 'Esta semana':
-                        const day = start.getDay();
-                        const diffToMonday = day === 0 ? -6 : 1 - day;
-                        start.setDate(start.getDate() + diffToMonday);
-                        end = new Date(start);
-                        end.setDate(start.getDate() + 5);
-                        break;
-                    case 'Hoy':
-                    case 'Ayer':
-                        if (!startDate) return [start, end];
-                        start = new Date(startDate);
-                        start.setHours(0, 0, 0, 0);
-                        end = new Date(start);
-                        end.setDate(end.getDate() + 1);
-                        break;
-                    case 'Semana pasada':
-                    case 'Este mes':
-                    case 'Mes pasado':
-                    case 'Este año':
-                    case 'Año pasado':
-                        if (!startDate || !endDate) return [start, end];
-                        start = new Date(startDate);
-                        end = new Date(endDate);
-                        end.setDate(end.getDate() + 1);
-                        break;
-                }
-
-                start.setHours(0, 0, 0, 0);
-                end.setHours(0, 0, 0, 0);
-                return [start, end];
-            }
-
-            const [start, end] = rangosPresets();
-
-            if (dataProfile && dataProfile.length > 0) {
-                const usersData: UserData[] = [];
-                const selectedProfiles = Object.keys(checkedState)
-                    .filter((key) => checkedState[parseInt(key)])
-                    .map((key) => parseInt(key));
-
-                const showProfiles = selectedProfiles.length === 0 ? dataProfile : dataProfile.filter((profile) =>
-                    selectedProfiles.includes(profile.id)
-                );
-
-                for (const profile of showProfiles) {
-                    const { data: fichajeJornada, error: errorFichajeJornada } = await supabase
-                        .from('fichaje_jornada')
-                        .select('*')
-                        .eq('profile_id', profile.id)
-                        .not('comentario', 'is', null)
-                        .neq('comentario', '')
-                        .gte('date', start.toISOString())
-                        .lt('date', end.toISOString())
-                        .order('date', { ascending: !reciente });
-
-
-                    if (errorFichajeJornada) {
-                        console.log('Error fetching Fichajes Jornada: ', errorFichajeJornada);
-                    }
-
-                    if (fichajeJornada && fichajeJornada.length > 0) {
-                        usersData.push({
-                            id: profile.id,
-                            nombre: profile.nombre,
-                            apellido: profile.apellido,
-                            fichajes: fichajeJornada.map(item => ({
-                                fecha: item.date,
-                                comentario: item.comentario,
-                            })),
-                        });
-                    }
-                }
-
-                setUsersData(usersData);
+            if (result.success) {
+                setUsersData(result.usersData)
             }
         };
 
         fetchData();
-    }, [option, startDate, endDate, reciente, checkedState]);
+    }, [option, reciente, checkedState]);
 
     function handleExportExcel() {
         const exportar = async () => {
@@ -281,10 +223,10 @@ export default function ComentariosPage() {
                     <p>No hay registros</p>
                 ) : (
                     usersData.map((item, index) => {
-                        return <ComentarioContainer key={index} nombre={item.nombre} fichajes={item.fichajes} />
+                        return <ComentarioContainer key={index} nombre={item.nombre} apellido={item.apellido} fichajes={item.fichajes} />
                     })
                 )
-                
+
             }
 
         </div>

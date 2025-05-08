@@ -24,7 +24,6 @@ export async function GET(req: NextRequest) {
         .neq('user_id', user.id);
 
     if (errorProfile) {
-        console.log('Error 1');
         return NextResponse.json({ error: errorProfile }, { status: 500 });
     }
 
@@ -77,8 +76,7 @@ export async function GET(req: NextRequest) {
                     .order('date', { ascending: true });
 
                 if (errorEventos) {
-                    console.log('Error fetching eventos: ', errorEventos);
-                    continue;
+                    return NextResponse.json({ error: errorEventos }, { status: 500 })
                 }
 
                 let totalHorasTrabajadas = 0;

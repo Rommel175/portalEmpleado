@@ -81,8 +81,6 @@ export default function Fichajes() {
         setEventosPorFecha(result.data)
         setProfile(result.profile)
       }
-
-      //console.log(result.data[0].eventos[0].evento);
     }
 
     fetchData();
