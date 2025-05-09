@@ -94,7 +94,7 @@ export default function ReportesPage() {
 
       if (result.success) {
         setUsersData(result.users)
-        setTotalHorasTrabajadas(formatHoras(result.totalHoras));
+        setTotalHorasTrabajadas(result.totalHoras);
         setHorasEquipo(result.horasEquipo);
       }
     };
@@ -494,12 +494,6 @@ export default function ReportesPage() {
     };
 
     exportar();
-  }
-
-  function formatHoras(horasDecimales: number): string {
-    const horas = Math.floor(horasDecimales);
-    const minutos = Math.round((horasDecimales - horas) * 60);
-    return `${horas < 10 ? '0' + horas : horas}:${minutos < 10 ? '0' + minutos : minutos}`;
   }
 
   return (

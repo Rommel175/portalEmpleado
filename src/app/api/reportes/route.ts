@@ -1,7 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 import dayjs from 'dayjs';
-import duration, { Duration } from 'dayjs/plugin/duration';
+import duration from 'dayjs/plugin/duration';
 
 dayjs.extend(duration);
 
@@ -19,18 +19,23 @@ export async function GET(req: NextRequest) {
     const { data: dataProfile, error: errorProfile } = await supabase
         .from('profiles')
         .select('*')
-        .neq('user_id', user.id);
+        //.neq('user_id', user.id);
 
     if (errorProfile) {
         return NextResponse.json({ error: errorProfile }, { status: 500 });
     }
 
-    const today = dayjs();
-    const startOfWeek = today.startOf('week').add(1, 'day').hour(0).minute(0).second(0).millisecond(0);
-    const endOfWeek = startOfWeek.add(5, 'day');
+    const now = dayjs();
 
-    let totalHoras = 0;
+    const startOfWeek = now.day(1).startOf('day').toDate();
+    const endOfWeek = now.day(1).add(5, 'day').endOf('day').toDate();
+
+    //let totalHoras = 0;
+    let totalHoras2 = dayjs.duration(0);
+
     let horasEquipo = 0;
+    //let horasEquipo2 = dayjs.duration(0);
+
     const users = [];
 
     const selectedProfiles = Object.keys(checkedState)
@@ -65,13 +70,13 @@ export async function GET(req: NextRequest) {
                     .order('date', { ascending: true });
 
                 if (errorEventos) {
-                    console.log('Error fetching eventos: ', errorEventos);
-                    continue;
+                    return NextResponse.json({ error: errorEventos }, { status: 500 });
                 }
 
                 let jornadaInicio: dayjs.Dayjs | null = null;
                 let pausaInicio: dayjs.Dayjs | null = null;
-                let totalPausas = dayjs.duration(0);
+                let tiempoPausa = dayjs.duration(0);
+                let totalTiempoTrabajado = dayjs.duration(0);
 
                 for (const evento of eventos || []) {
                     const hora = dayjs(evento.date);
@@ -79,7 +84,7 @@ export async function GET(req: NextRequest) {
                     switch (evento.evento) {
                         case 'Inicio Jornada':
                             jornadaInicio = hora;
-                            totalPausas = dayjs.duration(0);
+                            //totalPausas = dayjs.duration(0);
                             pausaInicio = null;
                             break;
                         case 'Inicio Pausa':
@@ -89,28 +94,32 @@ export async function GET(req: NextRequest) {
                             break;
                         case 'Fin Pausa':
                             if (jornadaInicio && pausaInicio) {
-                                totalPausas = totalPausas.add(dayjs.duration(hora.diff(pausaInicio)));
+                                const pausaSegundos = hora.diff(pausaInicio, 'second');
+                                tiempoPausa = tiempoPausa.add(pausaSegundos, 'second');
                                 pausaInicio = null;
                             }
                             break;
                         case 'Jornada Finalizada':
                             if (jornadaInicio) {
-                                const duracionJornada = dayjs.duration(hora.diff(jornadaInicio));
-                                const horasNetas = duracionJornada.subtract(totalPausas);
-                                totalHorasPerfil = totalHorasPerfil.add(horasNetas);
+                                const jornadaSegundos = hora.diff(jornadaInicio, 'second');
+                                totalTiempoTrabajado = totalTiempoTrabajado.add(jornadaSegundos, 'second');
                                 jornadaInicio = null;
-                                pausaInicio = null;
-                                totalPausas = dayjs.duration(0);
+                                totalHorasPerfil = totalTiempoTrabajado.subtract(tiempoPausa);
                             }
                             break;
                     }
                 }
+
+                //console.log('sssssssPERFILLLLssss',totalHorasPerfil.format('HH:mm:ss:SSS'))
+
             }
         }
 
         const horasSemana = dayjs.duration(profile.horas_semana, 'hours');
-        const horasUsadas = totalHorasPerfil;
-        const horasRestantes = horasSemana.subtract(horasUsadas);
+        const minutosSemana = Math.round(horasSemana.asMinutes());
+
+        const horasRestantes2 = horasSemana.subtract(totalHorasPerfil);
+        const minutosTotales = Math.round(horasRestantes2.asMinutes());
 
         users.push({
             id: profile.id,
@@ -118,24 +127,29 @@ export async function GET(req: NextRequest) {
             apellido: profile.apellido,
             email: profile.email,
             image: profile.image,
-            horas_semanales: formatHoras(horasSemana),
-            horas_restantes: formatHoras(horasRestantes)
+            horas_semanales: formatTime(minutosSemana),
+            horas_restantes: formatTime(minutosTotales)
         });
 
-        totalHoras += totalHorasPerfil.asHours();
+        totalHoras2 = totalHoras2.add(totalHorasPerfil);
     }
 
-    function formatHoras(dur: Duration): string {
-        const totalMinutos = Math.round(dur.asMinutes());
-        const horas = Math.floor(totalMinutos / 60);
-        const minutos = totalMinutos % 60
-        return `${String(horas).padStart(2, '0')}:${String(minutos).padStart(2, '0')}`;
+    //console.log(totalHoras2)
+    const minutosHorasTotalesEquipo = Math.round(totalHoras2.asMinutes()); 
+
+    console.log(formatTime(minutosHorasTotalesEquipo))
+
+    function formatTime(tiempoTotal: number) {
+        const horas = Math.floor(tiempoTotal / 60);
+        const minutos = tiempoTotal % 60;
+
+        return `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}`
     }
 
     return NextResponse.json({
         success: true,
         users,
-        totalHoras: parseFloat(totalHoras.toFixed(2)),
+        totalHoras: formatTime(minutosHorasTotalesEquipo),
         horasEquipo
     });
 }

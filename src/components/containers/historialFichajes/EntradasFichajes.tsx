@@ -21,9 +21,11 @@ export default function EntradasFichajes({ date, eventos }: { date: string, even
     let jornadaInicio: Dayjs | null = null;
     let pausaInicio: Dayjs | null = null;
     let tiempoPausa = dayjs.duration(0);
+    let tiempoFinal = dayjs.duration(0);
 
     for (const evento of eventos) {
       const hora = dayjs(evento.date);
+      //console.log(hora)
 
       switch (evento.evento) {
         case 'Inicio Jornada':
@@ -40,33 +42,35 @@ export default function EntradasFichajes({ date, eventos }: { date: string, even
             const pausaSegundos = hora.diff(pausaInicio, 'second');
             tiempoPausa = tiempoPausa.add(pausaSegundos, 'second');
             pausaInicio = null;
+
+            //console.log(tiempoPausa.format('HH:mm:ss:SSS'))
           }
           break;
         case 'Jornada Finalizada':
           if (jornadaInicio) {
             const jornadaSegundos = hora.diff(jornadaInicio, 'second');
             totalTiempoTrabajado = totalTiempoTrabajado.add(jornadaSegundos, 'second');
+
+            //console.log(totalTiempoTrabajado.format('HH:mm:ss:SSS'))
+
             jornadaInicio = null;
           }
           break;
       }
     }
 
-    console.log(totalTiempoTrabajado.format('HH:mm:ss'))
+    tiempoFinal = totalTiempoTrabajado.subtract(tiempoPausa);
 
-    totalTiempoTrabajado = totalTiempoTrabajado.subtract(tiempoPausa);
+    //console.log(tiempoFinal.format('HH:mm:ss:SSS'))
 
-    const horas = totalTiempoTrabajado.hours();
-    const minutos = totalTiempoTrabajado.minutes();
-
-    return `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}h`;
+    return tiempoFinal.format('HH:mm:ss')
   }
 
 
   function parseHora(hora: string | Date): string {
     const date = dayjs(hora);
     if (!date.isValid()) return '-';
-    return date.format('HH:mm')
+    return date.format('HH:mm:ss')
   }
 
   function parseFecha(fecha: string | Date): string {
