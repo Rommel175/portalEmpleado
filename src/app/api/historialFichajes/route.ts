@@ -14,19 +14,12 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
 
-    const checkedState = JSON.parse(req.nextUrl.searchParams.get('checkedState') || '{}'); const option = req.nextUrl.searchParams.get('option');
+    const option = req.nextUrl.searchParams.get('option');
     const startDate = req.nextUrl.searchParams.get('startDate');
     const endDate = req.nextUrl.searchParams.get('endDate');
     const reciente = req.nextUrl.searchParams.get('reciente');
-
-    const { data: dataProfile, error: errorProfile } = await supabase
-        .from('profiles')
-        .select('*')
-    //.eq('id', '12')
-
-    if (errorProfile) {
-        return NextResponse.json({ error: errorProfile }, { status: 500 });
-    }
+    const localizacion = req.nextUrl.searchParams.get('localizacion');
+    const profileId = req.nextUrl.searchParams.get('profileId');
 
     function rangosPresets() {
         let start = dayjs();
@@ -60,71 +53,29 @@ export async function GET(req: NextRequest) {
 
     const [start, end] = rangosPresets();
 
-    /*const now = dayjs();
-
-    const startOfWeek = now.day(1).startOf('day').toDate();
-    const endOfWeek = now.day(1).add(5, 'day').endOf('day').toDate();*/
+    //let horasEquipo = 0;
 
     let totalHoras = dayjs.duration(0);
 
-    let horasEquipo = 0;
 
-    const users = [];
+    const { data: dataFichaje, error: errorFichaje } = await supabase
+        .from('fichaje_jornada')
+        .select('*')
+        .eq('profile_id', profileId)
+        .gte('date', start.toISOString())
+        .lt('date', end.toISOString())
+        .order('date', { ascending: !reciente });;
 
-    const selectedProfiles = Object.keys(checkedState)
-        .filter((key) => checkedState[parseInt(key)])
-        .map((key) => parseInt(key));
+    //console.log(dataFichaje);
 
-    const showProfiles = selectedProfiles.length === 0
-        ? dataProfile
-        : dataProfile.filter((profile) => selectedProfiles.includes(profile.id));
+    if (errorFichaje) {
+        return NextResponse.json({ error: errorFichaje }, { status: 500 });
+    }
 
-    for (const profile of showProfiles) {
-        let horasSemana;
-        switch (option) {
-            case 'Hoy':
-            case 'Ayer':
-                horasSemana = dayjs.duration((profile.horas_semana / 5), 'hours');
-                break;
-            case 'Esta semana':
-            case 'Semana pasada':
-                horasSemana = dayjs.duration(profile.horas_semana, 'hours');
-                break;
-            case 'Este mes':
-            case 'Mes pasado':
-                horasSemana = dayjs.duration((profile.horas_semana * 4), 'hours');
-                break;
-            case 'Este año':
-            case 'Año pasado':
-                horasSemana = dayjs.duration(((profile.horas_semana / 5) * 365), 'hours');
-                break;
-            default:
-                horasSemana = dayjs.duration(profile.horas_semana, 'hours');
-                break;
-        }
+    if (dataFichaje && dataFichaje.length > 0) {
+        for (const jornada of dataFichaje) {
 
-
-
-
-        let totalHorasPerfil = dayjs.duration(0);
-        horasEquipo += profile.horas_semana;
-
-        const { data: dataFichaje, error: errorFichaje } = await supabase
-            .from('fichaje_jornada')
-            .select('*')
-            .eq('profile_id', profile.id)
-            .gte('date', start.toISOString())
-            .lt('date', end.toISOString())
-            .order('date', { ascending: !reciente });;
-
-        //console.log(dataFichaje);
-
-        if (errorFichaje) {
-            return NextResponse.json({ error: errorFichaje }, { status: 500 });
-        }
-
-        if (dataFichaje && dataFichaje.length > 0) {
-            for (const jornada of dataFichaje) {
+            if (localizacion == 'all') {
                 const { data: eventos, error: errorEventos } = await supabase
                     .from('fichaje_eventos')
                     .select('evento, date')
@@ -168,51 +119,78 @@ export async function GET(req: NextRequest) {
                                 totalTiempoTrabajado = totalTiempoTrabajado.add(jornadaSegundos, 'second');
                                 tiempoNeto = totalTiempoTrabajado.subtract(tiempoPausa);
                                 jornadaInicio = null;
-                                totalHorasPerfil = totalHorasPerfil.add(tiempoNeto)
+                                totalHoras = totalHoras.add(tiempoNeto)
                             }
                             break;
                     }
                 }
+            } else {
+                const { data: eventos, error: errorEventos } = await supabase
+                    .from('fichaje_eventos')
+                    .select('evento, date')
+                    .eq('fichaje_id', jornada.id)
+                    .eq('localizacion', localizacion)
+                    .order('date', { ascending: true });
 
-                console.log('Total cada jornada', tiempoNeto.format('HH:mm'))
+                if (errorEventos) {
+                    return NextResponse.json({ error: errorEventos }, { status: 500 });
+                }
+
+                let jornadaInicio: dayjs.Dayjs | null = null;
+                let pausaInicio: dayjs.Dayjs | null = null;
+                let tiempoPausa = dayjs.duration(0);
+                let totalTiempoTrabajado = dayjs.duration(0);
+                let tiempoNeto = dayjs.duration(0);
+
+                for (const evento of eventos || []) {
+                    const hora = dayjs(evento.date);
+                    //console.log(hora.format('HH:mm'))
+
+                    switch (evento.evento) {
+                        case 'Inicio Jornada':
+                            jornadaInicio = hora;
+                            pausaInicio = null;
+                            break;
+                        case 'Inicio Pausa':
+                            if (jornadaInicio && !pausaInicio) {
+                                pausaInicio = hora;
+                            }
+                            break;
+                        case 'Fin Pausa':
+                            if (jornadaInicio && pausaInicio) {
+                                const pausaSegundos = hora.diff(pausaInicio, 'second');
+                                tiempoPausa = tiempoPausa.add(pausaSegundos, 'second');
+                                pausaInicio = null;
+                            }
+                            break;
+                        case 'Jornada Finalizada':
+                            if (jornadaInicio) {
+                                const jornadaSegundos = hora.diff(jornadaInicio, 'second');
+                                totalTiempoTrabajado = totalTiempoTrabajado.add(jornadaSegundos, 'second');
+                                tiempoNeto = totalTiempoTrabajado.subtract(tiempoPausa);
+                                jornadaInicio = null;
+                                totalHoras = totalHoras.add(tiempoNeto)
+                            }
+                            break;
+                    }
+                }
             }
         }
 
-        console.log(totalHorasPerfil)
-
-        const minutosSemana = Math.round(horasSemana.asMinutes());
-
-        const horasRestantes2 = horasSemana.subtract(totalHorasPerfil);
-        const minutosTotales = Math.round(horasRestantes2.asMinutes());
-
-        users.push({
-            id: profile.id,
-            nombre: profile.nombre,
-            apellido: profile.apellido,
-            email: profile.email,
-            image: profile.image,
-            horas_semanales: formatTime(minutosSemana),
-            horas_restantes: formatTime(minutosTotales)
-        });
-
-        totalHoras = totalHoras.add(totalHorasPerfil);
     }
 
-    const minutosHorasTotalesEquipo = Math.round(totalHoras.asMinutes());
-
-    //console.log(formatTime(minutosHorasTotalesEquipo))
-
     function formatTime(tiempoTotal: number) {
-        const horas = Math.floor(tiempoTotal / 60);
-        const minutos = tiempoTotal % 60;
+        const totalMinutos = Math.round(tiempoTotal);
+        const horas = Math.floor(totalMinutos / 60);
+        const minutos = totalMinutos % 60;
 
         return `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}`
     }
 
     return NextResponse.json({
         success: true,
-        users,
-        totalHoras: formatTime(minutosHorasTotalesEquipo),
-        horasEquipo
+        totalHoras: formatTime(totalHoras.asMinutes()),
     });
+
+
 }

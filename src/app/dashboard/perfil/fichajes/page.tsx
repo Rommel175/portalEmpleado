@@ -10,6 +10,7 @@ import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { Profile } from '@/types/Types';
 import dayjs from 'dayjs';
+import ActividadCardIndividual from '@/components/cards/ActividadIndividual';
 
 type EventosPorFechaType = {
   fecha: string;
@@ -34,6 +35,8 @@ export default function Fichajes() {
   const [reciente, setReciente] = useState(true);
   const [checkedState, setCheckedState] = useState<{ [key: string]: boolean }>({});
   const [profile, setProfile] = useState<Profile | null>(null);
+  const [totalHorasTrabajadas, setTotalHorasTrabajadas] = useState<string>('00:00');
+  const [horasPerfil, setHorasPerfil] = useState(0);
 
   useEffect(() => {
 
@@ -45,7 +48,7 @@ export default function Fichajes() {
       const now = dayjs();
 
       start = now.day(1).startOf('day').toDate();
-      end = now.day(1).add(5, 'day').endOf('day').toDate(); 
+      end = now.day(1).add(5, 'day').endOf('day').toDate();
 
       setStartDate(start);
       setEndDate(end);
@@ -75,9 +78,9 @@ export default function Fichajes() {
       const result = await res.json();
 
       if (result.success) {
-        //console.log(result.data)
         setEventosPorFecha(result.data)
         setProfile(result.profile)
+        setHorasPerfil(result.horas_semana);
       }
     }
 
@@ -172,6 +175,22 @@ export default function Fichajes() {
 
   return (
     <>
+      {profile && (
+        <ActividadCardIndividual
+          total={horasPerfil}
+          setTotalHorasTrabajadas={setTotalHorasTrabajadas}
+          totalHorasTrabajadas={totalHorasTrabajadas}
+          startDate={startDate}
+          setStartDate={setStartDate}
+          endDate={endDate}
+          setEndDate={setEndDate}
+          localizacion={localizacion}
+          setLocalizacion={setLocalizacion}
+          option={option}
+          setOption={setOption}
+          id={profile.id}
+        />
+      )}
       <div className={styles.options}>
         <div style={{ display: 'flex', gap: '30px' }}>
           <button onClick={handleExportPdf}>

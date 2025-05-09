@@ -75,7 +75,6 @@ export default function ReportesPage() {
         startDate: start ? start.toISOString() : '',
         endDate: end ? end.toISOString() : '',
         reciente: reciente.toString(),
-        localizacion: localizacion,
         checkedState: JSON.stringify(checkedState),
       });
 
@@ -100,7 +99,7 @@ export default function ReportesPage() {
     };
 
     fetchData();
-  }, [checkedState]);
+  }, [checkedState, reciente, option]);
 
   function handleExportExcel() {
     const exportar = async () => {
@@ -520,7 +519,6 @@ export default function ReportesPage() {
           recientes={true}
           usuarios={true}
           date={true}
-          ubicacion={true}
           startDate={startDate}
           setStartDate={setStartDate}
           endDate={endDate}

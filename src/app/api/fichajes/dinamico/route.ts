@@ -1,4 +1,5 @@
 import { createClient } from "@/utils/supabase/server";
+import dayjs from "dayjs";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -16,13 +17,12 @@ export async function GET(req: NextRequest) {
     const reciente = req.nextUrl.searchParams.get('reciente');
     const localizacion = req.nextUrl.searchParams.get('localizacion');
     const profileId = req.nextUrl.searchParams.get('profileId');
-    let totalHoras = 0;
 
 
     const { data: dataProfile, error: errorProfile } = await supabase
         .from('profiles')
         .select('*')
-        .eq('id', profileId);
+        .eq('user_id', profileId);
 
     if (errorProfile || !dataProfile.length) {
         return NextResponse.json({ error: errorProfile }, { status: 500 });
@@ -30,40 +30,32 @@ export async function GET(req: NextRequest) {
 
     if (dataProfile && dataProfile.length > 0) {
         function rangosPresets() {
-            const now = new Date();
-            let start = new Date(now);
-            let end = new Date(now);
+            let start = dayjs();
+            let end = dayjs();
 
             switch (option) {
                 case 'Esta semana':
-                    const day = start.getDay();
-                    const diffToMonday = day === 0 ? -6 : 1 - day;
-                    start.setDate(start.getDate() + diffToMonday);
-                    end = new Date(start);
-                    end.setDate(start.getDate() + 5);
+                    const now = dayjs();
+                    start = now.day(1).startOf('day');
+                    end = now.day(1).add(5, 'day').endOf('day');
+                    ;
                     break;
                 case 'Hoy':
                 case 'Ayer':
                     if (!startDate) return [start, end];
-                    start = new Date(startDate);
-                    start.setHours(0, 0, 0, 0);
-                    end = new Date(start);
-                    end.setDate(end.getDate() + 1);
+                    start = dayjs(startDate).startOf('day');
+                    end = start.endOf('day');
                     break;
                 case 'Semana pasada':
                 case 'Este mes':
                 case 'Mes pasado':
                 case 'Este año':
                 case 'Año pasado':
-                    if (!startDate || !endDate) return [start, end];
-                    start = new Date(startDate);
-                    end = new Date(endDate);
-                    end.setDate(end.getDate() + 1);
+                    start = dayjs(startDate).startOf('day');
+                    end = dayjs(endDate).endOf('day');
                     break;
             }
 
-            start.setHours(0, 0, 0, 0);
-            end.setHours(0, 0, 0, 0);
             return [start, end];
         }
 
@@ -106,10 +98,10 @@ export async function GET(req: NextRequest) {
                             .from('fichaje_eventos')
                             .select('*')
                             .eq('fichaje_id', fichaje.id)
-                            .order('id', { ascending: true })
+                            .order('id', { ascending: true });
 
                         if (errorEvento) {
-                            return NextResponse.json({ error: errorEvento }, { status: 500 })
+                            console.log('Error 4')
                         }
 
                         if (dataEvento && dataEvento.length > 0) {
@@ -150,58 +142,15 @@ export async function GET(req: NextRequest) {
                 }
 
                 resultadoFinal.push({
+                    horas_semana: dataProfile[0].horas_semana,
                     fecha,
                     eventos
                 })
-
-                let totalHorasTrabajadas = 0;
-                let jornadaInicio: Date | null = null;
-                let pausaInicio: Date | null = null;
-                let totalPausas = 0;
-
-                for (const evento of eventos) {
-                    const hora = new Date(evento.date);
-
-                    switch (evento.evento) {
-                        case 'Inicio Jornada':
-                            jornadaInicio = hora;
-                            totalPausas = 0;
-                            pausaInicio = null;
-                            break;
-                        case 'Inicio Pausa':
-                            if (jornadaInicio && !pausaInicio) {
-                                pausaInicio = hora;
-                            }
-                            break;
-                        case 'Fin Pausa':
-                            if (jornadaInicio && pausaInicio) {
-                                const duracionPausa = (hora.getTime() - pausaInicio.getTime()) / 1000 / 60 / 60;
-                                totalPausas += duracionPausa;
-                                pausaInicio = null;
-                            }
-                            break;
-                        case 'Jornada Finalizada':
-                            if (jornadaInicio) {
-                                const duracionJornada = (hora.getTime() - jornadaInicio.getTime()) / 1000 / 60 / 60;
-                                const horasNetas = duracionJornada - totalPausas;
-                                totalHorasTrabajadas += horasNetas;
-
-                                jornadaInicio = null;
-                                pausaInicio = null;
-                                totalPausas = 0;
-                            }
-                            break;
-                    }
-                }
-
-                if (totalHorasTrabajadas > 0) {
-                    totalHoras += totalHorasTrabajadas;
-                }
             }
         }
 
+        console.log(resultadoFinal)
 
-
-        return NextResponse.json({ success: true, data: resultadoFinal, profile: dataProfile[0], totalHoras: totalHoras });
+        return NextResponse.json({ success: true, data: resultadoFinal, profile: dataProfile[0] });
     }
 }

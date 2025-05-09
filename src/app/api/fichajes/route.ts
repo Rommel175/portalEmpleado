@@ -141,13 +141,14 @@ export async function GET(req: NextRequest) {
                 }
 
                 resultadoFinal.push({
+                    horas_semana: dataProfile[0].horas_semana,
                     fecha,
                     eventos
                 })
             }
         }
 
-
+        console.log(resultadoFinal)
 
         return NextResponse.json({ success: true, data: resultadoFinal, profile: dataProfile[0] });
     }

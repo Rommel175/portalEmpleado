@@ -1,6 +1,6 @@
 'use client';
 
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import EntradaFichajesItem from './EntradaFichajesItem';
 import styles from './entradasFichajes.module.css';
@@ -17,15 +17,16 @@ export default function EntradasFichajes({ date, eventos }: { date: string, even
 
   function tiempoTotal(eventos: Evento[]) {
     dayjs.extend(duration);
-    let totalTiempoTrabajado = dayjs.duration(0);
-    let jornadaInicio: Dayjs | null = null;
-    let pausaInicio: Dayjs | null = null;
+    let jornadaInicio: dayjs.Dayjs | null = null;
+    let pausaInicio: dayjs.Dayjs | null = null;
     let tiempoPausa = dayjs.duration(0);
-    let tiempoFinal = dayjs.duration(0);
+    let totalTiempoTrabajado = dayjs.duration(0);
+    let tiempoNeto = dayjs.duration(0);
+    let totalHoras = dayjs.duration(0);
 
-    for (const evento of eventos) {
+    for (const evento of eventos || []) {
       const hora = dayjs(evento.date);
-      //console.log(hora)
+      //console.log(hora.format('HH:mm'))
 
       switch (evento.evento) {
         case 'Inicio Jornada':
@@ -38,32 +39,29 @@ export default function EntradasFichajes({ date, eventos }: { date: string, even
           }
           break;
         case 'Fin Pausa':
-          if (pausaInicio) {
+          if (jornadaInicio && pausaInicio) {
             const pausaSegundos = hora.diff(pausaInicio, 'second');
             tiempoPausa = tiempoPausa.add(pausaSegundos, 'second');
             pausaInicio = null;
-
-            //console.log(tiempoPausa.format('HH:mm:ss:SSS'))
           }
           break;
         case 'Jornada Finalizada':
           if (jornadaInicio) {
             const jornadaSegundos = hora.diff(jornadaInicio, 'second');
             totalTiempoTrabajado = totalTiempoTrabajado.add(jornadaSegundos, 'second');
-
-            //console.log(totalTiempoTrabajado.format('HH:mm:ss:SSS'))
-
+            tiempoNeto = totalTiempoTrabajado.subtract(tiempoPausa);
             jornadaInicio = null;
+            totalHoras = totalHoras.add(tiempoNeto)
           }
           break;
       }
     }
 
-    tiempoFinal = totalTiempoTrabajado.subtract(tiempoPausa);
+    const totalMinutos = Math.round(totalHoras.asMinutes());
+    const horas = Math.floor(totalMinutos / 60);
+    const minutos = totalMinutos % 60;
 
-    //console.log(tiempoFinal.format('HH:mm:ss:SSS'))
-
-    return tiempoFinal.format('HH:mm:ss')
+    return `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}`
   }
 
 

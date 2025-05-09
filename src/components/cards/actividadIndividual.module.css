@@ -1,0 +1,83 @@
+.container {
+    display: flex;
+    height: 200px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    background-color: #FFF;
+    border: 1.5px solid rgba(255, 255, 255, 0.00);
+    border-radius: 12px;
+    gap: 10px;
+}
+
+.container > h3 {
+    align-self: stretch;
+    color: #000;
+    font-size: 22.733px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.content {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 70px;
+    height: 100%;
+    width: 100%;
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    width: 100%;
+}
+
+.header > h3 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    align-self: stretch;
+    overflow: hidden;
+    color: #333;
+    text-overflow: ellipsis;
+    font-size: 34px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 40px; /* 117.647% */
+    letter-spacing: -0.85px;
+}
+
+.horizontalBarContainer {
+    width: 100%;
+    height: 3px;
+    background-color: #DFDFDF;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.horizontalBar {
+    height: 100%;
+    background-color: #FABB18;
+    border-radius: 12px;
+}
+
+.verticalBarContainer {
+    width: 190px;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+}
+
+.verticalBar {
+    width: 100%;
+    background-color: #E2E9FF;
+    border-radius: 12px;
+}

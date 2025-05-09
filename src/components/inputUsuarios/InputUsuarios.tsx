@@ -16,13 +16,9 @@ export default function InputUsuarios({checkedState, setCheckedState}: Props) {
 
     useEffect(() => {
         const fetchData = async () => {
-            const { data } = await supabase.auth.getUser();
-            const user = data.user;
-
             const { data: dataProfiles, error: errorProfiles } = await supabase
                 .from('profiles')
                 .select('nombre, apellido, id')
-                .neq('user_id', user?.id)
 
             if (errorProfiles) {
                 console.log('Error fetching Profiles: ', errorProfiles);

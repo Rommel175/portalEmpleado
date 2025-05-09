@@ -9,7 +9,8 @@ import { saveAs } from 'file-saver';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import styles from './fichajesUsuarios.module.css'
-import ActividadCard from '@/components/cards/Actividad';
+import ActividadCardIndividual from '@/components/cards/ActividadIndividual';
+import dayjs from 'dayjs';
 
 type EventosPorFechaType = {
   fecha: string;
@@ -34,21 +35,18 @@ export default function Fichajes({ params }: { params: Promise<{ id: string }> }
   const [profile, setProfile] = useState<Profile | null>(null);
   const [checkedState, setCheckedState] = useState<{ [key: string]: boolean }>({});
   const [eventosPorFecha, setEventosPorFecha] = useState<EventosPorFechaType[]>([]);
-  const [totalHoras, setTotalHoras] = useState<number>(0);
+  const [totalHorasTrabajadas, setTotalHorasTrabajadas] = useState<string>('00:00');
+  const [horasPerfil, setHorasPerfil] = useState(0);
 
   useEffect(() => {
     let start = startDate;
     let end = endDate;
 
     if (!startDate || !endDate) {
-      const now = new Date();
-      start = new Date(now);
-      const day = start.getDay();
-      const diffToMonday = day === 0 ? -6 : 1 - day;
-      start.setDate(start.getDate() + diffToMonday);
+      const now = dayjs();
 
-      end = new Date(start);
-      end.setDate(start.getDate() + 5);
+      start = now.day(1).startOf('day').toDate();
+      end = now.day(1).add(5, 'day').endOf('day').toDate();
 
       setStartDate(start);
       setEndDate(end);
@@ -81,7 +79,7 @@ export default function Fichajes({ params }: { params: Promise<{ id: string }> }
       if (result.success) {
         setEventosPorFecha(result.data)
         setProfile(result.profile)
-        setTotalHoras(result.totalHoras)
+        setHorasPerfil(result.horas_semana);
       }
     };
 
@@ -174,15 +172,25 @@ export default function Fichajes({ params }: { params: Promise<{ id: string }> }
     doc.save(`fichajes-${startDate?.toISOString().slice(0, 10)}/${endDate?.toISOString().slice(0, 10)}-${profile?.nombre || ''}${profile?.apellido || ''}.pdf`);
   }
 
-  function formatHoras(horasDecimales: number): string {
-    const horas = Math.floor(horasDecimales);
-    const minutos = Math.round((horasDecimales - horas) * 60);
-    return `${horas < 10 ? '0' + horas : horas}:${minutos < 10 ? '0' + minutos : minutos}`;
-  }
-
   return (
     <>
-      <ActividadCard horas={formatHoras(totalHoras)} total={profile?.horas_semana || 40} />
+      {profile && (
+        <ActividadCardIndividual
+          total={horasPerfil}
+          setTotalHorasTrabajadas={setTotalHorasTrabajadas}
+          totalHorasTrabajadas={totalHorasTrabajadas}
+          startDate={startDate}
+          setStartDate={setStartDate}
+          endDate={endDate}
+          setEndDate={setEndDate}
+          localizacion={localizacion}
+          setLocalizacion={setLocalizacion}
+          option={option}
+          setOption={setOption}
+          id={profile.id}
+        />
+      )}
+
       <div className={styles.options}>
         <div style={{ display: 'flex', gap: '30px' }}>
           <button onClick={handleExportarPdf}>
