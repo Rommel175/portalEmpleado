@@ -1,7 +1,6 @@
 import NavbarRecursos from '@/components/recursos/NavbarRecursos';
 import styles from './layput.module.css'
 import ContainerSuperior from '@/components/containers/containerSuperior/ContainerSuperior';
-import Navbar from '@/components/navbar/Navbar';
 import { getUserData } from '@/lib/getSupabaseData';
 
 export default async function RecursosLayout({ children }: { children: React.ReactNode; }) {

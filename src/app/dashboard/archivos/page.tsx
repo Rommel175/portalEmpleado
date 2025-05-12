@@ -1,5 +1,4 @@
 import ContainerSuperior from "@/components/containers/containerSuperior/ContainerSuperior";
-import Navbar from "@/components/navbar/Navbar";
 import { getUserData } from "@/lib/getSupabaseData";
 
 export default async function FilesPage() {
