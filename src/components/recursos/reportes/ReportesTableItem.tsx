@@ -2,10 +2,20 @@ import Link from 'next/link';
 import styles from './reportesTableItem.module.css'
 import Image from 'next/image';
 
-export default function ReportesTableItem( {image, nombre, apellido, email, horas_semana, horas_restantes, id} : {image: string, nombre: string, apellido: string, email: string, horas_semana: string, horas_restantes: string, id: string} ) {
+export default function ReportesTableItem({ image, nombre, apellido, email, horas_semana, horas_restantes, id, checkedState, setCheckedState }: { image: string, nombre: string, apellido: string, email: string, horas_semana: string, horas_restantes: string, id: string, checkedState: boolean, setCheckedState: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>> }) {
+
+    function handleCheckboxChange(id: string) {
+        setCheckedState((prevState) => ({
+            ...prevState,
+            [id]: !prevState[id],
+        }));
+    }
+
+
     return (
         <div className={styles.containerItem}>
             <div className={styles.personalInfo}>
+                <input type="checkbox" checked={checkedState} onChange={() => { handleCheckboxChange(id) }} style={{ cursor: 'pointer' }} />
                 <Image src={image} width={40} height={40} alt='img' />
                 <div className={styles.containerInfo}>
                     <div>

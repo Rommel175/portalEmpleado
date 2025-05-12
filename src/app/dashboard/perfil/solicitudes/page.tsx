@@ -10,6 +10,7 @@ export default function Solicitudes() {
   const [option, setOption] = useState('Esta semana');
   const [localizacion, setLocalizacion] = useState('all');
   const [reciente, setReciente] = useState(true);
+  const [tipoRegistros, setTipoRegistros] = useState('all');
   const [checkedState, setCheckedState] = useState<{ [key: string]: boolean }>({});
   return (
     <>
@@ -29,6 +30,8 @@ export default function Solicitudes() {
         setReciente={setReciente}
         checkedState={checkedState}
         setCheckedState={setCheckedState}
+        tipoRegistros={tipoRegistros}
+        setTipoRegistros={setTipoRegistros}
       />
       <EntradaSolicitudes />
       <EntradaSolicitudes />

@@ -19,13 +19,18 @@ type Prop = {
   reciente: boolean,
   setReciente: React.Dispatch<React.SetStateAction<boolean>>,
   checkedState: { [key: string]: boolean };
-  setCheckedState: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>;
-
+  setCheckedState: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>,
+  tipoRegistros: string,
+  setTipoRegistros: React.Dispatch<React.SetStateAction<string>>
 }
 
-export default function ContainerOptions({ recientes = false, tipoRegistro = false, ubicacion = false, date = false, usuarios = false, startDate, setStartDate, endDate, setEndDate, option, setOption, localizacion, setLocalizacion, reciente, setReciente, checkedState, setCheckedState }: Prop) {
-  function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
+export default function ContainerOptions({ recientes = false, tipoRegistro = false, ubicacion = false, date = false, usuarios = false, startDate, setStartDate, endDate, setEndDate, option, setOption, localizacion, setLocalizacion, reciente, setReciente, checkedState, setCheckedState, tipoRegistros, setTipoRegistros }: Prop) {
+  function handleChangeLocalizacion(e: React.ChangeEvent<HTMLSelectElement>) {
     setLocalizacion(e.target.value);
+  }
+
+  function handleChangeTipoRegistros(e: React.ChangeEvent<HTMLSelectElement>) {
+    setTipoRegistros(e.target.value);
   }
 
   return (
@@ -62,8 +67,12 @@ export default function ContainerOptions({ recientes = false, tipoRegistro = fal
             </defs>
           </svg>
 
-          <select name="filtro" id="filtro">
-            <option value="0">Tipo de registro</option>
+          <select name="filtro" id="filtro" value={tipoRegistros} onChange={handleChangeTipoRegistros}>
+            <option value="all">Tipo de Registro</option>
+            <option value="Inicio Jornada">Inicio Jornada</option>
+            <option value="Inicio Pausa">Inicio Pausa</option>
+            <option value="Fin Pausa">Fin Pausa</option>
+            <option value="Jornada Finalizada">Jornada Finalizada</option>
           </select>
         </div>
       }
@@ -76,8 +85,8 @@ export default function ContainerOptions({ recientes = false, tipoRegistro = fal
             <path d="M8.14542 8.91215C9.04916 8.91215 9.78178 8.17953 9.78178 7.27579C9.78178 6.37205 9.04916 5.63943 8.14542 5.63943C7.24168 5.63943 6.50906 6.37205 6.50906 7.27579C6.50906 8.17953 7.24168 8.91215 8.14542 8.91215Z" stroke="#7B8794" strokeWidth="0.818182" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
 
-          <select name="location" id="location" value={localizacion} onChange={handleChange} >
-            <option value="all">All</option>
+          <select name="location" id="location" value={localizacion} onChange={handleChangeLocalizacion} >
+            <option value="all">Ubicación</option>
             <option value="oficina">Oficina</option>
             <option value="casa">Casa</option>
             <option value="viaje">Viaje</option>

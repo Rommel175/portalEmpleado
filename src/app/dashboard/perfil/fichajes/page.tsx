@@ -27,19 +27,20 @@ type Evento = {
 
 export default function Fichajes() {
 
-  const [eventosPorFecha, setEventosPorFecha] = useState<EventosPorFechaType[]>([]);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [option, setOption] = useState('Esta semana');
   const [localizacion, setLocalizacion] = useState('all');
   const [reciente, setReciente] = useState(true);
   const [checkedState, setCheckedState] = useState<{ [key: string]: boolean }>({});
+  const [tipoRegistros, setTipoRegistros] = useState('all');
+
+  const [eventosPorFecha, setEventosPorFecha] = useState<EventosPorFechaType[]>([]);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [totalHorasTrabajadas, setTotalHorasTrabajadas] = useState<string>('00:00');
   const [horasPerfil, setHorasPerfil] = useState(0);
 
   useEffect(() => {
-
     let start = startDate;
     let end = endDate;
 
@@ -60,8 +61,9 @@ export default function Fichajes() {
         option: option,
         startDate: start ? start.toISOString() : '',
         endDate: end ? end.toISOString() : '',
-        reciente: reciente.toString(),
+        reciente: reciente ? 'true' : 'false',
         localizacion: localizacion,
+        tipoRegistro: tipoRegistros
       });
 
 
@@ -85,7 +87,7 @@ export default function Fichajes() {
     }
 
     fetchData();
-  }, [option, localizacion, reciente])
+  }, [option, localizacion, reciente, tipoRegistros])
 
   function handleExportExcel() {
     const exportar = async () => {
@@ -225,6 +227,8 @@ export default function Fichajes() {
           setReciente={setReciente}
           checkedState={checkedState}
           setCheckedState={setCheckedState}
+          tipoRegistros={tipoRegistros}
+          setTipoRegistros={setTipoRegistros}
         />
       </div>
 

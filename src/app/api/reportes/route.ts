@@ -14,10 +14,50 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
 
-    const checkedState = JSON.parse(req.nextUrl.searchParams.get('checkedState') || '{}'); const option = req.nextUrl.searchParams.get('option');
+    //const checkedState = JSON.parse(req.nextUrl.searchParams.get('checkedState') || '{}'); 
+    const option = req.nextUrl.searchParams.get('option');
     const startDate = req.nextUrl.searchParams.get('startDate');
     const endDate = req.nextUrl.searchParams.get('endDate');
     const reciente = req.nextUrl.searchParams.get('reciente');
+
+    let tituloHoras = '';
+
+    switch (option) {
+        case 'Hoy':
+            tituloHoras = 'Horas diarias';
+            break;
+        case 'Ayer':
+            tituloHoras = 'Horas diarias';
+            break;
+        case 'Esta semana':
+            tituloHoras = 'Horas semanales';
+            break;
+        case 'Semana pasada':
+            tituloHoras = 'Horas semanales';
+            break;
+        case 'Este mes':
+            tituloHoras = 'Horas mensuales';
+            break;
+        case 'Mes pasado':
+            tituloHoras = 'Horas mensuales';
+            break;
+        case 'Este año':
+            tituloHoras = 'Horas anuales';
+            break;
+        case 'Año pasado':
+            tituloHoras = 'Horas anuales';
+            break;
+        case '':
+            tituloHoras = 'Horas';
+            break;
+        default:
+            tituloHoras = 'Horas';
+            break;
+    }
+
+    switch (option) {
+        case 'Hoy':
+    }
 
     const { data: dataProfile, error: errorProfile } = await supabase
         .from('profiles')
@@ -71,15 +111,15 @@ export async function GET(req: NextRequest) {
 
     const users = [];
 
-    const selectedProfiles = Object.keys(checkedState)
+    /*const selectedProfiles = Object.keys(checkedState)
         .filter((key) => checkedState[parseInt(key)])
         .map((key) => parseInt(key));
 
     const showProfiles = selectedProfiles.length === 0
         ? dataProfile
-        : dataProfile.filter((profile) => selectedProfiles.includes(profile.id));
+        : dataProfile.filter((profile) => selectedProfiles.includes(profile.id));*/
 
-    for (const profile of showProfiles) {
+    for (const profile of dataProfile) {
         let horasSemana;
         switch (option) {
             case 'Hoy':
@@ -213,6 +253,7 @@ export async function GET(req: NextRequest) {
         success: true,
         users,
         totalHoras: formatTime(minutosHorasTotalesEquipo),
-        horasEquipo
+        horasEquipo,
+        tituloHoras: tituloHoras
     });
 }

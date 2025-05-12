@@ -67,7 +67,7 @@ export default function ActividadCardIndividual({ total, setTotalHorasTrabajadas
         }
 
         fetchData();
-    }, [option, localizacion])
+    }, [option])
 
     function formatHora(horasStr: string): number {
         const [horas, minutos] = horasStr.split(':').map(Number);
@@ -80,7 +80,7 @@ export default function ActividadCardIndividual({ total, setTotalHorasTrabajadas
 
     return (
         <div className={styles.container}>
-            <h3>Actividad semanal</h3>
+            <h3>Actividad</h3>
 
             <div className={styles.content}>
                 <div className={styles.header}>

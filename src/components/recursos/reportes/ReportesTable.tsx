@@ -1,9 +1,10 @@
 'use client'
 
+//import { useState } from 'react';
 import styles from './reportesTable.module.css'
 import ReportesTableItem from './ReportesTableItem';
-import ExcelJS from 'exceljs';
-import { saveAs } from 'file-saver';
+//import ExcelJS from 'exceljs';
+//import { saveAs } from 'file-saver';
 
 type UserData = {
   id: string,
@@ -15,9 +16,9 @@ type UserData = {
   horas_restantes: string
 }
 
-export default function ReportesTable({ users, totalHorasTrabajadas }: { users: UserData[], totalHorasTrabajadas: string }) {
+export default function ReportesTable({ users, totalHorasTrabajadas, checkedState, setCheckedState, titulo }: { users: UserData[], totalHorasTrabajadas: string, checkedState: { [key: string]: boolean }, setCheckedState: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>, titulo: string }) {
 
-  function handleExportExcel() {
+  /*function handleExportExcel() {
     const exportar = async () => {
       const workbook = new ExcelJS.Workbook();
       const worksheet = workbook.addWorksheet('Fichajes');
@@ -42,7 +43,7 @@ export default function ReportesTable({ users, totalHorasTrabajadas }: { users: 
         item.email?.toString() ?? '',
         item.horas_semanales?.toString() ?? '',
         item.horas_restantes?.toString() ?? ''
-      ]);      
+      ]);
 
       data.forEach((item) => {
         worksheet.addRow(item)
@@ -58,16 +59,21 @@ export default function ReportesTable({ users, totalHorasTrabajadas }: { users: 
     }
 
     exportar();
-  }
+  }*/
 
-
-
+  function handleSelectAll() {
+    const allChecked = Object.values(checkedState).every(Boolean);
+    const newState = Object.fromEntries(
+      Object.keys(checkedState).map(id => [id, !allChecked])
+    );
+    setCheckedState(newState);
+  };
 
   return (
     <div className={styles.table}>
       <div className={styles.tableHeader}>
         <h2>Usuarios</h2>
-        <h2>Horas semanales</h2>
+        <h2>{ titulo }</h2>
         <h2>
           Horas restantes
           <svg width="11" height="10" viewBox="0 0 11 10" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -77,14 +83,26 @@ export default function ReportesTable({ users, totalHorasTrabajadas }: { users: 
         <div>
           <h2>Total:</h2>
           <h2>{totalHorasTrabajadas}h</h2>
-          <svg width="150" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" onClick={handleExportExcel}>
+          <svg width="150" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" onClick={handleSelectAll} className={styles.svg} >
             <path d="M14.395 8.46648V14.124C14.395 14.3741 14.2922 14.6139 14.1094 14.7907C13.9265 14.9676 13.6785 15.0669 13.4199 15.0669H4.64404C4.38543 15.0669 4.13741 14.9676 3.95454 14.7907C3.77168 14.6139 3.66895 14.3741 3.66895 14.124V8.46648C3.66895 8.2164 3.77168 7.97657 3.95454 7.79973C4.13741 7.6229 4.38543 7.52356 4.64404 7.52356H6.10668C6.23598 7.52356 6.35999 7.57323 6.45143 7.66165C6.54286 7.75006 6.59423 7.86998 6.59423 7.99502C6.59423 8.12006 6.54286 8.23997 6.45143 8.32839C6.35999 8.41681 6.23598 8.46648 6.10668 8.46648H4.64404V14.124H13.4199V8.46648H11.9572C11.8279 8.46648 11.7039 8.41681 11.6125 8.32839C11.5211 8.23997 11.4697 8.12006 11.4697 7.99502C11.4697 7.86998 11.5211 7.75006 11.6125 7.66165C11.7039 7.57323 11.8279 7.52356 11.9572 7.52356H13.4199C13.6785 7.52356 13.9265 7.6229 14.1094 7.79973C14.2922 7.97657 14.395 8.2164 14.395 8.46648ZM6.93917 5.97128L8.54441 4.41841V9.88086C8.54441 10.0059 8.59578 10.1258 8.68721 10.2142C8.77864 10.3026 8.90265 10.3523 9.03196 10.3523C9.16126 10.3523 9.28527 10.3026 9.37671 10.2142C9.46814 10.1258 9.51951 10.0059 9.51951 9.88086V4.41841L11.1248 5.97128C11.2162 6.05974 11.3403 6.10944 11.4697 6.10944C11.5991 6.10944 11.7231 6.05974 11.8146 5.97128C11.9061 5.88281 11.9575 5.76283 11.9575 5.63772C11.9575 5.51261 11.9061 5.39263 11.8146 5.30416L9.3769 2.94687C9.33162 2.90303 9.27785 2.86826 9.21866 2.84453C9.15947 2.82081 9.09603 2.80859 9.03196 2.80859C8.96789 2.80859 8.90445 2.82081 8.84526 2.84453C8.78607 2.86826 8.7323 2.90303 8.68702 2.94687L6.24929 5.30416C6.1578 5.39263 6.10641 5.51261 6.10641 5.63772C6.10641 5.76283 6.1578 5.88281 6.24929 5.97128C6.34077 6.05974 6.46485 6.10944 6.59423 6.10944C6.7236 6.10944 6.84768 6.05974 6.93917 5.97128Z" fill="#9C9FA1" />
           </svg>
         </div>
       </div>
       {
         users.map((item, index) => {
-          return <ReportesTableItem key={index} image={item.image} nombre={item.nombre} apellido={item.apellido} email={item.email} horas_semana={item.horas_semanales} horas_restantes={item.horas_restantes} id={item.id} />
+          return <ReportesTableItem
+            key={index}
+            image={item.image}
+            nombre={item.nombre}
+            apellido={item.apellido}
+            email={item.email}
+            horas_semana={item.horas_semanales}
+            horas_restantes={item.horas_restantes}
+            id={item.id}
+            checkedState={checkedState[item.id]}
+            setCheckedState={setCheckedState}
+          />
+
         })
       }
     </div>
