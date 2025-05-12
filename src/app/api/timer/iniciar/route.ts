@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
                 return NextResponse.json({ error: errorUpdatingEstado }, { status: 500 })
             }
 
-            return NextResponse.json({ success: true, estado: 'Activo' });
+            return NextResponse.json({ success: true, estado: 'Activo' }, { status: 200 });
         }
 
     } else {
@@ -92,6 +92,6 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: errorUpdatingEstado }, { status: 500 })
         }
 
-        return NextResponse.json({ success: true, estado: 'Activo' });
+        return NextResponse.json({ success: true, estado: 'Activo' }, { status: 200 });
     }
 }

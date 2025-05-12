@@ -190,7 +190,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({
         success: true,
         totalHoras: formatTime(totalHoras.asMinutes()),
-    });
+    }, { status: 200 });
 
 
 }

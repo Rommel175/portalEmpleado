@@ -10,7 +10,6 @@ export default async function HomePage() {
 
   return (
     <>
-      <Navbar image={profile.image} title={'Inicio'}/>
       <Modal profile={profile} fichaje={fichaje} />
       <ContainerSuperior fichaje={fichaje} eventos={eventos} profile={profile} />
       <ContainerEquipo equipo={equipo} />

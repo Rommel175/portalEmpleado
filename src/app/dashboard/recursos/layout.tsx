@@ -9,13 +9,12 @@ export default async function RecursosLayout({ children }: { children: React.Rea
 
   return (
     <>
-      <Navbar image={profile.image} title='Recursos humanos'/>
+      <div style={{ display: 'none' }}>
+        <ContainerSuperior profile={profile} fichaje={fichaje} eventos={eventos} />
+      </div>
+      
       <div className={styles.wraper}>
         <NavbarRecursos />
-        <div style={{ display: 'none' }}>
-          <ContainerSuperior profile={profile} fichaje={fichaje} eventos={eventos} />
-        </div>
-
         {children}
       </div>
     </>

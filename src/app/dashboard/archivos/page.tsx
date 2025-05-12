@@ -7,8 +7,6 @@ export default async function FilesPage() {
 
   return (
     <>
-      <Navbar image={profile.image} title="Archivos" />
-
       <div style={{ display: 'none' }}>
         <ContainerSuperior profile={profile} fichaje={fichaje} eventos={eventos} />
       </div>

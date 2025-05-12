@@ -38,7 +38,7 @@ export default function Fichajes() {
   const [eventosPorFecha, setEventosPorFecha] = useState<EventosPorFechaType[]>([]);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [totalHorasTrabajadas, setTotalHorasTrabajadas] = useState<string>('00:00');
-  const [horasPerfil, setHorasPerfil] = useState(0);
+  const [totalHoras, setTotalHoras] = useState(0);
 
   useEffect(() => {
     let start = startDate;
@@ -82,7 +82,7 @@ export default function Fichajes() {
       if (result.success) {
         setEventosPorFecha(result.data)
         setProfile(result.profile)
-        setHorasPerfil(result.horas_semana);
+        setTotalHoras(result.horas_semana);
       }
     }
 
@@ -179,7 +179,7 @@ export default function Fichajes() {
     <>
       {profile && (
         <ActividadCardIndividual
-          total={horasPerfil}
+          totalHoras={totalHoras}
           setTotalHorasTrabajadas={setTotalHorasTrabajadas}
           totalHorasTrabajadas={totalHorasTrabajadas}
           startDate={startDate}

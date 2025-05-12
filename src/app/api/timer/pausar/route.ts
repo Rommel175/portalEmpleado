@@ -49,6 +49,6 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: updateError }, { status: 500 })
         }
 
-        return NextResponse.json({ success: true, estado: 'Pausa' });
+        return NextResponse.json({ success: true, estado: 'Pausa' }, { status: 200 });
     }
 }

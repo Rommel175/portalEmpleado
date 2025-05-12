@@ -203,6 +203,6 @@ export async function GET(req: NextRequest) {
 
         console.log(resultadoFinal)
 
-        return NextResponse.json({ success: true, data: resultadoFinal, profile: dataProfile[0] });
+        return NextResponse.json({ success: true, data: resultadoFinal, profile: dataProfile[0] }, { status: 200 });
     }
 }

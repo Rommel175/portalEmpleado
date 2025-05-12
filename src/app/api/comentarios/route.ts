@@ -105,7 +105,7 @@ export async function GET(req: NextRequest) {
             }
         }
 
-        return NextResponse.json({ success: true, usersData: usersData })
+        return NextResponse.json({ success: true, usersData: usersData }, { status: 200 })
     }
 
 }

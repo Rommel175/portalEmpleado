@@ -82,6 +82,6 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: updateError }, { status: 500 });
         }
 
-        return NextResponse.json({ success: true, estado: 'Jornada Finalizada' });
+        return NextResponse.json({ success: true, estado: 'Jornada Finalizada' }, { status: 200 });
     }
 }

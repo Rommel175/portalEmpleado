@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
     const reciente = req.nextUrl.searchParams.get('reciente') === 'true';
     const localizacion = req.nextUrl.searchParams.get('localizacion');
     const tipoRegistro = req.nextUrl.searchParams.get('tipoRegistro');
-
+    let horas;
 
     const { data: dataProfile, error: errorProfile } = await supabase
         .from('profiles')
@@ -38,7 +38,6 @@ export async function GET(req: NextRequest) {
                     const now = dayjs();
                     start = now.day(1).startOf('day');
                     end = now.day(1).add(5, 'day').endOf('day');
-                    ;
                     break;
                 case 'Hoy':
                 case 'Ayer':
@@ -57,6 +56,33 @@ export async function GET(req: NextRequest) {
             }
 
             return [start, end];
+        }
+
+        switch (option) {
+            case 'Hoy':
+            case 'Ayer':
+                horas = dataProfile[0].horas_semana / 5;
+                //console.log('horas', horas);
+                break;
+            case 'Esta semana':
+            case 'Semana pasada':
+                horas = dataProfile[0].horas_semana;
+                //console.log('horas', horas);
+                break;
+            case 'Este mes':
+            case 'Mes pasado':
+                horas = dataProfile[0].horas_semana * 4;
+                //console.log('horas', horas);
+                break;
+            case 'Este año':
+            case 'Año pasado':
+                horas = (dataProfile[0].horas_semana / 5) * 365;
+                //console.log('horas', horas);
+                break;
+            default:
+                horas = dataProfile[0].horas_semana
+                //console.log('horas', horas);
+                break;
         }
 
         const [start, end] = rangosPresets();
@@ -197,7 +223,6 @@ export async function GET(req: NextRequest) {
                 }
 
                 resultadoFinal.push({
-                    horas_semana: dataProfile[0].horas_semana,
                     fecha,
                     eventos
                 })
@@ -206,6 +231,6 @@ export async function GET(req: NextRequest) {
 
         console.log(resultadoFinal)
 
-        return NextResponse.json({ success: true, data: resultadoFinal, profile: dataProfile[0] });
+        return NextResponse.json({ success: true, data: resultadoFinal, profile: dataProfile[0], horas_semana: horas }, { status: 200 });
     }
 }

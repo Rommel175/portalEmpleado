@@ -3,9 +3,10 @@
 import { useEffect } from 'react';
 import styles from './actividadIndividual.module.css';
 import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
 
 type Props = {
-    total: number;
+    totalHoras: number;
     setTotalHorasTrabajadas: React.Dispatch<React.SetStateAction<string>>
     startDate: Date | null,
     setStartDate: React.Dispatch<React.SetStateAction<Date | null>>,
@@ -16,17 +17,17 @@ type Props = {
     localizacion: string,
     setLocalizacion: React.Dispatch<React.SetStateAction<string>>
     totalHorasTrabajadas: string,
-    id: string
+    id: string,
 };
 
 
-export default function ActividadCardIndividual({ total, setTotalHorasTrabajadas, totalHorasTrabajadas, startDate, setStartDate, endDate, setEndDate, option, localizacion, id  }: Props) {
+export default function ActividadCardIndividual({ totalHoras, setTotalHorasTrabajadas, totalHorasTrabajadas, startDate, setStartDate, endDate, setEndDate, option, localizacion, id }: Props) {
+    dayjs.extend(duration);
 
     useEffect(() => {
 
         let start = startDate;
         let end = endDate;
-
 
         if (!startDate || !endDate) {
             const now = dayjs();
@@ -69,19 +70,16 @@ export default function ActividadCardIndividual({ total, setTotalHorasTrabajadas
         fetchData();
     }, [option])
 
-    function formatHora(horasStr: string): number {
-        const [horas, minutos] = horasStr.split(':').map(Number);
-        return horas + minutos / 60;
-    }
+    const [horas, minutos] = totalHorasTrabajadas.split(':').map(Number);
+    const segundosTrabajados = dayjs.duration({ hours: horas, minutes: minutos }).asSeconds();
+    const totalHorasSegundos = dayjs.duration({hours: totalHoras}).asSeconds();
+    const porcentaje = Math.min((segundosTrabajados / totalHorasSegundos) * 100, 100);
 
-    const horaDecimal = formatHora(totalHorasTrabajadas);
-
-    const porcentaje = Math.min((horaDecimal / total) * 100, 100);
+    
 
     return (
         <div className={styles.container}>
             <h3>Actividad</h3>
-
             <div className={styles.content}>
                 <div className={styles.header}>
                     <h3>{totalHorasTrabajadas} h</h3>
@@ -89,7 +87,6 @@ export default function ActividadCardIndividual({ total, setTotalHorasTrabajadas
                         <div className={styles.horizontalBar} style={{ width: `${porcentaje}%` }} />
                     </div>
                 </div>
-
                 <div className={styles.verticalBarContainer}>
                     <div className={styles.verticalBar} style={{ height: `${porcentaje}%` }} />
                 </div>

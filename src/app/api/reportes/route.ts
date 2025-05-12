@@ -255,5 +255,5 @@ export async function GET(req: NextRequest) {
         totalHoras: formatTime(minutosHorasTotalesEquipo),
         horasEquipo,
         tituloHoras: tituloHoras
-    });
+    }, { status: 200 });
 }

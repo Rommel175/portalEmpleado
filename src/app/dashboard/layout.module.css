@@ -4,7 +4,7 @@
     height: 982px;*/
     align-items: center;
     min-height: 100vh;
-    background: #FFF;
+    background: #F6F6F6;
 }
 
 .container {
@@ -16,6 +16,7 @@
     flex: 1 0 0;
     align-self: stretch;
     background: #F6F6F6;
+    margin-left: 290px;
 }
 
 @media(width < 400px) {

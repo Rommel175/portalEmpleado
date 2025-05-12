@@ -20,6 +20,6 @@ export async function GET() {
     }
 
     if (dataEquipo && dataEquipo.length > 0) {
-        return NextResponse.json({ success: true, dataEquipo: dataEquipo })
+        return NextResponse.json({ success: true, dataEquipo: dataEquipo }, { status: 200 })
     }
 }

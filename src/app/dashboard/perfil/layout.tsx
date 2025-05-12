@@ -10,7 +10,6 @@ export default async function PerfilLayout({ children }: { children: React.React
 
   return (
     <>
-      <Navbar image={profile.image} title='Perfil' />
       <ContainerSuperior profile={profile} fichaje={fichaje} eventos={eventos} />
 
       <div className={styles.content}>
