@@ -4,8 +4,8 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); 
-    z-index: 999; 
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 3;
 }
 
 .modalContainer {
@@ -26,7 +26,7 @@
 
 .modalContainer img {
     border: 0px solid #BCC1CA;
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.50) 0%, rgba(0, 0, 0, 0.50) 100%), url(https://s3-alpha-sig.figma.com/img/862b/ae99/e7d28aca5cd5b5184aa0ba64d4e73de2?Expires=1744588800&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=i4rRIX3BVfmoHV4UMa9a5tEKT61pUwbN2S97qEYv61lro7YIBOctsENSfRnhwvxoVOTFJ6kxAufTRT1GF8LmDGfQVTQVIPGj8hfvqyNYSC-OZUa1hT66-AvlUSDek9hi9MiIoWHttASAE4Kyxo2q3avJ~K1RRaSZTvj4PQbLipIuDCcXRrkXVrW14UGNinVPMZFHC69pHPAGeUc2pOxb2tHd8-25lFfsAE2-qMA4CII58Smm63X7Xua7DMzqX~d-SiAEpqE~YHmCX3CnQwlQEHnspyQE9EAVDF4VQ1T~OiJg6kuilD3ES96lMekF4S9pWAUYbPf6Bd-ow0zTLYvvpw) lightgray 50% / cover no-repeat;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.50) 0%, rgba(0, 0, 0, 0.50) 100%), url(/images/modal_image.jpg) lightgray 50% / cover no-repeat;
 }
 
 .form {
@@ -46,17 +46,17 @@
 }
 
 .formHeader h1 {
-    color: #0B3C70;
-    font-size: 36px;
+    color: var(--primary, #0B3C70);
+    font-size: 32px;
     font-style: normal;
-    font-weight: 600;
+    font-weight: 500;
     line-height: normal;
 }
 
 .formHeader h2 {
     width: 542px;
     color: #7B8794;
-    font-size: 15px;
+    font-size: 14px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
@@ -82,29 +82,30 @@
     width: 265px;
     flex-direction: column;
     align-items: flex-start;
-    gap: 6px;   
+    gap: 6px;
     background: rgba(0, 0, 0, 0.00);
 }
 
 .dateItem label {
-    color: #424955;
-    font-size: 15px;
+    align-self: stretch;
+    color: var(--dark-01, #333);
+    font-size: 14px;
     font-style: normal;
     font-weight: 500;
-    line-height: 26px; /* 173.333% */
+    line-height: normal;
 }
 
 .date input[type=text] {
     display: flex;
-    padding: 8px 16px;
+    padding: 6px 12px;
     align-items: center;
     gap: 10px;
     align-self: stretch;
     border-radius: 6px;
-    border: 1px solid #BCC1CA;
-    background: #FFF;
-    color: #B3B7BA;
-    font-size: 15px;
+    border: 1px solid var(--light-02, #EDEDED);
+    background: var(--white, #FFF);
+    color: var(--dark-02, #7B8794);
+    font-size: 13px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
@@ -121,24 +122,24 @@
 
 .location label {
     width: 371px;
-    color: #424955;
+    color: var(--dark-01, #333);
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
-    line-height: 26px; /* 185.714% */
+    line-height: normal;
 }
 
 .location select {
     display: flex;
-    width: 541px;
-    padding: 8px 16px;
+    padding: 6px 12px;
     justify-content: space-between;
     align-items: center;
+    align-self: stretch;
     border-radius: 6px;
-    border: 1px solid #BCC1CA;
-    background: #FFF;
-    color: #333;
-    font-size: 15px;
+    border: 1px solid var(--light-02, #EDEDED);
+    background: var(--white, #FFF);
+    color: var(--dark-01, #333);
+    font-size: 13px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
@@ -157,25 +158,24 @@
     display: flex;
     align-items: center;
     gap: 2px;
-    color: #424955;
+    color: var(--dark-01, #333);
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
-    line-height: 26px; /* 185.714% */
+    line-height: normal;
 }
 
 .departureTime input[type=text] {
     display: flex;
-    height: 42px;
-    padding: 8px 16px;
+    padding: 6px 12px;
     align-items: center;
     gap: 10px;
     align-self: stretch;
     border-radius: 6px;
-    border: 1px solid #BCC1CA;
-    background: #FFF;
-    color: #333;
-    font-size: 15px;
+    border: 1px solid var(--light-02, #EDEDED);
+    background: var(--white, #FFF);
+    color: var(--dark-01, #333);
+    font-size: 13px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
@@ -194,34 +194,33 @@
     display: flex;
     align-items: center;
     gap: 2px;
-    color: #424955;
+    color: var(--dark-01, #333);
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
-    line-height: 26px; /* 185.714% */
+    line-height: normal;
 }
 
 .note textarea {
     display: flex;
     height: 90px;
-    padding: 12px 14px;
+    padding: 6px 12px;
     align-items: flex-start;
     gap: 12px;
     align-self: stretch;
-    border-radius: 10px;
-    border: 1px solid rgba(123, 135, 148, 0.30);
-    background: #FFF;
-    color: #C0C0C0;
-    font-size: 14px;
+    border-radius: 6px;
+    border: 1px solid var(--light-02, #EDEDED);
+    background: var(--white, #FFF);
+    color: var(--dark-01, #333);
+    font-size: 13px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
-    resize: none;
 }
 
 .note textarea::placeholder {
-    color: #C0C0C0;
-    font-size: 14px;
+    color: #E7E7E7;
+    font-size: 13px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
@@ -249,7 +248,8 @@
     font-size: 15px;
     font-style: normal;
     font-weight: 500;
-    line-height: 20px; /* 133.333% */
+    line-height: 20px;
+    /* 133.333% */
 }
 
 .buttons button:last-child {
@@ -267,5 +267,6 @@
     font-size: 15px;
     font-style: normal;
     font-weight: 500;
-    line-height: 20px; /* 133.333% */
+    line-height: 20px;
+    /* 133.333% */
 }
