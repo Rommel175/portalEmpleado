@@ -1,6 +1,6 @@
 .items {
     display: flex;
-    padding: 18px;
+    padding: 12px 18px;
     justify-content: space-between;
     align-items: center;
     align-self: stretch;
@@ -19,14 +19,12 @@
     flex-shrink: 0;
     aspect-ratio: 1/1;
     border-radius: 40px;
-    /*background: url(https://s3-alpha-sig.figma.com/img/4838/ebf9/9f5d3b04e54d4bda4b727af5ea1e799c?Expires=1743379200&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=OjuiJ9iriZqqOE72l-KP6Dww0UyXc9B5~oomNe-ku1QR-WKTmgYEk~XR4Yy~5V~MbI19w6OyflPM11uPMCXcOxWsYqgjnPTMgz5l785OXlhQxdNPb7xWGmmsO7psdWTdWejBEqynsfqy28~m-GrAtXwhyY3~yo0qiWLyWbQnE3BiSjX0DE30oP3BESuhfHg~v5JAL~DlY8Px5Yty9JsxP5PRJ014RJ6fs4RoQsa9Yu-vyhzBZxaxfqHlg~v61lNCuGBSOxhbrI3QSGkXtdWzW7W9KJMTWdSwNJ7MTQFCUN1~rkYYt5EQEP2C2~f~EwrhSlBisU23jSN4wFepiWJ2gw) lightgray 50% / cover no-repeat;*/
 }
 
 .personalInfo {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 6px;
 }
 
 .name {
@@ -36,19 +34,20 @@
 }
 
 .name h2 {
-    color: var(--dark-01, #252525);
-    font-size: 16px;
+    color: var(--dark-01, #333);
+    font-size: 14px;
     font-style: normal;
     font-weight: 500;
     line-height: normal;
 }
 
 .personalInfo h4 {
-    color: var(--dark-02, #9C9FA1);
-    font-size: 14px;
+    color: var(--dark-02, #7B8794);
+    font-size: 12px;
     font-style: normal;
     font-weight: 400;
-    line-height: normal;
+    line-height: 20px;
+    /* 166.667% */
 }
 
 .estado {
@@ -61,7 +60,7 @@
 
 .estadoActivo {
     display: flex;
-    padding: 6px 18px;
+    padding: 4px 12px;
     justify-content: center;
     align-items: center;
     gap: 8px;
@@ -74,13 +73,14 @@
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
-    color: var(--dark-01, #252525);
+    overflow: hidden;
+    color: var(--dark-01, #333);
     text-align: center;
     text-overflow: ellipsis;
-    font-size: 14px;
+    font-size: 12px;
     font-style: normal;
     font-weight: 500;
-    line-height: 20px; /* 142.857% */
+    line-height: normal;
 }
 
 .estadoInactivo {
@@ -98,11 +98,14 @@
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
-    color: var(--dark-01, #252525);
-    font-size: 14px;
+    overflow: hidden;
+    color: var(--dark-01, #333);
+    text-align: center;
+    text-overflow: ellipsis;
+    font-size: 12px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 20px; /* 142.857% */
+    font-weight: 500;
+    line-height: normal;
 }
 
 .estadoPausa {
@@ -120,11 +123,14 @@
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
-    color: var(--dark-01, #252525);
-    font-size: 14px;
+    overflow: hidden;
+    color: var(--dark-01, #333);
+    text-align: center;
+    text-overflow: ellipsis;
+    font-size: 12px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 20px; /* 142.857% */
+    font-weight: 500;
+    line-height: normal;
 }
 
 .estadoVacaciones {
@@ -142,11 +148,14 @@
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
-    color: var(--dark-01, #252525);
-    font-size: 14px;
+    overflow: hidden;
+    color: var(--dark-01, #333);
+    text-align: center;
+    text-overflow: ellipsis;
+    font-size: 12px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 20px; /* 142.857% */
+    font-weight: 500;
+    line-height: normal;
 }
 
 .estadoFinJornada {
@@ -164,11 +173,14 @@
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
-    color: var(--dark-01, #252525);
-    font-size: 14px;
+    overflow: hidden;
+    color: var(--dark-01, #333);
+    text-align: center;
+    text-overflow: ellipsis;
+    font-size: 12px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 20px; /* 142.857% */
+    font-weight: 500;
+    line-height: normal;
 }
 
 .localizacion {
@@ -176,8 +188,8 @@
 }
 
 .localizacion h2 {
-    color: var(--primary, #0B3C70);
-    font-size: 14px;
+    color: var(--dark-01, #333);
+    font-size: 13px;
     font-style: normal;
     font-weight: 500;
     line-height: normal;
@@ -195,9 +207,9 @@
 }
 
 .jornada h2 {
-    color: var(--dark-02, #9C9FA1);
-    font-size: 14px;
+    color: var(--dark-02, #7B8794);
+    font-size: 13px;
     font-style: normal;
     font-weight: 400;
-    line-height: 20px; /* 142.857% */
+    line-height: normal;
 }

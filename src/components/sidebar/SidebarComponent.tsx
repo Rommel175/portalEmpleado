@@ -36,7 +36,7 @@ export default function SidebarComponent({ is_admin }: { is_admin: boolean }) {
                 </div>
 
 
-                <h1>PORTAL EMPLEADO</h1>
+                <h1>Portal Empleado</h1>
 
             </header>
 

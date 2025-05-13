@@ -1,10 +1,11 @@
 .container {
     display: flex;
     width: 31%;
-    padding: 18px 24px;
+    padding: 20px;
     flex-direction: column;
     align-items: flex-start;
     gap: 18px;
+    flex-shrink: 0;
     align-self: stretch;
     border-radius: 12px;
     background: var(--white, #FFF);
@@ -17,24 +18,24 @@
     align-self: stretch;
 }
 
-.title > h2 {
+.title>h2 {
     color: var(--primary, #0B3C70);
-    font-size: 24px;
+    font-size: 21px;
     font-style: normal;
     font-weight: 500;
     line-height: normal;
 }
 
-.title > div {
+.title>div {
     display: flex;
-    width: 40px;
-    height: 40px;
-    padding: 9.091px 10.909px;
+    width: 32px;
+    height: 32px;
+    padding: 7.273px 8.727px;
     justify-content: center;
     align-items: center;
-    gap: 3.636px;
+    gap: 2.909px;
     aspect-ratio: 1/1;
-    border-radius: 10.909px;
+    border-radius: 8.727px;
     background: var(--primary, #0B3C70);
 }
 
@@ -42,16 +43,16 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
     align-self: stretch;
 }
 
 .date h3 {
-    color: var(--dark-02, #9C9FA1);
-    font-size: 15px;
+    color: var(--dark-02, #7B8794);
+    font-size: 12px;
     font-style: normal;
     font-weight: 400;
-    line-height: normal;
+    line-height: 20px;
     width: 100%;
 }
 
@@ -67,8 +68,8 @@
 }
 
 .counter h2 {
-    color: var(--dark-01, #252525);
-    font-size: 24px;
+    color: var(--dark-01, #333);
+    font-size: 21px;
     font-style: normal;
     font-weight: 500;
     line-height: normal;
@@ -84,7 +85,6 @@
 
 .entrada {
     display: flex;
-    height: 44px;
     padding: 10px 12px;
     justify-content: center;
     align-items: center;
@@ -94,7 +94,7 @@
     background: var(--primary, #0B3C70);
     color: var(--white, #FFF);
     text-align: center;
-    font-size: 15px;
+    font-size: 13px;
     font-style: normal;
     font-weight: 500;
     line-height: normal;
@@ -102,7 +102,6 @@
 
 .pausa {
     display: flex;
-    height: 44px;
     padding: 10px 12px;
     justify-content: center;
     align-items: center;
@@ -112,7 +111,8 @@
     background: #FFE7D5;
     color: var(--colors-Warning, #FF7300);
     text-align: center;
-    font-size: 15px;
+    font-family: Poppins;
+    font-size: 13px;
     font-style: normal;
     font-weight: 500;
     line-height: normal;
@@ -120,7 +120,6 @@
 
 .salida {
     display: flex;
-    height: 44px;
     padding: 10px 12px;
     justify-content: center;
     align-items: center;
@@ -130,17 +129,32 @@
     background: var(--light-01, #F9F9F9);
     color: var(--primary, #0B3C70);
     text-align: center;
-    font-size: 15px;
+    font-size: 13px;
     font-style: normal;
     font-weight: 500;
     line-height: normal;
+}
+
+.entrada:hover {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.30) 0%, rgba(0, 0, 0, 0.30) 100%), #0B3C70;
+    cursor: pointer;
+}
+
+.pausa:hover {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.07) 0%, rgba(0, 0, 0, 0.07) 100%), #FFE7D5;
+    cursor: pointer;
+}
+
+.salida:hover {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.07) 0%, rgba(0, 0, 0, 0.07) 100%), #F9F9F9;
+    cursor: pointer;
 }
 
 .salida:disabled {
     background: var(--light-01, #F9F9F9);
     color: var(--dark-03, #B6BEC9);
     text-align: center;
-    font-size: 15px;
+    font-size: 13px;
     font-style: normal;
     font-weight: 500;
     line-height: normal;
@@ -150,20 +164,14 @@
     cursor: not-allowed;
 }
 
-.entrada:hover,
-.pausa:hover,
-.salida:hover {
-    cursor: pointer;
-}
-
 .overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); 
-    z-index: 999; 
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
 }
 
 .modalContainer {
@@ -176,9 +184,9 @@
     padding: 50px;
     flex-direction: column;
     align-items: center;
-    gap: 48px;
+    gap: 36px;
     border-radius: 12px;
-    background: #FFF;
+    background: var(--white, #FFF);
 }
 
 .svgModal {
@@ -193,27 +201,26 @@
 
 .contentModal {
     display: flex;
-    width: 702px;
+    /*width: 702px;*/
     flex-direction: column;
     align-items: center;
-    gap: 12px; 
+    gap: 12px;
+    align-self: stretch;
 }
 
 .contentModal h3 {
-    color: #0B3C70;
+    color: var(--primary, #0B3C70);
     text-align: center;
-    font-size: 20px;
+    font-size: 17px;
     font-style: normal;
     font-weight: 500;
-    line-height: normal;
+    line-height: 24px;
 }
 
 .contentModal p {
-    align-self: stretch;
-    color: var(--light-03, #7B8794);
+    color: var(--dark-02, #7B8794);
     text-align: center;
-    font-family: Poppins;
-    font-size: 15px;
+    font-size: 13px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
@@ -221,11 +228,11 @@
 
 .buttonsModal {
     display: flex;
-    width: 386px;
-    height: 43px;
+    width: 322px;
+    justify-content: center;
     align-items: center;
     gap: 12px;
-} 
+}
 
 .buttonsModal button:first-child {
     display: flex;
@@ -234,13 +241,11 @@
     align-items: center;
     gap: 4px;
     flex: 1 0 0;
-    align-self: stretch;
     border-radius: 100px;
-    border: 1px solid #F6F6F6;
-    background: #F6F6F6;
-    color: #0B3C70;
+    background: var(--light-01, #F6F6F6);
+    color: var(--primary, #0B3C70);
     text-align: center;
-    font-size: 15px;
+    font-size: 13px;
     font-style: normal;
     font-weight: 500;
     line-height: normal;
@@ -253,17 +258,22 @@
     align-items: center;
     gap: 4px;
     flex: 1 0 0;
-    align-self: stretch;
     border-radius: 100px;
-    background: #0B3C70;
-    color: #FFF;
+    background: var(--primary, #0B3C70);
+    color: var(--white, #FFF);
     text-align: center;
-    font-size: 15px;
+    font-size: 13px;
     font-style: normal;
     font-weight: 500;
     line-height: normal;
 }
 
-.buttonsModal button:hover {
+.buttonsModal button:first-child:hover {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.07) 0%, rgba(0, 0, 0, 0.07) 100%), #F6F6F6;
+    cursor: pointer;
+}
+
+.buttonsModal button:last-child:hover {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.30) 0%, rgba(0, 0, 0, 0.30) 100%), #0B3C70;
     cursor: pointer;
 }

@@ -13,17 +13,21 @@
     align-items: center;
     gap: 10px;
     border-radius: 6px;
-    color: #0B3C70;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
+    color: var(--primary, #0B3C70);
     text-decoration: none;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.options a:hover {
+    background: var(--light-01, #F6F6F6);
 }
 
 .options a.active {
     background: #0B3C70;
-    color: #FFF;
+    color: var(--white, #FFF);
 }
 
 .options button {
@@ -44,10 +48,10 @@
 
 .options button:hover {
     opacity: .8;
-    cursor: pointer; 
+    cursor: pointer;
 }
 
-@media (width < 400px) {
+/*@media (width < 400px) {
     .options {
         flex-direction: row;
         width: 100%;
@@ -75,4 +79,4 @@
         background: none;
         color: #0B3C70;
     }
-}
+}*/

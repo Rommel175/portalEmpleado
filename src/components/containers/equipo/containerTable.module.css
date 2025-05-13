@@ -4,7 +4,7 @@
     align-items: flex-start;
     align-self: stretch;
     border-radius: 12px;
-    border: 1px solid var(--light-01, #F9F9F9);
+    border: 1px solid #F9F9F9;
     box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.06), 0px 0px 0px 1px rgba(0, 0, 0, 0.06);
 }
 
@@ -24,7 +24,7 @@
 }
 
 .tableHeader h3:nth-child(2) {
-    width: 180px;
+    width: 190px;
 }
 
 .tableHeader h3:nth-child(3) {
@@ -32,23 +32,24 @@
 }
 
 .tableHeader h3:nth-child(4) {
-    width: 132px;
+    width: 130px;
 }
 
 .tableHeader h3:last-child {
+    width: 132px;
     display: flex;
     align-items: center;
     gap: 2px;
-    color: var(--dark-01, #252525);
-    font-size: 13px;
+    color: var(--dark-01, #333);
+    font-size: 12px;
     font-style: normal;
     font-weight: 500;
     line-height: normal;
 }
 
 .tableHeader h3 {
-    color: var(--dark-01, #252525);
-    font-size: 13px;
+    color: var(--dark-01, #333);
+    font-size: 12px;
     font-style: normal;
     font-weight: 500;
     line-height: normal;

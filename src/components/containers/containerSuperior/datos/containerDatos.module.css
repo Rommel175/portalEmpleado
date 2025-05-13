@@ -1,6 +1,6 @@
 .container {
     display: flex;
-    padding: 18px;
+    padding: 20px;
     flex-direction: column;
     align-items: flex-start;
     gap: 18px;
@@ -8,6 +8,96 @@
     align-self: stretch;
     border-radius: 12px;
     background: var(--white, #FFF);
+}
+
+.title {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    align-self: stretch;
+}
+
+.title h1 {
+    color: var(--primary, #0B3C70);
+    font-size: 21px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.profile {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    position: relative;
+}
+
+.personalImage {
+    border-radius: 60px;
+    background: lightgray 50% / cover no-repeat;
+}
+
+.containerImage::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.40);
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+}
+
+.containerImage:hover::after {
+    opacity: 1;
+}
+
+.personalInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+}
+
+.name {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.name>h2 {
+    color: var(--dark-01, #333);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.personalInfo h3 {
+    color: var(--dark-02, #7B8794);
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+}
+
+.edit {
+    display: flex;
+    width: 20px;
+    height: 20px;
+    padding: 4.889px;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    left: 34px;
+    bottom: 10px;
+    border-radius: 60.5px;
+    border: 0.917px solid #FFFBFA;
+    background: var(--colors-Info, #285FF5);
+}
+
+.edit:hover {
+    cursor: pointer;
 }
 
 .state {
@@ -21,77 +111,18 @@
     box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.06), 0px 0px 0px 1px rgba(0, 0, 0, 0.06);
 }
 
-.state > p {
+.state>p {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
     overflow: hidden;
-    color: var(--dark-01, #252525);
+    color: var(--dark-01, #333);
     text-align: center;
     text-overflow: ellipsis;
-    font-size: 14px;
+    font-size: 12px;
     font-style: normal;
     font-weight: 500;
     line-height: normal;
-}
-
-.profile {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    position: relative;
-}
-
-.personalImage {
-    border-radius: 60px;
-    background: lightgray 50% / cover no-repeat;
-}
-
-.personalInfo {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-}
-
-.personalInfo h2 {
-    color: var(--dark-01, #252525);
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-}
-
-.personalInfo h3 {
-    color: var(--dark-02, #9C9FA1);
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-}
-
-.edit {
-    display: flex;
-    width: 20px;
-    height: 20px;
-    padding: 4.889px;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    left: 42px;
-    bottom: 0px;
-    border-radius: 60.5px;
-    border: 0.917px solid #FFFBFA;
-    background: var(--colors-Info, #285FF5);
-}
-
-.edit > a {
-    display: flex;
-    width: 10px;
-    height: 10px;
-    justify-content: center;
-    align-items: center;
-    flex-shrink: 0;
 }
 
 .line {
@@ -117,8 +148,11 @@
 }
 
 .mainContent div h4 {
-    color: var(--dark-01, #252525);
-    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    color: var(--dark-01, #333);
+    font-size: 13px;
     font-style: normal;
     font-weight: 500;
     line-height: normal;
@@ -126,30 +160,34 @@
 
 .location {
     display: flex;
-    padding: 8px 12px;
+    padding: 6px 12px;
     justify-content: space-between;
     align-items: center;
     align-self: stretch;
     border-radius: 6px;
-    border: 1px solid var(--light-02, #E7E7E7);
+    border: 1px solid var(--light-02, #EDEDED);
     background: var(--white, #FFF);
+    color: var(--dark-01, #333);
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
 }
 
 .inicio {
     display: flex;
-    height: 37px;
-    padding: 8px 12px;
+    padding: 6px 12px;
     align-items: center;
     gap: 10px;
     align-self: stretch;
     border-radius: 6px;
-    border: 1px solid var(--light-02, #E7E7E7);
+    border: 1px solid var(--light-02, #EDEDED);
     background: var(--white, #FFF);
 }
 
 .inicio p {
-    color: var(--dark-02, #9C9FA1);
-    font-size: 14px;
+    color: var(--dark-02, #7B8794);
+    font-size: 13px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
@@ -157,25 +195,25 @@
 
 .final {
     display: flex;
-    height: 37px;
     padding: 6px 12px;
     align-items: center;
     gap: 10px;
     align-self: stretch;
     border-radius: 6px;
-    border: 1px solid var(--light-02, #E7E7E7);
+    border: 1px solid var(--light-02, #EDEDED);
     background: var(--white, #FFF);
 }
 
 .final p {
-    color: var(--dark-02, #9C9FA1);
-    font-size: 14px;
+    color: var(--dark-01, #333);
+    font-family: Poppins;
+    font-size: 13px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
 }
 
-.mainContent div:last-child > div:first-child {
+.mainContent div:last-child>div:first-child {
     display: flex;
     flex-direction: row;
     align-items: center;

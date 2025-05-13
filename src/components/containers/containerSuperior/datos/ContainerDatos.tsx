@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 import dayjs from 'dayjs';
+import Tooltips2 from '@/components/tooltip/Tooltips2';
 import Tooltips from '@/components/tooltip/Tooltips';
 
 export default function DatosContainer({ profile, estado, localizacionFichaje, setLocalizacionFichaje, horaInicio, setHoraInicio, horaFinalAprox, setHoraFinalAprox }: { profile: Profile, estado: string, localizacionFichaje: string, setLocalizacionFichaje: React.Dispatch<React.SetStateAction<string>>, horaInicio: string | Date, setHoraInicio: React.Dispatch<React.SetStateAction<Date>>, horaFinalAprox: string | Date, setHoraFinalAprox: React.Dispatch<React.SetStateAction<Date>> }) {
@@ -56,67 +57,81 @@ export default function DatosContainer({ profile, estado, localizacionFichaje, s
     return (
         <div className={styles.container}>
 
-            <div className={styles.state}>
-                {
-                    (estado == 'Activo') &&
-                    <svg width="7" height="6" viewBox="0 0 7 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="3.5" cy="3" r="3" fill="#0DC44A" />
-                    </svg>
-                }
-
-                {
-                    (estado == 'Inactivo') &&
-                    <svg width="7" height="7" viewBox="0 0 7 7" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="3.5" cy="3.5" r="3" fill="#E94544" />
-                    </svg>
-                }
-
-                {
-                    (estado == 'Pausa') &&
-                    <svg width="7" height="7" viewBox="0 0 7 7" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="3.5" cy="3.5" r="3" fill="#FF6E00" />
-                    </svg>
-                }
-
-                {
-                    (estado == 'Jornada Finalizada') &&
-                    <svg width="7" height="7" viewBox="0 0 7 7" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="3.5" cy="3.5" r="3" fill="#828282" />
-                    </svg>
-                }
-
-                <p>{estado}</p>
+            <div className={styles.title}>
+                <h1>Inicio</h1>
             </div>
 
             <div className={styles.profile}>
 
-                <Image
-                    src={profile.image}
-                    width={60}
-                    height={60}
-                    alt="img"
-                    className={styles.personalImage}
-                />
+                <Tooltips2 infoText='Gestionar cuenta'>
+                    <div className={styles.containerImage}>
+                        <Link href={'/dashboard/editar_perfil'}>
+                            <Image
+                                src={profile.image}
+                                width={52}
+                                height={52}
+                                alt="img"
+                                className={styles.personalImage}
+                            />
+                        </Link>
+                        <div className={styles.edit}>
+                            <Link href={'/dashboard/editar_perfil'}>
+                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <g clipPath="url(#clip0_197_8779)">
+                                        <path d="M8.5 1.50003C8.63132 1.36871 8.78722 1.26454 8.9588 1.19347C9.13038 1.1224 9.31428 1.08582 9.5 1.08582C9.68572 1.08582 9.86962 1.1224 10.0412 1.19347C10.2128 1.26454 10.3687 1.36871 10.5 1.50003C10.6313 1.63135 10.7355 1.78725 10.8066 1.95883C10.8776 2.13041 10.9142 2.31431 10.9142 2.50003C10.9142 2.68575 10.8776 2.86964 10.8066 3.04123C10.7355 3.21281 10.6313 3.36871 10.5 3.50003L3.75 10.25L1 11L1.75 8.25003L8.5 1.50003Z" stroke="white" strokeWidth="0.75" strokeLinecap="round" strokeLinejoin="round" />
+                                    </g>
+                                    <defs>
+                                        <clipPath id="clip0_197_8779">
+                                            <rect width="12" height="12" fill="white" />
+                                        </clipPath>
+                                    </defs>
+                                </svg>
+                            </Link>
+
+                        </div>
+                    </div>
+
+                </Tooltips2>
 
                 <div className={styles.personalInfo}>
-                    <h2>{profile.nombre} {profile.apellido || ''}</h2>
+                    <div className={styles.name}>
+                        <h2>{profile.nombre} {profile.apellido || ''}</h2>
+                        <div className={styles.state}>
+                            {
+                                (estado == 'Activo') &&
+                                <svg width="7" height="6" viewBox="0 0 7 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="3.5" cy="3" r="3" fill="#0DC44A" />
+                                </svg>
+                            }
+
+                            {
+                                (estado == 'Inactivo') &&
+                                <svg width="7" height="7" viewBox="0 0 7 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="3.5" cy="3.5" r="3" fill="#E94544" />
+                                </svg>
+                            }
+
+                            {
+                                (estado == 'Pausa') &&
+                                <svg width="7" height="7" viewBox="0 0 7 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="3.5" cy="3.5" r="3" fill="#FF6E00" />
+                                </svg>
+                            }
+
+                            {
+                                (estado == 'Jornada Finalizada') &&
+                                <svg width="7" height="7" viewBox="0 0 7 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="3.5" cy="3.5" r="3" fill="#828282" />
+                                </svg>
+                            }
+
+                            <p>{estado}</p>
+                        </div>
+                    </div>
                     <h3>{profile.puesto || 'No especificado'} | {profile.email}</h3>
                 </div>
 
-                <div className={styles.edit}>
-                    <Link href={'/dashboard/editar_perfil'}>
-                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <g clipPath="url(#clip0_197_8779)">
-                                <path d="M8.5 1.50003C8.63132 1.36871 8.78722 1.26454 8.9588 1.19347C9.13038 1.1224 9.31428 1.08582 9.5 1.08582C9.68572 1.08582 9.86962 1.1224 10.0412 1.19347C10.2128 1.26454 10.3687 1.36871 10.5 1.50003C10.6313 1.63135 10.7355 1.78725 10.8066 1.95883C10.8776 2.13041 10.9142 2.31431 10.9142 2.50003C10.9142 2.68575 10.8776 2.86964 10.8066 3.04123C10.7355 3.21281 10.6313 3.36871 10.5 3.50003L3.75 10.25L1 11L1.75 8.25003L8.5 1.50003Z" stroke="white" strokeWidth="0.75" strokeLinecap="round" strokeLinejoin="round" />
-                            </g>
-                            <defs>
-                                <clipPath id="clip0_197_8779">
-                                    <rect width="12" height="12" fill="white" />
-                                </clipPath>
-                            </defs>
-                        </svg>
-                    </Link>
-                </div>
+
 
             </div>
 
@@ -125,7 +140,7 @@ export default function DatosContainer({ profile, estado, localizacionFichaje, s
             <div className={styles.mainContent}>
                 <div>
                     <h4>Ubicación</h4>
-                    <select name="localizacion" id="localizacion" className={styles.location} value={localizacionFichaje} onChange={handleChange}>
+                    <select className={styles.location} value={localizacionFichaje} onChange={handleChange}>
                         <option value="oficina">Oficina</option>
                         <option value="casa">Casa</option>
                         <option value="viaje">Viaje</option>

@@ -32,10 +32,10 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
         }*/
 
         dayjs.locale('es');
-        
+
         const date = dayjs();
-        
-        setCurrentDate(date.format("DD [de] MMMM [de] YYYY"));
+
+        setCurrentDate(date.format("DD MMMM YYYY"));
 
         const horasTrabajo = profile.horas_semana / 5;
 
@@ -247,8 +247,8 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
                 <div className={styles.title}>
                     <h2>Fichar</h2>
                     <div>
-                        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M7.36377 5.54553L16.4547 11.0001L7.36377 16.4546V5.54553Z" fill="white" stroke="white" strokeWidth="1.81818" strokeLinecap="round" strokeLinejoin="round" />
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                            <path d="M6.09106 4.63635L13.3638 8.99999L6.09106 13.3636V4.63635Z" fill="white" stroke="white" strokeWidth="1.45455" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                     </div>
                 </div>
@@ -264,8 +264,8 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
                         (!profile.alta) && (
                             <>
                                 <button className={styles.entrada} onClick={startTimer} style={{ cursor: 'not-allowed' }} disabled>
-                                    <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M8.5 6L18.5 12L8.5 18V6Z" fill="white" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                        <path d="M5.83325 4L15.8333 10L5.83325 16V4Z" fill="white" stroke="white" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
                                     </svg>
                                     FICHAR ENTRADA
                                 </button>
@@ -278,8 +278,8 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
                         ((estado == 'Activo') && profile.alta) && (
                             <>
                                 <button className={styles.pausa} onClick={pauseTimer}>
-                                    <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M14.5 19V5H18.5V19H14.5ZM6.5 19V5H10.5V19H6.5Z" fill="#FF6E00" />
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20" fill="none">
+                                        <path d="M15.2717 4.51465V15.4854H12.8713V4.51465H15.2717ZM8.41431 4.51465V15.4854H6.01489V4.51465H8.41431Z" fill="#FF7300" stroke="#FF7300" strokeWidth="1.02857" />
                                     </svg>
                                     PAUSA
                                 </button>
@@ -293,8 +293,8 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
                         ((estado == 'Inactivo' || estado == 'Jornada Finalizada') && profile.alta) && (
                             <>
                                 <button className={styles.entrada} onClick={startTimer}>
-                                    <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M8.5 6L18.5 12L8.5 18V6Z" fill="white" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                        <path d="M5.83325 4L15.8333 10L5.83325 16V4Z" fill="white" stroke="white" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
                                     </svg>
                                     FICHAR ENTRADA
                                 </button>
@@ -307,8 +307,8 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
                         ((estado == 'Pausa') && profile.alta) && (
                             <>
                                 <button className={styles.entrada} onClick={reanudarTimer}>
-                                    <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M8.5 6L18.5 12L8.5 18V6Z" fill="white" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                        <path d="M5.83325 4L15.8333 10L5.83325 16V4Z" fill="white" stroke="white" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
                                     </svg>
                                     REANUDAR
                                 </button>
