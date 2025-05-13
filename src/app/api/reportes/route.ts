@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
 
-    //const checkedState = JSON.parse(req.nextUrl.searchParams.get('checkedState') || '{}'); 
+    const checkedState = JSON.parse(req.nextUrl.searchParams.get('checkedState') || '{}'); 
     const option = req.nextUrl.searchParams.get('option');
     const startDate = req.nextUrl.searchParams.get('startDate');
     const endDate = req.nextUrl.searchParams.get('endDate');
@@ -107,19 +107,19 @@ export async function GET(req: NextRequest) {
 
     let totalHoras = dayjs.duration(0);
 
-    let horasEquipo = 0;
+    let horasEquipo = dayjs.duration(0);
 
     const users = [];
 
-    /*const selectedProfiles = Object.keys(checkedState)
+    const selectedProfiles = Object.keys(checkedState)
         .filter((key) => checkedState[parseInt(key)])
         .map((key) => parseInt(key));
 
     const showProfiles = selectedProfiles.length === 0
         ? dataProfile
-        : dataProfile.filter((profile) => selectedProfiles.includes(profile.id));*/
+        : dataProfile.filter((profile) => selectedProfiles.includes(profile.id));
 
-    for (const profile of dataProfile) {
+    for (const profile of showProfiles) {
         let horasSemana;
         switch (option) {
             case 'Hoy':
@@ -147,7 +147,7 @@ export async function GET(req: NextRequest) {
 
 
         let totalHorasPerfil = dayjs.duration(0);
-        horasEquipo += profile.horas_semana;
+        horasEquipo = horasEquipo.add(horasSemana);
 
         const { data: dataFichaje, error: errorFichaje } = await supabase
             .from('fichaje_jornada')
@@ -214,16 +214,16 @@ export async function GET(req: NextRequest) {
                     }
                 }
 
-                console.log('Total cada jornada', tiempoNeto.format('HH:mm'))
+                //console.log('Total cada jornada', tiempoNeto.format('HH:mm'))
             }
         }
 
-        console.log(totalHorasPerfil)
+        //console.log(totalHorasPerfil)
 
         const minutosSemana = Math.round(horasSemana.asMinutes());
 
-        const horasRestantes2 = horasSemana.subtract(totalHorasPerfil);
-        const minutosTotales = Math.round(horasRestantes2.asMinutes());
+        const horasRestantes = horasSemana.subtract(totalHorasPerfil);
+        const minutosTotales = Math.round(horasRestantes.asMinutes());
 
         users.push({
             id: profile.id,
@@ -249,11 +249,13 @@ export async function GET(req: NextRequest) {
         return `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}`
     }
 
+    const minutosEquipo = Math.round(horasEquipo.asMinutes());
+
     return NextResponse.json({
         success: true,
         users,
         totalHoras: formatTime(minutosHorasTotalesEquipo),
-        horasEquipo,
+        minutosEquipo,
         tituloHoras: tituloHoras
     }, { status: 200 });
 }

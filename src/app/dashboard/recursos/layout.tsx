@@ -13,6 +13,7 @@ export default async function RecursosLayout({ children }: { children: React.Rea
       </div>
       
       <div className={styles.wraper}>
+        <h1 className={styles.title}>Recursos humanos</h1>
         <NavbarRecursos />
         {children}
       </div>

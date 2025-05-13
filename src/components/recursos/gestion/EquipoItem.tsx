@@ -17,17 +17,13 @@ type Prop = {
 export default function EquipoItem({ id, nombre, apellido, email, foto, estado = 'Jornada Finalizada', localizacion, inicio = "-", final = "-" }: Prop) {
 
     return (
-        <div className={styles.items}>
+        <div className={styles.item}>
             <div className={styles.usuario}>
-                <Image src={foto ?? "https://clasicoshispanicos.com/wp-content/uploads/2021/01/siluetagrisanonimo.jpg"} width={40} height={40} alt='img_profile' />
+                <Image src={foto || ''} width={40} height={40} alt='img_profile' />
                 <div className={styles.personalInfo}>
                     <div className={styles.name}>
                         <h2>{nombre} {apellido}</h2>
-                        <svg width="10" height="11" viewBox="0 0 10 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M3.60176 8.38657L6.41431 5.57402L3.60176 2.76148" stroke="#333333" strokeWidth="0.623087" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
                     </div>
-
                     <h4>{email}</h4>
                 </div>
             </div>

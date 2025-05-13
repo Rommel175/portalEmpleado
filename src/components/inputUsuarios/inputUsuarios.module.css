@@ -4,9 +4,9 @@
     align-items: center;
     gap: 6px;
     border-radius: 6px;
-    border: 1px solid #FFF;
-    background: #FFF;
-    box-shadow: 0px 0px 1.5px 1px rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--blue-light, #F5F7FF);
+    background: var(--blue-light, #F5F7FF);
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.06), 0px 0px 0px 1px rgba(0, 0, 0, 0.06);
     position: relative;
 }
 
@@ -21,6 +21,26 @@
 
 .filtro {
     cursor: pointer;
+}
+
+.filtro .totalUsers {
+    display: flex;
+    width: 16px;
+    height: 16px;
+    padding: 4px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    aspect-ratio: 1/1;
+    border-radius: var(--sizes-round, 100px);
+    background: var(--colors-Info, #285FF5);
+    color: #FFF;
+    text-align: center;
+    font-size: 11px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
 }
 
 .container {
@@ -50,7 +70,7 @@
     color: #252525;
 }
 
-.option > p {
+.option>p {
     font-size: 14px;
     font-style: normal;
     font-weight: 500;

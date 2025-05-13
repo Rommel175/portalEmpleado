@@ -1,4 +1,4 @@
-.items {
+.item {
     display: flex;
     padding: 18px;
     justify-content: space-between;
@@ -26,7 +26,6 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 6px;
 }
 
 .name {
@@ -36,19 +35,20 @@
 }
 
 .name h2 {
-    color: var(--dark-01, #252525);
-    font-size: 16px;
+    color: var(--dark-01, #333);
+    font-size: 14px;
     font-style: normal;
     font-weight: 500;
     line-height: normal;
 }
 
 .personalInfo h4 {
-    color: var(--dark-02, #9C9FA1);
-    font-size: 14px;
+    color: var(--dark-02, #7B8794);
+    font-size: 12px;
     font-style: normal;
     font-weight: 400;
-    line-height: normal;
+    line-height: 20px;
+    /* 166.667% */
 }
 
 .estado {
@@ -61,7 +61,7 @@
 
 .estadoActivo {
     display: flex;
-    padding: 6px 18px;
+    padding: 4px 12px;
     justify-content: center;
     align-items: center;
     gap: 8px;
@@ -74,13 +74,14 @@
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
-    color: var(--dark-01, #252525);
+    overflow: hidden;
+    color: var(--dark-01, #333);
     text-align: center;
     text-overflow: ellipsis;
-    font-size: 14px;
+    font-size: 12px;
     font-style: normal;
     font-weight: 500;
-    line-height: 20px; /* 142.857% */
+    line-height: normal;
 }
 
 .estadoInactivo {
@@ -98,11 +99,14 @@
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
-    color: var(--dark-01, #252525);
-    font-size: 14px;
+    overflow: hidden;
+    color: var(--dark-01, #333);
+    text-align: center;
+    text-overflow: ellipsis;
+    font-size: 12px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 20px; /* 142.857% */
+    font-weight: 500;
+    line-height: normal;
 }
 
 .estadoPausa {
@@ -120,11 +124,14 @@
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
-    color: var(--dark-01, #252525);
-    font-size: 14px;
+    overflow: hidden;
+    color: var(--dark-01, #333);
+    text-align: center;
+    text-overflow: ellipsis;
+    font-size: 12px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 20px; /* 142.857% */
+    font-weight: 500;
+    line-height: normal;
 }
 
 .estadoVacaciones {
@@ -142,11 +149,14 @@
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
-    color: var(--dark-01, #252525);
-    font-size: 14px;
+    overflow: hidden;
+    color: var(--dark-01, #333);
+    text-align: center;
+    text-overflow: ellipsis;
+    font-size: 12px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 20px; /* 142.857% */
+    font-weight: 500;
+    line-height: normal;
 }
 
 .estadoFinJornada {
@@ -164,11 +174,14 @@
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
-    color: var(--dark-01, #252525);
-    font-size: 14px;
+    overflow: hidden;
+    color: var(--dark-01, #333);
+    text-align: center;
+    text-overflow: ellipsis;
+    font-size: 12px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 20px; /* 142.857% */
+    font-weight: 500;
+    line-height: normal;
 }
 
 .localizacion {
@@ -176,8 +189,8 @@
 }
 
 .localizacion h2 {
-    color: var(--primary, #0B3C70);
-    font-size: 14px;
+    color: var(--dark-01, #333);
+    font-size: 13px;
     font-style: normal;
     font-weight: 500;
     line-height: normal;
@@ -195,11 +208,11 @@
 }
 
 .jornada h2 {
-    color: var(--dark-02, #9C9FA1);
-    font-size: 14px;
+    color: var(--dark-02, #7B8794);
+    font-size: 13px;
     font-style: normal;
     font-weight: 400;
-    line-height: 20px; /* 142.857% */
+    line-height: normal;
 }
 
 .verUsuario {
@@ -213,8 +226,12 @@
     box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.06), 0px 0px 0px 1px rgba(0, 0, 0, 0.06);
     color: var(--colors-Info, #285FF5);
     text-align: center;
-    font-size: 13px;
+    font-size: 12px;
     font-style: normal;
     font-weight: 400;
-    line-height: 20px; /* 153.846% */
+    line-height: 20px;
+}
+
+.verUsuario:hover {
+    background: var(--white, #ececec);
 }

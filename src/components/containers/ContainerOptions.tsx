@@ -22,9 +22,10 @@ type Prop = {
   setCheckedState: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>,
   tipoRegistros: string,
   setTipoRegistros: React.Dispatch<React.SetStateAction<string>>
+  totalUsuarios?: number
 }
 
-export default function ContainerOptions({ recientes = false, tipoRegistro = false, ubicacion = false, date = false, usuarios = false, startDate, setStartDate, endDate, setEndDate, option, setOption, localizacion, setLocalizacion, reciente, setReciente, checkedState, setCheckedState, tipoRegistros, setTipoRegistros }: Prop) {
+export default function ContainerOptions({ recientes = false, tipoRegistro = false, ubicacion = false, date = false, usuarios = false, startDate, setStartDate, endDate, setEndDate, option, setOption, localizacion, setLocalizacion, reciente, setReciente, checkedState, setCheckedState, tipoRegistros, setTipoRegistros, totalUsuarios=0 }: Prop) {
   function handleChangeLocalizacion(e: React.ChangeEvent<HTMLSelectElement>) {
     setLocalizacion(e.target.value);
   }
@@ -48,7 +49,7 @@ export default function ContainerOptions({ recientes = false, tipoRegistro = fal
 
       {
         (usuarios) &&
-        <InputUsuarios checkedState={checkedState} setCheckedState={setCheckedState} />
+        <InputUsuarios checkedState={checkedState} setCheckedState={setCheckedState} totalUsuarios={totalUsuarios}/>
       }
 
       {
