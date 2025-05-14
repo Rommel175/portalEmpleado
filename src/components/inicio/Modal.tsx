@@ -7,6 +7,7 @@ import { Fichaje_jornada, Profile } from '@/types/Types';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
 import Tooltips from '../tooltip/Tooltips';
+import CustomSelect from '../customInputs/customSelect/CustomSelect';
 
 export default function Modal({ profile, fichaje }: { profile: Profile, fichaje: Fichaje_jornada[] }) {
     const [isOpen, setIsOpen] = useState(true);
@@ -56,10 +57,6 @@ export default function Modal({ profile, fichaje }: { profile: Profile, fichaje:
         fichar();
     }
 
-    function handleChangeLocation(e: React.ChangeEvent<HTMLSelectElement>) {
-        setLocalizacionFichaje(e.target.value);
-    }
-
     function handleChangeMensaje(e: React.ChangeEvent<HTMLTextAreaElement>) {
         setMensaje(e.target.value)
     }
@@ -90,11 +87,7 @@ export default function Modal({ profile, fichaje }: { profile: Profile, fichaje:
 
                         <div className={styles.location}>
                             <label htmlFor="location">Localización</label>
-                            <select name="location" value={localizacionFichaje || ''} onChange={handleChangeLocation}>
-                                <option value="oficina">Oficina</option>
-                                <option value="casa">Casa</option>
-                                <option value="viaje">Viaje</option>
-                            </select>
+                            <CustomSelect localizacionFichaje={localizacionFichaje} setLocalizacionFichaje={setLocalizacionFichaje} options={["Oficina", "Casa", "Viaje"]}/>
                         </div>
 
                         <div className={styles.departureTime}>

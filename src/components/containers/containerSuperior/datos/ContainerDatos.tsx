@@ -10,6 +10,7 @@ import { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 import dayjs from 'dayjs';
 import Tooltips2 from '@/components/tooltip/Tooltips2';
 import Tooltips from '@/components/tooltip/Tooltips';
+import CustomSelect from '@/components/customInputs/customSelect/CustomSelect';
 
 export default function DatosContainer({ profile, estado, localizacionFichaje, setLocalizacionFichaje, horaInicio, setHoraInicio, horaFinalAprox, setHoraFinalAprox }: { profile: Profile, estado: string, localizacionFichaje: string, setLocalizacionFichaje: React.Dispatch<React.SetStateAction<string>>, horaInicio: string | Date, setHoraInicio: React.Dispatch<React.SetStateAction<Date>>, horaFinalAprox: string | Date, setHoraFinalAprox: React.Dispatch<React.SetStateAction<Date>> }) {
 
@@ -42,10 +43,6 @@ export default function DatosContainer({ profile, estado, localizacionFichaje, s
             supabase.removeChannel(jornadaRealTime);
         };
     }, [])
-
-    function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
-        setLocalizacionFichaje(e.target.value);
-    }
 
     function parseHora(hora: string | Date): string {
         if (!hora) return '-';
@@ -140,11 +137,7 @@ export default function DatosContainer({ profile, estado, localizacionFichaje, s
             <div className={styles.mainContent}>
                 <div>
                     <h4>Ubicación</h4>
-                    <select className={styles.location} value={localizacionFichaje} onChange={handleChange}>
-                        <option value="oficina">Oficina</option>
-                        <option value="casa">Casa</option>
-                        <option value="viaje">Viaje</option>
-                    </select>
+                    <CustomSelect localizacionFichaje={localizacionFichaje} setLocalizacionFichaje={setLocalizacionFichaje} options={["Oficina", "Casa", "Viaje"]}/>
                 </div>
 
                 <div>
