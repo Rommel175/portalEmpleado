@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import styles from './reportesTableItem.module.css'
 import Image from 'next/image';
-import SelectOne from '@/components/customCheckbox/SelectOne';
+import SelectOne from '@/components/customInputs/customCheckbox/SelectOne';
 
 export default function ReportesTableItem({ image, nombre, apellido, email, horas_semana, horas_restantes, id, checkedState, setCheckedState }: { image: string, nombre: string, apellido: string, email: string, horas_semana: string, horas_restantes: string, id: string, checkedState: boolean, setCheckedState: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>> }) {
 

@@ -1,6 +1,6 @@
 import styles from './containerOptions.module.css'
-import CustomDate from '../customDate/CustomDate';
-import InputUsuarios from '../inputUsuarios/InputUsuarios';
+import CustomDate from '../customInputs/customDate/CustomDate';
+import InputUsuarios from '../customInputs/inputUsuarios/InputUsuarios';
 
 type Prop = {
   recientes?: boolean,

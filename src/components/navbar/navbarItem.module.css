@@ -3,9 +3,3 @@
     align-items: center;
     gap: 12px;
 }
-
-.navImage {
-    aspect-ratio: 1/1;
-    border-radius: 36px;
-    background: lightgray 50% / cover no-repeat;
-}

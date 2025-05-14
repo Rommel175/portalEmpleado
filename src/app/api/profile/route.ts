@@ -21,8 +21,6 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ error: errorProfile }, { status: 500 })
     }
 
-    console.log('aaaaaaa',dataProfile.length);
-
     if (dataProfile && dataProfile.length > 0) {
         return NextResponse.json({ success: true, profile: dataProfile[0] }, { status: 200 })
     }

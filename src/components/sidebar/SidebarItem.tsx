@@ -2,18 +2,10 @@
 
 import Link from 'next/link';
 import styles from './sidebarItem.module.css';
-import { usePathname, useRouter } from 'next/navigation';
-import { createClient } from '@/utils/supabase/client';
+import { usePathname } from 'next/navigation';
 
 export default function SidebarItemComponent({ is_admin }: { is_admin: boolean }) {
   const pathname = usePathname();
-  const supabase = createClient();
-  const router = useRouter();
-
-  async function handleLogOut() {
-    await supabase.auth.signOut();
-    router.push('/login')
-  }
 
   return (
     <div className={styles.options}>
@@ -48,9 +40,6 @@ export default function SidebarItemComponent({ is_admin }: { is_admin: boolean }
           Recursos Humanos
         </Link>
       }
-
-
-      <button onClick={handleLogOut}>Cerrar sesión</button>
     </div>
   );
 }

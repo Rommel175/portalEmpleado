@@ -5,7 +5,7 @@ import ContainerOptions from '@/components/containers/ContainerOptions';
 import styles from './informes.module.css';
 import ReportesTable from '@/components/recursos/reportes/ReportesTable';
 import ActividadCard from '@/components/cards/Actividad';
-import SelectAll from '@/components/customCheckbox/SelectAll';
+import SelectAll from '@/components/customInputs/customCheckbox/SelectAll';
 import ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import { jsPDF } from 'jspdf';

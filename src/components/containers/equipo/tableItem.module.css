@@ -8,6 +8,10 @@
     background: var(--white, #FFF);
 }
 
+.items:hover {
+    cursor: default;
+}
+
 .usuario {
     display: flex;
     width: 300px;

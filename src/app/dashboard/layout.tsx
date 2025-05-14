@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation';
 import Navbar from '@/components/navbar/Navbar';
 
 const poppins = Poppins({
-  weight: ['700', '600', '500', '400'],
+  weight: ['900','800','800','700', '600', '500', '400', '300', '200', '100'],
   subsets: ['latin']
 });
 
@@ -31,7 +31,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <div className={`${styles.wraper} ${poppins.className}`}>
-      <Navbar image={profile.image} />
+      <Navbar image={profile.image} nombre={profile.nombre} apellido={profile.apellido} email={profile.email} />
 
       <SidebarComponent is_admin={profile?.is_admin} />
 

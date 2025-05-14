@@ -270,3 +270,13 @@
     line-height: 20px;
     /* 133.333% */
 }
+
+.buttons button:first-child:hover {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.07) 0%, rgba(0, 0, 0, 0.07) 100%), #F6F6F6;
+    cursor: pointer;
+}
+
+.buttons button:last-child:hover {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.30) 0%, rgba(0, 0, 0, 0.30) 100%), #0B3C70;
+    cursor: pointer;
+}
