@@ -1,6 +1,8 @@
 import styles from './containerOptions.module.css'
 import CustomDate from '../customInputs/customDate/CustomDate';
 import InputUsuarios from '../customInputs/inputUsuarios/InputUsuarios';
+import Recientes from '../customInputs/recientes/Recientes';
+import Location from '../customInputs/location/Location';
 
 type Prop = {
   recientes?: boolean,
@@ -25,7 +27,7 @@ type Prop = {
   totalUsuarios?: number
 }
 
-export default function ContainerOptions({ recientes = false, tipoRegistro = false, ubicacion = false, date = false, usuarios = false, startDate, setStartDate, endDate, setEndDate, option, setOption, localizacion, setLocalizacion, reciente, setReciente, checkedState, setCheckedState, tipoRegistros, setTipoRegistros, totalUsuarios=0 }: Prop) {
+export default function ContainerOptions({ recientes = false, tipoRegistro = false, ubicacion = false, date = false, usuarios = false, startDate, setStartDate, endDate, setEndDate, option, setOption, localizacion, setLocalizacion, reciente, setReciente, checkedState, setCheckedState, tipoRegistros, setTipoRegistros, totalUsuarios = 0 }: Prop) {
   function handleChangeLocalizacion(e: React.ChangeEvent<HTMLSelectElement>) {
     setLocalizacion(e.target.value);
   }
@@ -39,17 +41,12 @@ export default function ContainerOptions({ recientes = false, tipoRegistro = fal
 
       {
         (recientes) &&
-        <div className={styles.recientes} onClick={() => reciente ? setReciente(false) : setReciente(true)}>
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M4.36157 5.38037H10.3699V6.19704H4.36157V5.38037ZM4.36157 8.2387H10.3699V9.05537H4.36157V8.2387ZM4.76991 11.097H4.36157V11.9137H9.55324V11.097H4.76991ZM12.0032 12.4911L12.2919 12.2024L13.5169 10.9774L13.8056 10.6887L13.2282 10.1113L12.9395 10.4L12.4116 10.928V5.38037H11.5949V10.928L11.0669 10.4L10.7782 10.1113L10.2009 10.6887L10.4895 10.9774L11.7145 12.2024L12.0032 12.4911Z" fill="#7B8794" />
-          </svg>
-          <p> {reciente ? 'Más antiguo' : 'Más reciente'}</p>
-        </div>
+        <Recientes reciente={reciente} setReciente={setReciente} />
       }
 
       {
         (usuarios) &&
-        <InputUsuarios checkedState={checkedState} setCheckedState={setCheckedState} totalUsuarios={totalUsuarios}/>
+        <InputUsuarios checkedState={checkedState} setCheckedState={setCheckedState} totalUsuarios={totalUsuarios} />
       }
 
       {
@@ -80,19 +77,7 @@ export default function ContainerOptions({ recientes = false, tipoRegistro = fal
 
       {
         (ubicacion) &&
-        <div className={styles.filtro}>
-          <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M13.0545 7.27579C13.0545 11.094 8.14542 14.3667 8.14542 14.3667C8.14542 14.3667 3.23633 11.094 3.23633 7.27579C3.23633 5.97382 3.75353 4.72517 4.67417 3.80454C5.5948 2.88391 6.84345 2.3667 8.14542 2.3667C9.44739 2.3667 10.696 2.88391 11.6167 3.80454C12.5373 4.72517 13.0545 5.97382 13.0545 7.27579Z" stroke="#7B8794" strokeWidth="0.818182" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M8.14542 8.91215C9.04916 8.91215 9.78178 8.17953 9.78178 7.27579C9.78178 6.37205 9.04916 5.63943 8.14542 5.63943C7.24168 5.63943 6.50906 6.37205 6.50906 7.27579C6.50906 8.17953 7.24168 8.91215 8.14542 8.91215Z" stroke="#7B8794" strokeWidth="0.818182" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-
-          <select name="location" id="location" value={localizacion} onChange={handleChangeLocalizacion} >
-            <option value="all">Ubicación</option>
-            <option value="oficina">Oficina</option>
-            <option value="casa">Casa</option>
-            <option value="viaje">Viaje</option>
-          </select>
-        </div>
+        <Location localizacion={localizacion} setLocalizacion={setLocalizacion} />
       }
 
       {

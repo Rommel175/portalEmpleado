@@ -24,3 +24,7 @@
     font-weight: 500;
     line-height: 20px;
 }
+
+.navbar a:hover {
+    color: var(--dark-02, #7B8794);
+}

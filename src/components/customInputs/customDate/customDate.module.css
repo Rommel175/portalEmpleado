@@ -32,7 +32,8 @@
     font-size: 13.02px;
     font-style: normal;
     font-weight: 500;
-    line-height: 17.679px; /* 135.781% */
+    line-height: 17.679px;
+    /* 135.781% */
     background: none;
 }
 
@@ -47,32 +48,39 @@
     display: flex;
     padding: 6px 12px;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     border-radius: 6px;
-    border: 1px solid #FFF;
-    background: #FFF;
-    box-shadow: 0px 0px 1.5px 1px rgba(0, 0, 0, 0.15);
-    position: relative;
-}
-
-.filtro > input[type=text] {
-    border: none;
+    border: 1px solid var(--white, #FFF);
+    background: var(--white, #FFF);
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.06), 0px 0px 0px 1px rgba(0, 0, 0, 0.06);
+    color: var(--dark-02, #7B8794);
     text-align: center;
-    cursor: pointer;
-    color: var(--dark-02, #9C9FA1);
-    text-align: center;
-    font-size: 14px;
+    font-family: Poppins;
+    font-size: 13px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
-    caret-color: transparent;
+    position: relative;
 }
 
-.filtro > input[type=text]:focus {
+.filtro>input[type=text] {
+    border: none;
+    text-align: center;
+    cursor: pointer;
+    color: var(--dark-02, #7B8794);
+    text-align: center;
+    font-family: Poppins;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal
+}
+
+.filtro>input[type=text]:focus {
     border: none;
     outline: none;
 }
 
-.filtro > input[type=text]:active {
+.filtro>input[type=text]:active {
     border: none;
 }

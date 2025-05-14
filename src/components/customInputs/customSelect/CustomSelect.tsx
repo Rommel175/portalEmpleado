@@ -1,17 +1,34 @@
 'use client';
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from './customSelect.module.css';
 
 export default function CustomSelect({ localizacionFichaje, setLocalizacionFichaje, options }: { localizacionFichaje: string, setLocalizacionFichaje: React.Dispatch<React.SetStateAction<string>>, options: string[] }) {
     const [show, setShow] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement | null>(null);
+
     function handleSelect(option: string) {
         setLocalizacionFichaje(option);
         setShow(false);
     }
 
+
+
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setShow(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [])
+
     return (
-        <div className={styles.customSelect} onClick={() => setShow(!show)}>
+        <div className={styles.customSelect} onClick={() => setShow(!show)} ref={dropdownRef}>
             {localizacionFichaje.charAt(0).toUpperCase() + localizacionFichaje.slice(1)}
             <svg xmlns="http://www.w3.org/2000/svg" width="13" height="12" viewBox="0 0 13 12" fill="none">
                 <rect width="11.9999" height="11.9999" transform="translate(12.3333) rotate(90)" fill="white" />
