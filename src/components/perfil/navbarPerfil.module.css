@@ -7,18 +7,20 @@
 
 .navbar a {
     display: flex;
-    padding: 14px 24px;
+    padding: 10px 24px;
     justify-content: center;
     align-items: center;
     gap: 6px;
-    color: #B3B7BA;
+    color: var(--dark-03, #B6BEC9);
     font-size: 14px;
     font-style: normal;
-    font-weight: 500;
-    line-height: 20px; /* 142.857% */
+    font-weight: 400;
+    line-height: normal;
 }
 
 .navbar a.active {
-    border-bottom: 1.5px solid #0B3C70;
-    color: #0B3C70;
+    border-bottom: 1.5px solid var(--primary, #0B3C70);
+    color: var(--primary, #0B3C70);
+    font-weight: 500;
+    line-height: 20px;
 }
