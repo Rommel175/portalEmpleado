@@ -4,10 +4,6 @@ import { useState, useEffect } from 'react';
 import ContainerOptions from '@/components/containers/ContainerOptions';
 import EntradasFichajes from '@/components/containers/historialFichajes/EntradasFichajes';
 import styles from './fichajes.module.css'
-import ExcelJS from 'exceljs';
-import { saveAs } from 'file-saver';
-import { jsPDF } from 'jspdf';
-import autoTable from 'jspdf-autotable';
 import { Profile } from '@/types/Types';
 import dayjs from 'dayjs';
 import ActividadCardIndividual from '@/components/cards/ActividadIndividual';
@@ -89,92 +85,6 @@ export default function Fichajes() {
 
     fetchData();
   }, [option, localizacion, reciente, tipoRegistros])
-
-  function handleExportExcel() {
-    const exportar = async () => {
-      const workbook = new ExcelJS.Workbook();
-      const worksheet = workbook.addWorksheet('Fichajes');
-
-      worksheet.columns = [
-        { header: 'ID', key: 'id', width: 10 },
-        { header: 'Fichaje_id', key: 'fichaje_id', width: 30 },
-        { header: 'Evento', key: 'evento', width: 30 },
-        { header: 'Fecha', key: 'date', width: 65 },
-        { header: 'Localizacion', key: 'localizacion', width: 30 }
-      ];
-
-      worksheet.getRow(1).eachCell((cell) => {
-        cell.font = { bold: true };
-      });
-
-      eventosPorFecha.forEach(({ eventos }) => {
-        eventos.forEach(evento => {
-          worksheet.addRow({
-            id: evento.id,
-            fichaje_id: evento.fichaje_id,
-            evento: evento.evento,
-            date: dayjs(evento.date).toLocaleString(),
-            localizacion: evento.localizacion,
-          });
-        });
-      });
-
-      const buffer = await workbook.xlsx.writeBuffer();
-
-      const blob = new Blob([buffer], {
-        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      });
-
-      saveAs(blob, `fichajes-${startDate?.toISOString().slice(0, 10)}/${endDate?.toISOString().slice(0, 10)}-${profile?.nombre || ''}${profile?.apellido || ''}.xlsx`);
-    }
-
-    exportar();
-  }
-
-  function handleExportPdf() {
-    const doc = new jsPDF();
-    const headers = [['ID', 'Fichaje_id', 'Evento', 'Fecha', 'Localizacion']];
-    const data = eventosPorFecha.flatMap(({ eventos }) =>
-      eventos.map((e) => [
-        e.id.toString(),
-        e.fichaje_id.toString(),
-        e.evento.toString(),
-        e.date.toString(),
-        e.localizacion.toString()
-      ])
-    );
-
-    doc.setFontSize(16);
-    doc.text('Historial de Fichajes', 14, 20);
-
-    autoTable(doc, {
-      head: headers,
-      body: data,
-      startY: 30,
-      theme: 'striped',
-      headStyles: {
-        fillColor: [22, 160, 133],
-        textColor: 255,
-        fontStyle: 'bold',
-      },
-      styles: {
-        fontSize: 10,
-        halign: 'center',
-        valign: 'middle',
-        cellPadding: 4,
-        lineColor: [200, 200, 200],
-        lineWidth: 0.5,
-      },
-      alternateRowStyles: { fillColor: [245, 245, 245] },
-      columnStyles: {
-        0: { cellWidth: 20 },
-        3: { halign: 'right' },
-      },
-      margin: { top: 10, bottom: 10 },
-    });
-
-    doc.save(`fichajes-${startDate?.toISOString().slice(0, 10)}/${endDate?.toISOString().slice(0, 10)}-${profile?.nombre || ''}${profile?.apellido || ''}.pdf`);
-  }
 
   return (
     <>

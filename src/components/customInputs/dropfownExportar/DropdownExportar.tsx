@@ -1,6 +1,5 @@
 'use client'
 
-import Image from 'next/image';
 import styles from './dropdownExportar.module.css';
 import { useEffect, useRef, useState } from 'react';
 import dayjs from 'dayjs';

@@ -28,9 +28,6 @@ type Prop = {
 }
 
 export default function ContainerOptions({ recientes = false, tipoRegistro = false, ubicacion = false, date = false, usuarios = false, startDate, setStartDate, endDate, setEndDate, option, setOption, localizacion, setLocalizacion, reciente, setReciente, checkedState, setCheckedState, tipoRegistros, setTipoRegistros, totalUsuarios = 0 }: Prop) {
-  function handleChangeLocalizacion(e: React.ChangeEvent<HTMLSelectElement>) {
-    setLocalizacion(e.target.value);
-  }
 
   function handleChangeTipoRegistros(e: React.ChangeEvent<HTMLSelectElement>) {
     setTipoRegistros(e.target.value);
