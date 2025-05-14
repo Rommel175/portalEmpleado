@@ -1,3 +1,4 @@
+import TooltipUserInfo from '@/components/tooltip/TooltipUserInfo';
 import styles from './tableItem.module.css'
 import Image from 'next/image';
 
@@ -9,26 +10,30 @@ type Prop = {
     estado?: string,
     localizacion?: string,
     inicio?: string,
-    final?: string
+    final?: string,
+    id: string
 }
 
-export default function TableItem({ nombre, apellido, email, foto, estado = 'Jornada Finalizada', localizacion, inicio = "-", final = "-" }: Prop) {
+export default function TableItem({ nombre, apellido, email, foto, estado = 'Jornada Finalizada', localizacion, inicio = "-", final = "-", id }: Prop) {
 
     return (
         <div className={styles.items}>
-            <div className={styles.usuario}>
-                <Image src={foto ?? "https://clasicoshispanicos.com/wp-content/uploads/2021/01/siluetagrisanonimo.jpg"} width={40} height={40} alt='img_profile' />
-                <div className={styles.personalInfo}>
-                    <div className={styles.name}>
-                        <h2>{nombre} {apellido}</h2>
-                        <svg width="10" height="11" viewBox="0 0 10 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M3.60176 8.38657L6.41431 5.57402L3.60176 2.76148" stroke="#333333" strokeWidth="0.623087" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                    </div>
+            <TooltipUserInfo id={id}>
+                <div className={styles.usuario}>
+                    <Image src={foto ?? "https://clasicoshispanicos.com/wp-content/uploads/2021/01/siluetagrisanonimo.jpg"} width={40} height={40} alt='img_profile' />
+                    <div className={styles.personalInfo}>
+                        <div className={styles.name}>
+                            <h2>{nombre} {apellido}</h2>
+                            <svg width="10" height="11" viewBox="0 0 10 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M3.60176 8.38657L6.41431 5.57402L3.60176 2.76148" stroke="#333333" strokeWidth="0.623087" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        </div>
 
-                    <h4>{email}</h4>
+                        <h4>{email}</h4>
+                    </div>
                 </div>
-            </div>
+            </TooltipUserInfo>
+
 
             <div className={styles.estado}>
                 {

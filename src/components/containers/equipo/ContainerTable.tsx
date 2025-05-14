@@ -168,7 +168,7 @@ export default function ContainerTable({ equipo }: { equipo: Equipo[] }) {
 
       {
         users.map((item, index) => {
-          return <TableItem key={index} nombre={item.nombre} apellido={item.apellido} email={item.email} estado={item.estado} foto={item.image} localizacion={(currentDate == item.fecha) ? item.localizacion : '-'} inicio={(currentDate == item.fecha) ? item.hora : '-'} final={(currentDate == item.fecha) ? item.hora_aprox_salida : '-'} />
+          return <TableItem key={index} nombre={item.nombre} apellido={item.apellido} email={item.email} estado={item.estado} foto={item.image} localizacion={(currentDate == item.fecha) ? item.localizacion : '-'} inicio={(currentDate == item.fecha) ? item.hora : '-'} final={(currentDate == item.fecha) ? item.hora_aprox_salida : '-'} id={item.id} />
         })
       }
     </div>
