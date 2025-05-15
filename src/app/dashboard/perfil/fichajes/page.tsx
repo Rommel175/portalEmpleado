@@ -33,6 +33,7 @@ export default function Fichajes() {
   const [checkedStateRegistro, setCheckedStateRegistro] = useState<{ [key: string]: boolean }>({});
   const [registroSelected, setRegistroSelected] = useState(0);
   const [activarFiltros, setActivarFiltros] = useState(0);
+  const [borrarFiltros, setBorrarFiltros] = useState(0);
 
   const [eventosPorFecha, setEventosPorFecha] = useState<EventosPorFechaType[]>([]);
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -86,7 +87,7 @@ export default function Fichajes() {
     }
 
     fetchData();
-  }, [activarFiltros])
+  }, [activarFiltros, borrarFiltros])
 
   useEffect(() => {
     const countSelected = Object.values(checkedStateRegistro).filter((val) => val === true).length;
@@ -100,11 +101,12 @@ export default function Fichajes() {
     Object.values(checkedStateRegistro).some((val) => val)
   );
 
-  function borrarFiltros() {
+  function resetFiltros() {
     setReciente(true);
     setOption('Esta semana');
     setLocalizacion('all');
     setCheckedStateRegistro({});
+    setBorrarFiltros(prev => prev + 1)
   }
 
   return (
@@ -157,7 +159,7 @@ export default function Fichajes() {
             >
               Activar Filtros
             </button>
-            <div className={styles.borrarFiltros} onClick={borrarFiltros}>
+            <div className={styles.borrarFiltros} onClick={resetFiltros}>
               Borrar Filtros
             </div>
           </div>

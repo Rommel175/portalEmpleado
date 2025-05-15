@@ -32,6 +32,8 @@ export default function InformesPage() {
   const [checkedState, setCheckedState] = useState<{ [key: string]: boolean }>({});
   const [checkedStateRegistro, setCheckedStateRegistro] = useState<{ [key: string]: boolean }>({});
   const [usersSelected, setUsersSelected] = useState(0);
+  const [activarFiltros, setActivarFiltros] = useState(0);
+  const [borrarFiltros, setBorrarFiltros] = useState(0);
   const isSelected = Object.values(checkedState).some((val) => val === true);
 
   useEffect(() => {
@@ -87,12 +89,25 @@ export default function InformesPage() {
     };
 
     fetchData();
-  }, [option, checkedState]);
+  }, [activarFiltros, borrarFiltros]);
 
   useEffect(() => {
     const countSelected = Object.values(checkedState).filter((val) => val === true).length;
     setUsersSelected(countSelected);
   }, [checkedState]);
+
+  const hayFiltrosActivos = (
+    option !== 'Esta semana' ||
+    !reciente ||
+    Object.values(checkedState).some((val) => val)
+  );
+
+  function resetFiltros() {
+    setReciente(true);
+    setOption('Esta semana');
+    setCheckedState({});
+    setBorrarFiltros(prev => prev + 1);
+  };
 
   return (
     <div className={styles.container}>
@@ -128,10 +143,23 @@ export default function InformesPage() {
           totalUsuarios={usersSelected}
           checkedStateRegistro={checkedStateRegistro}
           setCheckedStateRegistro={setCheckedStateRegistro}
-        />
+        >
+          <div className={styles.buttons}>
+            <button
+              className={styles.filtroBtn}
+              disabled={!hayFiltrosActivos}
+              onClick={() => setActivarFiltros(prev => prev + 1)}
+            >
+              Activar Filtros
+            </button>
+            <div className={styles.borrarFiltros} onClick={resetFiltros}>
+              Borrar Filtros
+            </div>
+          </div>
+        </ContainerOptions>
       </div>
 
-      <ReportesTable users={usersData} totalHorasTrabajadas={totalHorasTrabajadas} checkedState={checkedState} setCheckedState={setCheckedState} titulo={titulo} isSelected={isSelected}/>
+      <ReportesTable users={usersData} totalHorasTrabajadas={totalHorasTrabajadas} checkedState={checkedState} setCheckedState={setCheckedState} titulo={titulo} isSelected={isSelected} />
     </div>
   );
 }
