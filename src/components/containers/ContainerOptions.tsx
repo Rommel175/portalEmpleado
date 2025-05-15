@@ -26,10 +26,11 @@ type Prop = {
   checkedStateRegistro: { [key: string]: boolean },
   setCheckedStateRegistro: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>,
   totalUsuarios?: number,
-  totalRegistros?: number
+  totalRegistros?: number,
+  children?: React.ReactNode;
 }
 
-export default function ContainerOptions({ recientes = false, tipoRegistro = false, ubicacion = false, date = false, usuarios = false, startDate, setStartDate, endDate, setEndDate, option, setOption, localizacion, setLocalizacion, reciente, setReciente, checkedState, setCheckedState, totalUsuarios = 0, totalRegistros = 0, checkedStateRegistro, setCheckedStateRegistro }: Prop) {
+export default function ContainerOptions({ recientes = false, tipoRegistro = false, ubicacion = false, date = false, usuarios = false, startDate, setStartDate, endDate, setEndDate, option, setOption, localizacion, setLocalizacion, reciente, setReciente, checkedState, setCheckedState, totalUsuarios = 0, totalRegistros = 0, checkedStateRegistro, setCheckedStateRegistro, children }: Prop) {
 
   return (
     <div className={styles.filtros}>
@@ -59,6 +60,9 @@ export default function ContainerOptions({ recientes = false, tipoRegistro = fal
         (date) &&
         <CustomDate startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate} option={option} setOption={setOption} />
       }
+
+      {children}
+
     </div>
   );
 }

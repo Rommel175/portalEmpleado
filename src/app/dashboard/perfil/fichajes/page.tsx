@@ -7,7 +7,7 @@ import styles from './fichajes.module.css'
 import { Profile } from '@/types/Types';
 import dayjs from 'dayjs';
 import ActividadCardIndividual from '@/components/cards/ActividadIndividual';
-import DropdownExportar from '@/components/customInputs/dropfownExportar/DropdownExportar';
+import DropdownExportar from '@/components/customInputs/dropdownExportar/exportarProfile/DropdownExportarProfile';
 
 type EventosPorFechaType = {
   fecha: string;
@@ -32,6 +32,7 @@ export default function Fichajes() {
   const [checkedState, setCheckedState] = useState<{ [key: string]: boolean }>({});
   const [checkedStateRegistro, setCheckedStateRegistro] = useState<{ [key: string]: boolean }>({});
   const [registroSelected, setRegistroSelected] = useState(0);
+  const [activarFiltros, setActivarFiltros] = useState(0);
 
   const [eventosPorFecha, setEventosPorFecha] = useState<EventosPorFechaType[]>([]);
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -85,12 +86,26 @@ export default function Fichajes() {
     }
 
     fetchData();
-  }, [option, localizacion, reciente, checkedStateRegistro])
+  }, [activarFiltros])
 
   useEffect(() => {
     const countSelected = Object.values(checkedStateRegistro).filter((val) => val === true).length;
     setRegistroSelected(countSelected);
   }, [checkedStateRegistro]);
+
+  const hayFiltrosActivos = (
+    option !== 'Esta semana' ||
+    localizacion !== 'all' ||
+    !reciente ||
+    Object.values(checkedStateRegistro).some((val) => val)
+  );
+
+  function borrarFiltros() {
+    setReciente(true);
+    setOption('Esta semana');
+    setLocalizacion('all');
+    setCheckedStateRegistro({});
+  }
 
   return (
     <>
@@ -111,7 +126,7 @@ export default function Fichajes() {
         />
       )}
       <div className={styles.options}>
-        <DropdownExportar eventos={eventosPorFecha} startDate={startDate} endDate={endDate}/>
+        <DropdownExportar eventos={eventosPorFecha} startDate={startDate} endDate={endDate} />
 
         <ContainerOptions
           recientes={true}
@@ -133,8 +148,21 @@ export default function Fichajes() {
           setCheckedStateRegistro={setCheckedStateRegistro}
           checkedStateRegistro={checkedStateRegistro}
           totalRegistros={registroSelected}
-        />
-      </div>
+        >
+          <div className={styles.buttons}>
+            <button
+              className={styles.filtroBtn}
+              disabled={!hayFiltrosActivos}
+              onClick={() => setActivarFiltros(prev => prev + 1)}
+            >
+              Activar Filtros
+            </button>
+            <div className={styles.borrarFiltros} onClick={borrarFiltros}>
+              Borrar Filtros
+            </div>
+          </div>
+        </ContainerOptions>
+      </div >
 
       {
         eventosPorFecha.length == 0 ? (

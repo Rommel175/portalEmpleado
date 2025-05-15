@@ -1,6 +1,6 @@
 'use client'
 
-import styles from './dropdownExportar.module.css';
+import styles from './dropdownExportarProfile.module.css';
 import { useEffect, useRef, useState } from 'react';
 import dayjs from 'dayjs';
 import ExcelJS from 'exceljs';
@@ -21,7 +21,7 @@ type Evento = {
     localizacion: string;
 };
 
-export default function DropdownExportar({ eventos, startDate, endDate }: { eventos: EventosPorFechaType[], startDate: Date | null, endDate: Date | null }) {
+export default function DropdownExportarProfile({ eventos, startDate, endDate }: { eventos: EventosPorFechaType[], startDate: Date | null, endDate: Date | null }) {
     const [show, setShow] = useState(false);
     const dropdownRef = useRef<HTMLDivElement | null>(null);
 

@@ -7,28 +7,61 @@
     /*border-bottom: 1px solid #F6F6F6;*/
 }
 
-.options button {
+.buttons {
     display: flex;
-    padding: 8px 12px;
     align-items: center;
-    gap: 6px;
-    color: var(--blue, #285FF5);
-    font-size: 15px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-    background: none;
-    border-radius: 999px;
-    border: 1px solid var(--white, #FFF);
-    background: var(--white, #FFF);
+    gap: 12px;
+}
+
+.filtroBtn {
+    display: flex;
+    padding: 6px 12px;
+    align-items: center;
+    gap: 8px;
+    border-radius: var(--sizes-round, 100px);
+    background: var(--colors-Info, #285FF5);
     box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.06), 0px 0px 0px 1px rgba(0, 0, 0, 0.06);
+    color: var(--white, #FFF);
+    text-align: center;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
 }
 
-.options button svg {
-    flex-shrink: 0;
-    aspect-ratio: 1/1;
+.filtroBtn:disabled {
+    background: rgba(40, 95, 245, 0.50);
 }
 
-.options button:hover {
+.filtroBtn:hover {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), var(--colors-Info, #285FF5);
+    cursor: pointer;
+}
+
+.filtroBtn:disabled:hover {
+    background: rgba(40, 95, 245, 0.50);
+    cursor: not-allowed;
+}
+
+.borrarFiltros {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--blue, #285FF5);
+    text-align: center;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-skip-ink: none;
+    text-decoration-thickness: auto;
+    text-underline-offset: auto;
+    text-underline-position: from-font;
+}
+
+.borrarFiltros:hover {
+    text-decoration-line: none;
     cursor: pointer;
 }
