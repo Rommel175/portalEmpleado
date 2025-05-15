@@ -35,12 +35,14 @@
 }
 
 .dateItemContent h3 {
-    color: #0B3C70;
-    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--primary, #0B3C70);
+    font-size: 13px;
     font-style: normal;
     font-weight: 500;
-    line-height: 20px;
-    /* 133.333% */
+    line-height: normal;
 }
 
 .dateItemContent div {
@@ -53,9 +55,9 @@
 }
 
 .dateItemContent div p {
-    color: var(--light-03, #7B8794);
-    font-size: 13px;
+    color: var(--dark-02, #7B8794);
+    font-size: 12px;
     font-style: normal;
     font-weight: 400;
-    line-height: normal;
+    line-height: 20px;
 }

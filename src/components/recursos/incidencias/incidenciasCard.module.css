@@ -3,11 +3,12 @@
     padding: 24px;
     flex-direction: column;
     align-items: flex-start;
-    gap: 24px;
+    gap: 18px;
     align-self: stretch;
     border-radius: 12px;
-    border: 1px solid #F6F6F6;
-    background: #FFF;
+    border: 1px solid #F9F9F9;
+    background: var(--white, #FFF);
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.06), 0px 0px 0px 1px rgba(0, 0, 0, 0.06);
 }
 
 .message {
@@ -19,15 +20,16 @@
     gap: 12px;
     align-self: stretch;
     border-radius: 6px;
-    background: #F6F6F6;
+    background: #F9F9F9;
 }
 
 .message p {
-    color: var(--light-03, #7B8794);
-    font-size: 13px;
+    align-self: stretch;
+    color: var(--dark-02, #7B8794);
+    font-size: 12px;
     font-style: normal;
     font-weight: 400;
-    line-height: normal;
+    line-height: 20px;
 }
 
 .buttons {
@@ -44,30 +46,43 @@
 
 .buttons button:first-child {
     display: flex;
-    padding: 8px 60px;
+    width: 169px;
+    padding: 8px 12px;
     justify-content: center;
     align-items: center;
-    border-radius: 96px;
-    background: #F6F6F6;
-    color: #0B3C70;
-    font-size: 14px;
+    gap: 4px;
+    border-radius: 100px;
+    background: var(--light-01, #F6F6F6);
+    color: var(--primary, #0B3C70);
+    text-align: center;
+    font-family: Poppins;
+    font-size: 13px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 20px; /* 142.857% */
-    letter-spacing: -0.08px;
+    font-weight: 500;
+    line-height: normal;
 }
 
 .buttons button:last-child {
     display: flex;
-    padding: 8px 60px;
+    width: 169px;
+    padding: 8px 12px;
     justify-content: center;
     align-items: center;
-    border-radius: 96px;
-    background: #0B3C70;
-    color: var(--text-button-primary, #FFF);
-    font-size: 14px;
+    gap: 4px;
+    border-radius: 100px;
+    background: var(--primary, #0B3C70);
+    color: var(--white, #FFF);
+    text-align: center;
+    font-size: 13px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 20px; /* 142.857% */
-    letter-spacing: -0.08px;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.buttons button:first-child:hover {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.07) 0%, rgba(0, 0, 0, 0.07) 100%), #F9F9F9;
+}
+
+.buttons button:last-child:hover {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.30) 0%, rgba(0, 0, 0, 0.30) 100%), #0B3C70;
 }

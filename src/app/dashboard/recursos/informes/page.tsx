@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import ContainerOptions from '@/components/containers/ContainerOptions';
 import styles from './informes.module.css';
-import ReportesTable from '@/components/recursos/reportes/ReportesTable';
+import InformesTable from '@/components/recursos/informes/InformesTable';
 import ActividadCard from '@/components/cards/Actividad';
 import SelectAll from '@/components/customInputs/customCheckbox/SelectAll';
 import dayjs from 'dayjs';
@@ -62,7 +62,7 @@ export default function InformesPage() {
       });
 
 
-      const res = await fetch(`/api/reportes?${params.toString()}`, {
+      const res = await fetch(`/api/informes?${params.toString()}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
@@ -159,7 +159,7 @@ export default function InformesPage() {
         </ContainerOptions>
       </div>
 
-      <ReportesTable users={usersData} totalHorasTrabajadas={totalHorasTrabajadas} checkedState={checkedState} setCheckedState={setCheckedState} titulo={titulo} isSelected={isSelected} />
+      <InformesTable users={usersData} totalHorasTrabajadas={totalHorasTrabajadas} checkedState={checkedState} setCheckedState={setCheckedState} titulo={titulo} isSelected={isSelected} />
     </div>
   );
 }

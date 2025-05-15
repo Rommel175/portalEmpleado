@@ -10,7 +10,7 @@ export default function GestionPage() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await fetch('/api/equipo', {
+            const res = await fetch('/api/gestion', {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' },
             });

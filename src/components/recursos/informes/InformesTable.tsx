@@ -2,8 +2,8 @@
 
 import Tooltips from '@/components/tooltip/Tooltips';
 //import { useState } from 'react';
-import styles from './reportesTable.module.css'
-import ReportesTableItem from './ReportesTableItem';
+import styles from './informesTable.module.css'
+import InformesTableItem from './InformesTableItem';
 //import ExcelJS from 'exceljs';
 //import { saveAs } from 'file-saver';
 
@@ -17,7 +17,7 @@ type UserData = {
   horas_restantes: string,
 }
 
-export default function ReportesTable({ users, totalHorasTrabajadas, checkedState, setCheckedState, titulo, isSelected }: { users: UserData[], totalHorasTrabajadas: string, checkedState: { [key: string]: boolean }, setCheckedState: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>, titulo: string, isSelected: boolean }) {
+export default function InformesTable({ users, totalHorasTrabajadas, checkedState, setCheckedState, titulo, isSelected }: { users: UserData[], totalHorasTrabajadas: string, checkedState: { [key: string]: boolean }, setCheckedState: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>, titulo: string, isSelected: boolean }) {
 
   /*function handleExportExcel() {
     const exportar = async () => {
@@ -96,7 +96,7 @@ export default function ReportesTable({ users, totalHorasTrabajadas, checkedStat
       </div>
       {
         users.map((item, index) => {
-          return <ReportesTableItem
+          return <InformesTableItem
             key={index}
             image={item.image}
             nombre={item.nombre}

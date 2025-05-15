@@ -50,7 +50,7 @@ export default function ActividadCardIndividual({ totalHoras, setTotalHorasTraba
             });
 
 
-            const res = await fetch(`/api/historialFichajes?${params.toString()}`, {
+            const res = await fetch(`/api/actividadCard?${params.toString()}`, {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' },
             });

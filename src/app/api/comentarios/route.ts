@@ -1,7 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
-import { NextRequest, NextResponse } from "next/server";
+import { /*NextRequest,*/ NextResponse } from "next/server";
 
-export async function GET(req: NextRequest) {
+export async function GET(/*req: NextRequest*/) {
     const supabase = await createClient();
     const { data, error } = await supabase.auth.getUser();
     const user = data.user;
@@ -10,11 +10,11 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
 
-    const option = req.nextUrl.searchParams.get('option');
+    /*const option = req.nextUrl.searchParams.get('option');
     const startDate = req.nextUrl.searchParams.get('startDate');
     const endDate = req.nextUrl.searchParams.get('endDate');
     const reciente = req.nextUrl.searchParams.get('reciente');
-    const checkedState = JSON.parse(req.nextUrl.searchParams.get('checkedState') || '{}');
+    const checkedState = JSON.parse(req.nextUrl.searchParams.get('checkedState') || '{}');*/
 
 
     const { data: dataProfile, error: errorProfile } = await supabase
@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ error: errorProfile }, { status: 500 });
     }
 
-    function rangosPresets() {
+    /*function rangosPresets() {
         const now = new Date();
         let start = new Date(now);
         let end = new Date(now);
@@ -62,30 +62,30 @@ export async function GET(req: NextRequest) {
         start.setHours(0, 0, 0, 0);
         end.setHours(0, 0, 0, 0);
         return [start, end];
-    }
+    }*/
 
-    const [start, end] = rangosPresets();
+    //const [start, end] = rangosPresets();
 
     if (dataProfile && dataProfile.length) {
         const usersData = [];
-        const selectedProfiles = Object.keys(checkedState)
+        /*const selectedProfiles = Object.keys(checkedState)
             .filter((key) => checkedState[parseInt(key)])
             .map((key) => parseInt(key));
 
         const showProfiles = selectedProfiles.length === 0 ? dataProfile : dataProfile.filter((profile) =>
             selectedProfiles.includes(profile.id)
-        );
+        );*/
 
-        for (const profile of showProfiles) {
+        for (const profile of dataProfile) {
             const { data: fichajeJornada, error: errorFichajeJornada } = await supabase
                 .from('fichaje_jornada')
                 .select('*')
                 .eq('profile_id', profile.id)
                 .not('comentario', 'is', null)
                 .neq('comentario', '')
-                .gte('date', start.toISOString())
+                /*.gte('date', start.toISOString())
                 .lt('date', end.toISOString())
-                .order('date', { ascending: !reciente });
+                .order('date', { ascending: !reciente });*/
 
 
             if (errorFichajeJornada) {
@@ -97,6 +97,8 @@ export async function GET(req: NextRequest) {
                     id: profile.id,
                     nombre: profile.nombre,
                     apellido: profile.apellido,
+                    email: profile.email,
+                    image: profile.image,
                     fichajes: fichajeJornada.map(item => ({
                         fecha: item.date,
                         comentario: item.comentario,
@@ -104,6 +106,8 @@ export async function GET(req: NextRequest) {
                 });
             }
         }
+
+        console.log(usersData)
 
         return NextResponse.json({ success: true, usersData: usersData }, { status: 200 })
     }
