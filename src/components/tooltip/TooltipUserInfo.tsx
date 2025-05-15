@@ -51,7 +51,7 @@ export default function TooltipUserInfo({ children, id }: TooltipProps) {
             </div>
             <Tooltip
                 id={`tooltip-profile-${id}`}
-                place='right'
+                place='bottom-start'
                 noArrow
                 className={styles.tooltipCustom}
             >

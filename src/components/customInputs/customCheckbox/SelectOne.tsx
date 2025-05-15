@@ -13,7 +13,7 @@ export default function SelectOne({ checkedState, setCheckedState, id }: { check
         <label className={styles.checkboxContainer}>
             <input
                 type="checkbox"
-                checked={checkedState}
+                checked={!!checkedState}
                 onChange={() => {handleCheckboxChange(id)}}
                 className={styles.hiddenCheckbox}
             />

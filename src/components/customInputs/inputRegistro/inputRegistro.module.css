@@ -61,6 +61,7 @@
     border-radius: 6px;
     background: var(--white, #FFF);
     box-shadow: 0px 0px 4.8px 1px rgba(0, 0, 0, 0.10);
+    width: 100%;
 }
 
 .option {
@@ -74,16 +75,16 @@
     color: #252525;
 }
 
+.option:hover {
+    background: var(--blue-light, #F5F7FF);
+
+}
+
 .option>p {
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
     line-height: normal;
-}
-
-.option:hover {
-    background: var(--blue-light, #F5F7FF);
-
 }
 
 .option input[type=checkbox]:hover {

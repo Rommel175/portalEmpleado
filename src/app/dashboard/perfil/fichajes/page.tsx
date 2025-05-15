@@ -30,7 +30,8 @@ export default function Fichajes() {
   const [localizacion, setLocalizacion] = useState('all');
   const [reciente, setReciente] = useState(true);
   const [checkedState, setCheckedState] = useState<{ [key: string]: boolean }>({});
-  const [tipoRegistros, setTipoRegistros] = useState('all');
+  const [checkedStateRegistro, setCheckedStateRegistro] = useState<{ [key: string]: boolean }>({});
+  const [registroSelected, setRegistroSelected] = useState(0);
 
   const [eventosPorFecha, setEventosPorFecha] = useState<EventosPorFechaType[]>([]);
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -60,7 +61,7 @@ export default function Fichajes() {
         endDate: end ? end.toISOString() : '',
         reciente: reciente ? 'true' : 'false',
         localizacion: localizacion,
-        tipoRegistro: tipoRegistros
+        checkedStateRegistro: JSON.stringify(checkedStateRegistro)
       });
 
 
@@ -84,7 +85,12 @@ export default function Fichajes() {
     }
 
     fetchData();
-  }, [option, localizacion, reciente, tipoRegistros])
+  }, [option, localizacion, reciente, checkedStateRegistro])
+
+  useEffect(() => {
+    const countSelected = Object.values(checkedStateRegistro).filter((val) => val === true).length;
+    setRegistroSelected(countSelected);
+  }, [checkedStateRegistro]);
 
   return (
     <>
@@ -124,8 +130,9 @@ export default function Fichajes() {
           setReciente={setReciente}
           checkedState={checkedState}
           setCheckedState={setCheckedState}
-          tipoRegistros={tipoRegistros}
-          setTipoRegistros={setTipoRegistros}
+          setCheckedStateRegistro={setCheckedStateRegistro}
+          checkedStateRegistro={checkedStateRegistro}
+          totalRegistros={registroSelected}
         />
       </div>
 

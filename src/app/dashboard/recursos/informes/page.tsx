@@ -33,8 +33,8 @@ export default function InformesPage() {
   const [horasEquipo, setHorasEquipo] = useState(0);
   const [titulo, setTitulo] = useState('Horas semanales');
   const [checkedState, setCheckedState] = useState<{ [key: string]: boolean }>({});
+  const [checkedStateRegistro, setCheckedStateRegistro] = useState<{ [key: string]: boolean }>({});
   const [usersSelected, setUsersSelected] = useState(0);
-  const [tipoRegistros, setTipoRegistros] = useState('all');
   const isSelected = Object.values(checkedState).some((val) => val === true);
 
   useEffect(() => {
@@ -256,13 +256,13 @@ export default function InformesPage() {
           setReciente={setReciente}
           checkedState={checkedState}
           setCheckedState={setCheckedState}
-          tipoRegistros={tipoRegistros}
-          setTipoRegistros={setTipoRegistros}
           totalUsuarios={usersSelected}
+          checkedStateRegistro={checkedStateRegistro}
+          setCheckedStateRegistro={setCheckedStateRegistro}
         />
       </div>
 
-      <ReportesTable users={usersData} totalHorasTrabajadas={totalHorasTrabajadas} checkedState={checkedState} setCheckedState={setCheckedState} titulo={titulo} />
+      <ReportesTable users={usersData} totalHorasTrabajadas={totalHorasTrabajadas} checkedState={checkedState} setCheckedState={setCheckedState} titulo={titulo} isSelected={isSelected}/>
     </div>
   );
 }

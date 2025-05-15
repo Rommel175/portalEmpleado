@@ -26,6 +26,10 @@
     flex-direction: row !important;
 }
 
+.selector:hover {
+    background: var(--light-01, #F6F6F6);
+}
+
 .options {
     position: absolute;
     top: 100%;

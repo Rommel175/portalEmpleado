@@ -36,7 +36,7 @@ export default function ComentariosPage() {
     const [localizacion, setLocalizacion] = useState('all');
     const [reciente, setReciente] = useState(true);
     const [checkedState, setCheckedState] = useState<{ [key: string]: boolean }>({});
-    const [tipoRegistros, setTipoRegistros] = useState('all');
+    const [checkedStateRegistro, setCheckedStateRegistro] = useState<{ [key: string]: boolean }>({});
 
     useEffect(() => {
 
@@ -215,8 +215,8 @@ export default function ComentariosPage() {
                     setReciente={setReciente}
                     checkedState={checkedState}
                     setCheckedState={setCheckedState}
-                    tipoRegistros={tipoRegistros}
-                    setTipoRegistros={setTipoRegistros}
+                    checkedStateRegistro={checkedStateRegistro}
+                    setCheckedStateRegistro={setCheckedStateRegistro}
                 />
 
             </div>

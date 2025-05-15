@@ -14,10 +14,10 @@ type UserData = {
   email: string
   image: string,
   horas_semanales: string,
-  horas_restantes: string
+  horas_restantes: string,
 }
 
-export default function ReportesTable({ users, totalHorasTrabajadas, checkedState, setCheckedState, titulo }: { users: UserData[], totalHorasTrabajadas: string, checkedState: { [key: string]: boolean }, setCheckedState: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>, titulo: string }) {
+export default function ReportesTable({ users, totalHorasTrabajadas, checkedState, setCheckedState, titulo, isSelected }: { users: UserData[], totalHorasTrabajadas: string, checkedState: { [key: string]: boolean }, setCheckedState: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>, titulo: string, isSelected: boolean }) {
 
   /*function handleExportExcel() {
     const exportar = async () => {
@@ -107,6 +107,7 @@ export default function ReportesTable({ users, totalHorasTrabajadas, checkedStat
             id={item.id}
             checkedState={checkedState[item.id]}
             setCheckedState={setCheckedState}
+            isSelected={isSelected}
           />
 
         })

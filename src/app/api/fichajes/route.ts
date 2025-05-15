@@ -16,7 +16,19 @@ export async function GET(req: NextRequest) {
     const endDate = req.nextUrl.searchParams.get('endDate');
     const reciente = req.nextUrl.searchParams.get('reciente') === 'true';
     const localizacion = req.nextUrl.searchParams.get('localizacion');
-    const tipoRegistro = req.nextUrl.searchParams.get('tipoRegistro');
+    const checkedStateRegistro = JSON.parse(req.nextUrl.searchParams.get('checkedStateRegistro') || '{}');
+
+    const EVENT_TYPES = ['Inicio Jornada', 'Inicio Pausa', 'Fin Pausa', 'Jornada Finalizada'];
+
+    let selectedTipos = Object.entries(checkedStateRegistro)
+        .filter(([, isChecked]) => isChecked)
+        .map(([index]) => EVENT_TYPES[parseInt(index)]);
+
+    if (selectedTipos.length === 0) {
+        selectedTipos = [...EVENT_TYPES];
+    }
+
+
     let horas;
 
     const { data: dataProfile, error: errorProfile } = await supabase
@@ -121,102 +133,52 @@ export async function GET(req: NextRequest) {
 
                     if (localizacion == 'all') {
 
-                        if (tipoRegistro == 'all') {
-                            const { data: dataEvento, error: errorEvento } = await supabase
-                                .from('fichaje_eventos')
-                                .select('*')
-                                .eq('fichaje_id', fichaje.id)
-                                .order('id', { ascending: true });
+                        const { data: dataEvento, error: errorEvento } = await supabase
+                            .from('fichaje_eventos')
+                            .select('*')
+                            .eq('fichaje_id', fichaje.id)
+                            .in('evento', selectedTipos)
+                            .order('id', { ascending: true });
 
-                            if (errorEvento) {
-                                console.log('Error 4')
-                            }
+                        if (errorEvento) {
+                            console.log('Error 4')
+                        }
 
-                            if (dataEvento && dataEvento.length > 0) {
-                                const eventosData = dataEvento.map(item => ({
-                                    id: item.id,
-                                    fichaje_id: item.fichaje_id,
-                                    evento: item.evento,
-                                    date: new Date(item.date),
-                                    localizacion: item.localizacion,
-                                }));
+                        if (dataEvento && dataEvento.length > 0) {
+                            const eventosData = dataEvento.map(item => ({
+                                id: item.id,
+                                fichaje_id: item.fichaje_id,
+                                evento: item.evento,
+                                date: new Date(item.date),
+                                localizacion: item.localizacion,
+                            }));
 
-                                eventos.push(...eventosData)
-
-                            }
-                        } else {
-                            const { data: dataEvento, error: errorEvento } = await supabase
-                                .from('fichaje_eventos')
-                                .select('*')
-                                .eq('fichaje_id', fichaje.id)
-                                .eq('evento', tipoRegistro)
-                                .order('id', { ascending: true });
-
-                            if (errorEvento) {
-                                console.log('Error 4')
-                            }
-
-                            if (dataEvento && dataEvento.length > 0) {
-                                const eventosData = dataEvento.map(item => ({
-                                    id: item.id,
-                                    fichaje_id: item.fichaje_id,
-                                    evento: item.evento,
-                                    date: new Date(item.date),
-                                    localizacion: item.localizacion,
-                                }));
-
-                                eventos.push(...eventosData)
-
-                            }
+                            eventos.push(...eventosData)
                         }
 
                     } else {
 
-                        if (tipoRegistro == 'all') {
-                            const { data: dataEvento, error: errorEvento } = await supabase
-                                .from('fichaje_eventos')
-                                .select('*')
-                                .eq('fichaje_id', fichaje.id)
-                                .eq('localizacion', localizacion);
+                        const { data: dataEvento, error: errorEvento } = await supabase
+                            .from('fichaje_eventos')
+                            .select('*')
+                            .eq('fichaje_id', fichaje.id)
+                            .in('evento', selectedTipos)
+                            .eq('localizacion', localizacion);
 
-                            if (errorEvento) {
-                                return NextResponse.json({ error: errorEvento }, { status: 500 })
-                            }
+                        if (errorEvento) {
+                            return NextResponse.json({ error: errorEvento }, { status: 500 })
+                        }
 
-                            if (dataEvento && dataEvento.length > 0) {
-                                const eventosData = dataEvento.map(item => ({
-                                    id: item.id,
-                                    fichaje_id: item.fichaje_id,
-                                    evento: item.evento,
-                                    date: item.date,
-                                    localizacion: item.localizacion,
-                                }));
+                        if (dataEvento && dataEvento.length > 0) {
+                            const eventosData = dataEvento.map(item => ({
+                                id: item.id,
+                                fichaje_id: item.fichaje_id,
+                                evento: item.evento,
+                                date: item.date,
+                                localizacion: item.localizacion,
+                            }));
 
-                                eventos.push(...eventosData)
-                            }
-                        } else {
-                            const { data: dataEvento, error: errorEvento } = await supabase
-                                .from('fichaje_eventos')
-                                .select('*')
-                                .eq('fichaje_id', fichaje.id)
-                                .eq('evento', tipoRegistro)
-                                .eq('localizacion', localizacion);
-
-                            if (errorEvento) {
-                                return NextResponse.json({ error: errorEvento }, { status: 500 })
-                            }
-
-                            if (dataEvento && dataEvento.length > 0) {
-                                const eventosData = dataEvento.map(item => ({
-                                    id: item.id,
-                                    fichaje_id: item.fichaje_id,
-                                    evento: item.evento,
-                                    date: item.date,
-                                    localizacion: item.localizacion,
-                                }));
-
-                                eventos.push(...eventosData)
-                            }
+                            eventos.push(...eventosData)
                         }
 
                     }

@@ -32,8 +32,8 @@ export default function Fichajes({ params }: { params: Promise<{ id: string }> }
   const [option, setOption] = useState('Esta semana');
   const [localizacion, setLocalizacion] = useState('all');
   const [reciente, setReciente] = useState(true);
-  const [tipoRegistros, setTipoRegistros] = useState('all');
   const [checkedState, setCheckedState] = useState<{ [key: string]: boolean }>({});
+  const [checkedStateRegistro, setCheckedStateRegistro] = useState<{ [key: string]: boolean }>({});
   const [profile, setProfile] = useState<Profile | null>(null);
   const [eventosPorFecha, setEventosPorFecha] = useState<EventosPorFechaType[]>([]);
   const [totalHorasTrabajadas, setTotalHorasTrabajadas] = useState<string>('00:00');
@@ -63,7 +63,7 @@ export default function Fichajes({ params }: { params: Promise<{ id: string }> }
         reciente: reciente ? 'true' : 'false',
         localizacion: localizacion,
         profileId: id,
-        tipoRegistro: tipoRegistros
+        checkedStateRegistro: JSON.stringify(checkedStateRegistro)
       });
 
       const res = await fetch(`/api/fichajes/dinamico?${urlParams.toString()}`, {
@@ -86,7 +86,7 @@ export default function Fichajes({ params }: { params: Promise<{ id: string }> }
     };
 
     fetchData();
-  }, [option, localizacion, reciente, tipoRegistros]);
+  }, [option, localizacion, reciente, checkedStateRegistro]);
 
   function handleExportarExcel() {
     const exportar = async () => {
@@ -227,8 +227,8 @@ export default function Fichajes({ params }: { params: Promise<{ id: string }> }
           setReciente={setReciente}
           checkedState={checkedState}
           setCheckedState={setCheckedState}
-          tipoRegistros={tipoRegistros}
-          setTipoRegistros={setTipoRegistros}
+          setCheckedStateRegistro={setCheckedStateRegistro}
+          checkedStateRegistro={checkedStateRegistro}
         />
       </div>
 
