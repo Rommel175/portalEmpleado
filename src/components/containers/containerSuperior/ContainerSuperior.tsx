@@ -5,8 +5,6 @@ import styles from './containerSuperior.module.css';
 import ContainerDatos from "./datos/ContainerDatos";
 import ContainerFichaje from "./fichaje/ContanerFichaje";
 import { Fichaje_eventos, Fichaje_jornada, Profile } from "@/types/Types";
-//import { createClient } from "@/utils/supabase/client";
-//import { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 
 
 export default function ContainerSuperior({ profile, fichaje, eventos }: { profile: Profile, fichaje: Fichaje_jornada[], eventos: Fichaje_eventos[] }) {
@@ -15,11 +13,9 @@ export default function ContainerSuperior({ profile, fichaje, eventos }: { profi
     const [horaInicio, setHoraInicio] = useState(fichaje?.[0]?.date ?? '');
     const [horaFinalAprox, setHoraFinalAprox] = useState(fichaje?.[0]?.date_final_aprox);
 
-
-
     return (
         <div className={styles.containerSuperior}>
-            <ContainerDatos estado={estado} localizacionFichaje={localizacionFichaje} setLocalizacionFichaje={setLocalizacionFichaje} horaInicio={horaInicio} setHoraInicio={setHoraInicio} setHoraFinalAprox={setHoraFinalAprox} horaFinalAprox={horaFinalAprox} profile={profile} />
+            <ContainerDatos estado={estado} localizacionFichaje={localizacionFichaje} setLocalizacionFichaje={setLocalizacionFichaje} horaInicio={horaInicio} setHoraInicio={setHoraInicio} setHoraFinalAprox={setHoraFinalAprox} horaFinalAprox={horaFinalAprox} profile={profile}/>
             <ContainerFichaje profile={profile} estado={estado} setEstado={setEstado} localizacionFichaje={localizacionFichaje} />
         </div>
     );

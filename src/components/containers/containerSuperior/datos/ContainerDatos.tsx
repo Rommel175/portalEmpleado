@@ -24,16 +24,38 @@ export default function DatosContainer({ profile, estado, localizacionFichaje, s
                 schema: 'public',
                 table: 'fichaje_jornada',
             }, (payload: RealtimePostgresChangesPayload<Fichaje_jornada>) => {
+
+                const fetchData = async(id: string) => {
+                    const { data, error } = await supabase
+                        .from('fichajes_eventos')
+                        .select('localizacion')
+                        .eq('fichaje_id', id)
+                        .order('date', {ascending: false})
+                        .limit(1);
+
+                    if (error) {
+                        console.log('Error fetching Data');
+                    }
+                    
+                    if (data && data.length > 0) {
+                        setLocalizacionFichaje(data[0].localizacion);
+                    }
+                }
+
                 switch (payload.eventType) {
                     case 'INSERT':
                         const insertItem = payload.new;
+                        if (insertItem.profile_id !== profile.id) return;
                         setHoraInicio(insertItem.date);
                         setHoraFinalAprox(insertItem.date_final_aprox);
+                        fetchData(insertItem.id)
                         break;
                     case 'UPDATE':
                         const updatedItem = payload.new;
+                        if (updatedItem.profile_id !== profile.id) return;
                         setHoraInicio(updatedItem.date);
                         setHoraFinalAprox(updatedItem.date);
+                        fetchData(updatedItem.id)
                         break;
                 }
             })
@@ -139,7 +161,7 @@ export default function DatosContainer({ profile, estado, localizacionFichaje, s
             <div className={styles.mainContent}>
                 <div>
                     <h4>Ubicación</h4>
-                    <CustomSelect localizacionFichaje={localizacionFichaje} setLocalizacionFichaje={setLocalizacionFichaje} options={["Oficina", "Casa", "Viaje"]} />
+                    <CustomSelect localizacionFichaje={localizacionFichaje} setLocalizacionFichaje={setLocalizacionFichaje} options={["oficina", "casa", "viaje"]} />
                 </div>
 
                 <div>
