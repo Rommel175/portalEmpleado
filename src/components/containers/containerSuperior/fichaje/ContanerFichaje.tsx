@@ -18,8 +18,8 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
     const supabase = createClient();
 
     useEffect(() => {
-        const localTime = sessionStorage.getItem('time');
-        //const run = sessionStorage.getItem('run');
+        const localTime = localStorage.getItem('time');
+        //const run = localStorage.getItem('run');
 
         if (localTime) {
             setTime(Number(localTime));
@@ -84,15 +84,15 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
 
         if (estado == 'Activo') {
             setRunning(true);
-            sessionStorage.setItem('run', 'true');
+            localStorage.setItem('run', 'true');
         } else if (estado == 'Inactivo' || estado == 'Jornada Finalizada') {
             setRunning(false);
             setTime(0);
-            sessionStorage.setItem('run', 'false');
-            sessionStorage.setItem('time', '0');
+            localStorage.setItem('run', 'false');
+            localStorage.setItem('time', '0');
         } else if (estado === 'Pausa') {
             setRunning(false);
-            sessionStorage.setItem('run', 'false');
+            localStorage.setItem('run', 'false');
         }
 
     }, [estado])
@@ -120,7 +120,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
 
     function startTimer() {
         activo();
-        sessionStorage.setItem('run', 'true');
+        localStorage.setItem('run', 'true');
     }
 
     //Establecr a pausa 
@@ -145,7 +145,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
 
     function pauseTimer() {
         pausa();
-        sessionStorage.setItem('run', 'false');
+        localStorage.setItem('run', 'false');
     }
 
     //Reanudar jornada
@@ -170,7 +170,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
 
     function reanudarTimer() {
         reanudar();
-        sessionStorage.setItem('run', 'true');
+        localStorage.setItem('run', 'true');
     }
 
     //Establecer a Jornada Finalizada
@@ -195,8 +195,8 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
 
     function stopTimer() {
         salida();
-        sessionStorage.setItem('run', 'false');
-        sessionStorage.setItem('time', '0')
+        localStorage.setItem('run', 'false');
+        localStorage.setItem('time', '0')
     }
 
     //Accion del timer
@@ -205,7 +205,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
         const timer: number = window.setInterval(() => {
             setTime(prevTime => {
                 const newTime = prevTime + 1;
-                sessionStorage.setItem('time', String(newTime));
+                localStorage.setItem('time', String(newTime));
                 return newTime;
             });
         }, 1000)
