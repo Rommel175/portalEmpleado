@@ -2,7 +2,7 @@
 
 import styles from './containerDatos.module.css'
 import Image from "next/image";
-import { Fichaje_eventos, Fichaje_jornada, Profile } from '@/types/Types';
+import { Fichaje_jornada, Profile } from '@/types/Types';
 import Link from 'next/link';
 import { useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
@@ -12,42 +12,9 @@ import Tooltips2 from '@/components/tooltip/Tooltips2';
 import Tooltips from '@/components/tooltip/Tooltips';
 import CustomSelect from '@/components/customInputs/customSelect/CustomSelect';
 
-export default function DatosContainer({ profile, estado, localizacionFichaje, setLocalizacionFichaje, horaInicio, setHoraInicio, horaFinalAprox, setHoraFinalAprox, idFichaje }: { profile: Profile, estado: string, localizacionFichaje: string, setLocalizacionFichaje: React.Dispatch<React.SetStateAction<string>>, horaInicio: string | Date, setHoraInicio: React.Dispatch<React.SetStateAction<Date>>, horaFinalAprox: string | Date, setHoraFinalAprox: React.Dispatch<React.SetStateAction<Date>>, idFichaje: string | null, setIdFichaje: React.Dispatch<React.SetStateAction<string>> }) {
+export default function DatosContainer({ profile, estado, localizacionFichaje, setLocalizacionFichaje, horaInicio, setHoraInicio, horaFinalAprox, setHoraFinalAprox }: { profile: Profile, estado: string, localizacionFichaje: string, setLocalizacionFichaje: React.Dispatch<React.SetStateAction<string>>, horaInicio: string | Date, setHoraInicio: React.Dispatch<React.SetStateAction<Date>>, horaFinalAprox: string | Date, setHoraFinalAprox: React.Dispatch<React.SetStateAction<Date>>}) {
 
     const supabase = createClient();
-
-    useEffect(() => {
-        const eventosRealTime = supabase
-            .channel('realtime-fichaje_eventos2')
-            .on('postgres_changes', {
-                event: '*',
-                schema: 'public',
-                table: 'fichaje_eventos',
-            }, (payload: RealtimePostgresChangesPayload<Fichaje_eventos>) => {
-                //console.log(payload);
-                switch (payload.eventType) {
-                    case 'INSERT':
-                        console.log(payload.new)
-                        if (!idFichaje || payload.new.fichaje_id !== idFichaje) return;
-                        const insertItem = payload.new;
-                        setLocalizacionFichaje(insertItem.localizacion)
-                        break;
-                    case 'UPDATE':
-                        console.log(payload.new)
-                        if (!idFichaje || payload.new.fichaje_id !== idFichaje) return;
-                        const updateItem = payload.new;
-                        setLocalizacionFichaje(updateItem.localizacion)
-                        break;
-                }
-
-
-            })
-            .subscribe();
-
-        return () => {
-            supabase.removeChannel(eventosRealTime);
-        };
-    }, [idFichaje])
 
     useEffect(() => {
         const jornadaRealTime = supabase
@@ -59,52 +26,21 @@ export default function DatosContainer({ profile, estado, localizacionFichaje, s
             }, (payload: RealtimePostgresChangesPayload<Fichaje_jornada>) => {
                 switch (payload.eventType) {
                     case 'INSERT':
-                        if (payload.new.profile_id !== profile.id) return;
                         const insertItem = payload.new;
                         setHoraInicio(insertItem.date);
                         setHoraFinalAprox(insertItem.date_final_aprox);
                         break;
                     case 'UPDATE':
-                        if (payload.new.profile_id !== profile.id) return;
                         const updatedItem = payload.new;
-                        console.log(payload.new)
                         setHoraInicio(updatedItem.date);
-                        setHoraFinalAprox(updatedItem.date_final_aprox);
+                        setHoraFinalAprox(updatedItem.date);
                         break;
                 }
-            })
-            .subscribe();
-
-        const eventosRealTime = supabase
-            .channel('realtime-fichaje_eventos2')
-            .on('postgres_changes', {
-                event: '*',
-                schema: 'public',
-                table: 'fichaje_eventos',
-            }, (payload: RealtimePostgresChangesPayload<Fichaje_eventos>) => {
-                //console.log(payload);
-                switch (payload.eventType) {
-                    case 'INSERT':
-                        console.log(payload.new)
-                        if (!idFichaje || payload.new.fichaje_id !== idFichaje) return;
-                        const insertItem = payload.new;
-                        setLocalizacionFichaje(insertItem.localizacion)
-                        break;
-                    case 'UPDATE':
-                        console.log(payload.new)
-                        if (!idFichaje || payload.new.fichaje_id !== idFichaje) return;
-                        const updateItem = payload.new;
-                        setLocalizacionFichaje(updateItem.localizacion)
-                        break;
-                }
-
-
             })
             .subscribe();
 
         return () => {
             supabase.removeChannel(jornadaRealTime);
-            supabase.removeChannel(eventosRealTime);
         };
     }, [])
 
@@ -118,7 +54,7 @@ export default function DatosContainer({ profile, estado, localizacionFichaje, s
     return (
         <div className={styles.container}>
 
-            {/*JSON.stringify(localizacionFichaje)*/}
+            {JSON.stringify(localizacionFichaje)}
 
             <div className={styles.title}>
                 <h1>Inicio</h1>

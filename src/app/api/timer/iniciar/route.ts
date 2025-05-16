@@ -69,7 +69,9 @@ export async function POST(req: NextRequest) {
                 return NextResponse.json({ error: errorUpdatingEstado }, { status: 500 })
             }
 
-            return NextResponse.json({ success: true, estado: 'Activo' }, { status: 200 });
+            console.log(localizacion)
+
+            return NextResponse.json({ success: true, estado: 'Activo', localizacion: localizacion }, { status: 200 });
         }
 
     } else {
@@ -92,6 +94,8 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: errorUpdatingEstado }, { status: 500 })
         }
 
-        return NextResponse.json({ success: true, estado: 'Activo' }, { status: 200 });
+        console.log(localizacion)
+
+        return NextResponse.json({ success: true, estado: 'Activo', localizacion: localizacion }, { status: 200 });
     }
 }
