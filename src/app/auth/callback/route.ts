@@ -30,7 +30,7 @@ export async function GET(request: Request) {
   const name = user?.user_metadata.full_name;
   const full_name = name.split(' ');
 
-  if (email == 'rommel.xana@gmail.com' || email == 'example.xana@gmail.com' || email.endsWith('@xanasystem.com') || email.endsWith('@xanatechnolgies.com')) {
+  if (email == 'rommel.xana@gmail.com' || email == 'example.xana@gmail.com' || email.endsWith('@xanasystem.com') || email.endsWith('@xanatechnolgies.com') || email == 'rrhh.portalxana@gmail.com') {
 
     const { data: dataProfile, error: errorProfle } = await supabase
       .from('profiles')

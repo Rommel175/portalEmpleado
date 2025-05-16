@@ -17,7 +17,6 @@ export default function Modal({ profile, fichaje }: { profile: Profile, fichaje:
     const [horaFinalAprox, setHoraFinalAprox] = useState<Date | null>(null);
     const [horaFinalAproxVisualizer, setHoraFinalAproxVisualizer] = useState('');
     const [mensaje, setMensaje] = useState('');
-
     useEffect(() => {
         dayjs.locale('es');
 
@@ -29,9 +28,8 @@ export default function Modal({ profile, fichaje }: { profile: Profile, fichaje:
         const horasTrabajo = profile.horas_semana / 5;
 
         const horaFinal = date.add(horasTrabajo, 'hour');
-        setHoraFinalAprox(horaFinal.toDate())
-        setHoraFinalAproxVisualizer(horaFinal.format('HH:mm'))
-
+        setHoraFinalAprox(horaFinal.toDate());
+        setHoraFinalAproxVisualizer(horaFinal.format('HH:mm'));
     }, []);
 
     async function fichar() {
@@ -63,7 +61,10 @@ export default function Modal({ profile, fichaje }: { profile: Profile, fichaje:
 
     return (
 
-        (profile.alta && isOpen && !profile.is_admin && (!fichaje || fichaje.length == 0) && (profile.estado == 'Inactivo' || profile.estado == 'Jornada Finalizada')) &&
+        (profile.alta && isOpen && !profile.is_admin && (!fichaje || fichaje.length == 0)) &&
+
+
+
         <div className={styles.overlay}>
 
             <div className={styles.modalContainer}>
@@ -87,7 +88,7 @@ export default function Modal({ profile, fichaje }: { profile: Profile, fichaje:
 
                         <div className={styles.location}>
                             <label htmlFor="location">Localización</label>
-                            <CustomSelect localizacionFichaje={localizacionFichaje} setLocalizacionFichaje={setLocalizacionFichaje} options={["Oficina", "Casa", "Viaje"]}/>
+                            <CustomSelect localizacionFichaje={localizacionFichaje} setLocalizacionFichaje={setLocalizacionFichaje} options={["Oficina", "Casa", "Viaje"]} />
                         </div>
 
                         <div className={styles.departureTime}>

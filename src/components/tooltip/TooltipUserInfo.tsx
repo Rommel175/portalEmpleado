@@ -37,7 +37,7 @@ export default function TooltipUserInfo({ children, id }: TooltipProps) {
                 setProfile(result.profile)
             }
 
-            console.log(result.profile);
+            //console.log(result.profile);
         }
 
         fetchData();

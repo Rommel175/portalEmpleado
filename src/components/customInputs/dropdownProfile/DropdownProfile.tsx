@@ -31,13 +31,13 @@ export default function DropdownProfile({ image, nombre, apellido, email }: { im
     }
 
     async function handleLogOut() {
-        await supabase.auth.signOut();
+        await supabase.auth.signOut();   
         router.push('/login')
     }
 
     return (
         <div className={styles.containerImage} ref={dropdownRef} onClick={handleDropdown}>
-            <Image src={image} width={32} height={32} alt='img' className={styles.navImage} />
+            <Image src={image} width={32} height={32} alt='img' className={styles.navImage} style={{cursor: 'pointer'}} />
             {
                 show &&
                 <>
