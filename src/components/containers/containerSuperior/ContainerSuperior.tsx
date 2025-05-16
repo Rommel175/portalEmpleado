@@ -16,6 +16,7 @@ export default function ContainerSuperior({ profile, fichaje, eventos }: { profi
     const [horaFinalAprox, setHoraFinalAprox] = useState(fichaje?.[0]?.date_final_aprox);
 
 
+
     return (
         <div className={styles.containerSuperior}>
             <ContainerDatos estado={estado} localizacionFichaje={localizacionFichaje} setLocalizacionFichaje={setLocalizacionFichaje} horaInicio={horaInicio} setHoraInicio={setHoraInicio} setHoraFinalAprox={setHoraFinalAprox} horaFinalAprox={horaFinalAprox} profile={profile} />

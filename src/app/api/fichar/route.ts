@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
     const startDate = date.startOf('day');
     const endDate = startDate.add(1, 'day');
 
-
+    //Comprobamos si hay un fichaje hoy
     const { data: dataFichaje, error: errorFichaje } = await supabase
         .from('fichaje_jornada')
         .select('id')
@@ -26,22 +26,16 @@ export async function POST(req: NextRequest) {
         .lt('date', endDate.toISOString())
         .eq('profile_id', profileId);
 
-    /*const { data: dataFichaje, error: errorFichaje } = await supabase
-        .from('fichaje_jornada')
-        .select('id, date')
-        .eq('profile_id', profileId)
-        .order('date', { ascending: false })
-        .limit(1);*/
-
 
     if (errorFichaje) {
+        console.log('Error 1')
         return NextResponse.json({ error: errorFichaje }, { status: 500 })
     }
 
+    //Si no hay fichaje hoy
     if (!dataFichaje || dataFichaje.length == 0) {
 
         //Cojemos último fichaje
-
         const { data: ultimoFichaje, error: errorUltimoFichaje } = await supabase
             .from('fichaje_jornada')
             .select('id, date')
@@ -50,6 +44,7 @@ export async function POST(req: NextRequest) {
             .limit(1);
 
         if (errorUltimoFichaje) {
+            console.log('Error 2')
             return NextResponse.json({ error: errorUltimoFichaje }, { status: 500 });
         }
 
@@ -63,6 +58,7 @@ export async function POST(req: NextRequest) {
                 .limit(1);
 
             if (errorFichajeEvento) {
+                console.log('Error 3')
                 return NextResponse.json({ error: errorFichajeEvento }, { status: 500 });
             }
 
@@ -75,6 +71,7 @@ export async function POST(req: NextRequest) {
                         .insert({ fichaje_id: ultimoFichaje[0].id, evento: 'Fin Pausa', date: date.toISOString(), localizacion: localizacion });
 
                     if (errorInsertFichajeEvent) {
+                        console.log('Error 4')
                         return NextResponse.json({ error: errorInsertFichajeEvent }, { status: 500 });
                     }
 
@@ -83,6 +80,7 @@ export async function POST(req: NextRequest) {
                         .insert({ fichaje_id: ultimoFichaje[0].id, evento: 'Jornada Finalizada', date: date.toISOString(), localizacion: localizacion });
 
                     if (errorInsertFichajeEvent2) {
+                        console.log('Error 5')
                         return NextResponse.json({ error: errorInsertFichajeEvent2 }, { status: 500 });
                     }
 
@@ -93,6 +91,7 @@ export async function POST(req: NextRequest) {
                         .insert({ fichaje_id: ultimoFichaje[0].id, evento: 'Jornada Finalizada', date: date.toISOString(), localizacion: localizacion });
 
                     if (errorInsertFichajeEvent2) {
+                        console.log('Error 6')
                         return NextResponse.json({ error: errorInsertFichajeEvent2 }, { status: 500 });
                     }
 
@@ -104,6 +103,7 @@ export async function POST(req: NextRequest) {
                     .insert({ date: date.toISOString(), profile_id: profileId, comentario: comentario, date_final_aprox: dayjs(horaFinalAprox).toISOString() })
 
                 if (errorInsert) {
+                    console.log('Error 7')
                     return NextResponse.json({ error: errorInsert }, { status: 500 });
                 }
 
@@ -120,7 +120,7 @@ export async function POST(req: NextRequest) {
 
                 if (dataNewFichaje && dataNewFichaje.length > 0) {
 
-                    
+
                     const fichaje_id = dataNewFichaje[0].id;
 
                     const { error: errorInsertEvento } = await supabase
@@ -128,6 +128,7 @@ export async function POST(req: NextRequest) {
                         .insert({ fichaje_id: fichaje_id, evento: 'Inicio Jornada', date: date.toISOString(), localizacion: localizacion });
 
                     if (errorInsertEvento) {
+                        console.log('Error 8')
                         return NextResponse.json({ error: errorInsertEvento }, { status: 500 });
                     }
 
@@ -137,21 +138,17 @@ export async function POST(req: NextRequest) {
                         .eq('id', profileId)
 
                     if (errorUpdatingEstado) {
+                        console.log('Error 9')
                         return NextResponse.json({ error: errorUpdatingEstado }, { status: 500 })
                     }
 
                     return NextResponse.json({ success: true }, { status: 200 })
 
-
-
-
-
-
-
                 }
             }
 
         } else {
+
             const fichaje_id = dataFichaje[0].id;
 
             const { error: errorInsertFichajeEvent } = await supabase
@@ -159,6 +156,7 @@ export async function POST(req: NextRequest) {
                 .insert({ fichaje_id: fichaje_id, evento: 'Inicio Jornada', date: date.toISOString(), localizacion: localizacion });
 
             if (errorInsertFichajeEvent) {
+                console.log('Error 10')
                 return NextResponse.json({ error: errorInsertFichajeEvent }, { status: 500 })
             }
 
@@ -168,10 +166,82 @@ export async function POST(req: NextRequest) {
                 .eq('id', profileId)
 
             if (errorUpdatingEstado) {
+                console.log('Error 11')
                 return NextResponse.json({ error: errorUpdatingEstado }, { status: 500 })
             }
 
             return NextResponse.json({ success: true }, { status: 200 })
         }
+
+    } else {
+
+        const fichaje_id = dataFichaje[0].id;
+
+        const { data: dataFichajeEvento, error: errorFichajeEvento } = await supabase
+            .from('fichaje_eventos')
+            .select('*')
+            .eq('fichaje_id', dataFichaje[0].id)
+            .order('date', { ascending: false })
+            .limit(1);
+
+        if (errorFichajeEvento) {
+            console.log('Error 3')
+            return NextResponse.json({ error: errorFichajeEvento }, { status: 500 });
+        }
+
+        if (dataFichajeEvento[0].evento == 'Inicio Pausa') {
+
+            const { error: errorInsertFichajeEvent } = await supabase
+                .from('fichaje_eventos')
+                .insert({ fichaje_id: dataFichaje[0].id, evento: 'Fin Pausa', date: date.toISOString(), localizacion: localizacion });
+
+            if (errorInsertFichajeEvent) {
+                console.log('Error 4')
+                return NextResponse.json({ error: errorInsertFichajeEvent }, { status: 500 });
+            }
+
+            const { error: errorInsertFichajeEvent2 } = await supabase
+                .from('fichaje_eventos')
+                .insert({ fichaje_id: dataFichaje[0].id, evento: 'Jornada Finalizada', date: date.toISOString(), localizacion: localizacion });
+
+            if (errorInsertFichajeEvent2) {
+                console.log('Error 5')
+                return NextResponse.json({ error: errorInsertFichajeEvent2 }, { status: 500 });
+            }
+
+        } else if (dataFichajeEvento[0].evento == 'Inicio Jornada' || dataFichajeEvento[0].evento == 'Fin Pausa') {
+
+            const { error: errorInsertFichajeEvent2 } = await supabase
+                .from('fichaje_eventos')
+                .insert({ fichaje_id: dataFichaje[0].id, evento: 'Jornada Finalizada', date: date.toISOString(), localizacion: localizacion });
+
+            if (errorInsertFichajeEvent2) {
+                console.log('Error 6')
+                return NextResponse.json({ error: errorInsertFichajeEvent2 }, { status: 500 });
+            }
+
+        }
+
+        const { error: errorInsertFichajeEvent } = await supabase
+            .from('fichaje_eventos')
+            .insert({ fichaje_id: fichaje_id, evento: 'Inicio Jornada', date: date.toISOString(), localizacion: localizacion });
+
+        if (errorInsertFichajeEvent) {
+            console.log('Error 10')
+            return NextResponse.json({ error: errorInsertFichajeEvent }, { status: 500 })
+        }
+
+        const { error: errorUpdatingEstado } = await supabase
+            .from('profiles')
+            .update({ estado: 'Activo' })
+            .eq('id', profileId)
+
+        if (errorUpdatingEstado) {
+            console.log('Error 11')
+            return NextResponse.json({ error: errorUpdatingEstado }, { status: 500 })
+        }
+
+        return NextResponse.json({ success: true }, { status: 200 })
+
     }
 }    

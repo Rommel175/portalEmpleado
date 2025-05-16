@@ -3,13 +3,13 @@
 import styles from './modal.module.css'
 import { useState, useEffect } from "react";
 import Image from 'next/image';
-import { Fichaje_jornada, Profile } from '@/types/Types';
+import { Profile } from '@/types/Types';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
 import Tooltips from '../tooltip/Tooltips';
 import CustomSelect from '../customInputs/customSelect/CustomSelect';
 
-export default function Modal({ profile, fichaje }: { profile: Profile, fichaje: Fichaje_jornada[] }) {
+export default function Modal({ profile }: { profile: Profile }) {
     const [isOpen, setIsOpen] = useState(true);
     const [currentDate, setCurrentDate] = useState<string>("");
     const [currentTime, setCurrentTime] = useState<string>("");
@@ -61,10 +61,7 @@ export default function Modal({ profile, fichaje }: { profile: Profile, fichaje:
 
     return (
 
-        (profile.alta && isOpen && !profile.is_admin && (!fichaje || fichaje.length == 0)) &&
-
-
-
+        (profile.alta && isOpen && !profile.is_admin && (profile.estado == 'Inactivo' || profile.estado == 'Jornada Finalizada')) &&
         <div className={styles.overlay}>
 
             <div className={styles.modalContainer}>

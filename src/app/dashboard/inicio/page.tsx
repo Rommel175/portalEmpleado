@@ -9,7 +9,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <Modal profile={profile} fichaje={fichaje} />
+      <Modal profile={profile} />
       <ContainerSuperior fichaje={fichaje} eventos={eventos} profile={profile} />
       <ContainerEquipo equipo={equipo} />
     </>
