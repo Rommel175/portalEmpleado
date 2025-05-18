@@ -20,9 +20,10 @@ type Props = {
     id: string,
 };
 
+dayjs.extend(duration);
+
 
 export default function ActividadCardIndividual({ totalHoras, setTotalHorasTrabajadas, totalHorasTrabajadas, startDate, setStartDate, endDate, setEndDate, option, localizacion, id }: Props) {
-    dayjs.extend(duration);
 
     useEffect(() => {
 

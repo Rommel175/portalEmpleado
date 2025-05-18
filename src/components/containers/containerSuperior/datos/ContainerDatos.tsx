@@ -2,19 +2,19 @@
 
 import styles from './containerDatos.module.css'
 import Image from "next/image";
-import { Fichaje_jornada, Profile } from '@/types/Types';
+import { /*Fichaje_jornada,*/ Profile } from '@/types/Types';
 import Link from 'next/link';
-import { useEffect } from 'react';
-import { createClient } from '@/utils/supabase/client';
-import { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
+//import { useEffect } from 'react';
+//import { createClient } from '@/utils/supabase/client';
+//import { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 import dayjs from 'dayjs';
 import Tooltips2 from '@/components/tooltip/Tooltips2';
 import Tooltips from '@/components/tooltip/Tooltips';
 import CustomSelect from '@/components/customInputs/customSelect/CustomSelect';
 
-export default function DatosContainer({ profile, estado, localizacionFichaje, setLocalizacionFichaje, horaInicio, setHoraInicio, horaFinalAprox, setHoraFinalAprox }: { profile: Profile, estado: string, localizacionFichaje: string, setLocalizacionFichaje: React.Dispatch<React.SetStateAction<string>>, horaInicio: string | Date, setHoraInicio: React.Dispatch<React.SetStateAction<Date>>, horaFinalAprox: string | Date, setHoraFinalAprox: React.Dispatch<React.SetStateAction<Date>>}) {
+export default function DatosContainer({ profile, estado, localizacionFichaje, setLocalizacionFichaje, horaInicio, /*setHoraInicio,*/ horaFinalAprox/*, setHoraFinalAprox*/ }: { profile: Profile, estado: string, localizacionFichaje: string, setLocalizacionFichaje: React.Dispatch<React.SetStateAction<string>>, horaInicio: string | Date, setHoraInicio: React.Dispatch<React.SetStateAction<Date>>, horaFinalAprox: string | Date, setHoraFinalAprox: React.Dispatch<React.SetStateAction<Date>>}) {
 
-    const supabase = createClient();
+    /*const supabase = createClient();
 
     useEffect(() => {
         const jornadaRealTime = supabase
@@ -25,37 +25,21 @@ export default function DatosContainer({ profile, estado, localizacionFichaje, s
                 table: 'fichaje_jornada',
             }, (payload: RealtimePostgresChangesPayload<Fichaje_jornada>) => {
 
-                const fetchData = async(id: string) => {
-                    const { data, error } = await supabase
-                        .from('fichajes_eventos')
-                        .select('localizacion')
-                        .eq('fichaje_id', id)
-                        .order('date', {ascending: false})
-                        .limit(1);
-
-                    if (error) {
-                        console.log('Error fetching Data');
-                    }
-                    
-                    if (data && data.length > 0) {
-                        setLocalizacionFichaje(data[0].localizacion);
-                    }
-                }
-
                 switch (payload.eventType) {
                     case 'INSERT':
                         const insertItem = payload.new;
+                        console.log(insertItem);
                         if (insertItem.profile_id !== profile.id) return;
                         setHoraInicio(insertItem.date);
                         setHoraFinalAprox(insertItem.date_final_aprox);
-                        fetchData(insertItem.id)
+
                         break;
                     case 'UPDATE':
                         const updatedItem = payload.new;
+                        console.log(updatedItem);
                         if (updatedItem.profile_id !== profile.id) return;
                         setHoraInicio(updatedItem.date);
                         setHoraFinalAprox(updatedItem.date);
-                        fetchData(updatedItem.id)
                         break;
                 }
             })
@@ -64,7 +48,7 @@ export default function DatosContainer({ profile, estado, localizacionFichaje, s
         return () => {
             supabase.removeChannel(jornadaRealTime);
         };
-    }, [])
+    }, [])*/
 
     function parseHora(hora: string | Date): string {
         if (!hora) return '-';
@@ -75,8 +59,6 @@ export default function DatosContainer({ profile, estado, localizacionFichaje, s
 
     return (
         <div className={styles.container}>
-
-            {JSON.stringify(localizacionFichaje)}
 
             <div className={styles.title}>
                 <h1>Inicio</h1>

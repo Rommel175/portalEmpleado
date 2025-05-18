@@ -15,7 +15,8 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
     const [time, setTime] = useState<number>(0);
     const [currentDate, setCurrentDate] = useState<string>("");
     const [horaFinalAprox, setHoraFinalAprox] = useState<Date | null>(null);
-    const supabase = createClient();
+    const [horaInicio, setHoraInicio] = useState<Date | null>(null);
+    //const supabase = createClient();
 
     useEffect(() => {
         const localTime = localStorage.getItem('time');
@@ -43,6 +44,33 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
 
         setHoraFinalAprox(horaFinal.toDate());
 
+        const supabase = createClient();
+
+        const fetchFichaje = async () => {
+
+            const date = dayjs();
+            const startDate = date.startOf('day');
+            const endDate = startDate.add(1, 'day');
+
+            const { data, error } = await supabase
+                .from('fichaje_jornada')
+                .select('*')
+                .gte('date', startDate.toISOString())
+                .lt('date', endDate.toISOString())
+                .eq('profile_id', profile.id);
+
+            if (error) {
+                console.error('Error al obtener fichaje:', error);
+                return;
+            }
+
+            if (data && data.length > 0) {
+                setHoraInicio(data[0].date);
+            }
+        };
+
+        fetchFichaje();
+
         const profilesRealTime = supabase
             .channel('realtime-contenedor-fichar')
             .on('postgres_changes', {
@@ -52,6 +80,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
             }, (payload: RealtimePostgresChangesPayload<Profile>) => {
                 switch (payload.eventType) {
                     case 'UPDATE':
+                        if (payload.new.id !== profile.id) return;
                         const updatedItem = payload.new;
                         setEstado(updatedItem.estado);
                         break;
@@ -201,17 +230,25 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
 
     //Accion del timer
     useEffect(() => {
-        if (!isRunning) return;
+
+        if (!isRunning || !horaInicio) return;
+
         const timer: number = window.setInterval(() => {
-            setTime(prevTime => {
+
+            const now = dayjs();
+            const start = dayjs(horaInicio);
+            const diffInSeconds = now.diff(start, 'second');
+
+            /*setTime(prevTime => {
                 const newTime = prevTime + 1;
                 localStorage.setItem('time', String(newTime));
                 return newTime;
-            });
+            });*/
+            setTime(diffInSeconds);
         }, 1000)
 
         return () => clearInterval(timer);
-    }, [isRunning])
+    }, [isRunning, horaInicio])
 
     function formatTimer(s: number) {
         const hours = String(Math.floor(s / 3600)).padStart(2, "0");
