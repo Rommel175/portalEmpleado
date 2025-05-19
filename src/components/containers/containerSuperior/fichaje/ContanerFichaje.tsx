@@ -88,8 +88,10 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
         //console.log('Format offset total: ', segundosOffset.format('HH:mm'));
         //console.log(calculoOffset(nuevosOffsets))
         //console.log(dayjs(horaInicio))
-        const segundosOffset = dayjs.duration(calculoOffset(nuevosOffsets), 'seconds');
+        
         //setOffsets(nuevosOffsets);
+
+        const segundosOffset = dayjs.duration(calculoOffset(nuevosOffsets), 'seconds');
         const totalDuracion = tiempoPausa.add(segundosOffset);
 
         if (pausaInicio) {

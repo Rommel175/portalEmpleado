@@ -62,7 +62,7 @@ export async function GET(req: NextRequest) {
     const { data: dataProfile, error: errorProfile } = await supabase
         .from('profiles')
         .select('*')
-    //.eq('id', '12')
+        //.eq('id', '18')
 
     if (errorProfile) {
         return NextResponse.json({ error: errorProfile }, { status: 500 });
@@ -157,7 +157,7 @@ export async function GET(req: NextRequest) {
             .lt('date', end.toISOString())
             .order('date', { ascending: !reciente });;
 
-        //console.log(dataFichaje);
+        console.log(dataFichaje);
 
         if (errorFichaje) {
             return NextResponse.json({ error: errorFichaje }, { status: 500 });
@@ -178,8 +178,8 @@ export async function GET(req: NextRequest) {
                 let jornadaInicio: dayjs.Dayjs | null = null;
                 let pausaInicio: dayjs.Dayjs | null = null;
                 let tiempoPausa = dayjs.duration(0);
-                let totalTiempoTrabajado = dayjs.duration(0);
-                let tiempoNeto = dayjs.duration(0);
+                //let totalTiempoTrabajado = dayjs.duration(0);
+                //let tiempoNeto = dayjs.duration(0);
 
                 for (const evento of eventos || []) {
                     const hora = dayjs(evento.date);
@@ -205,22 +205,30 @@ export async function GET(req: NextRequest) {
                         case 'Jornada Finalizada':
                             if (jornadaInicio) {
                                 const jornadaSegundos = hora.diff(jornadaInicio, 'second');
-                                totalTiempoTrabajado = totalTiempoTrabajado.add(jornadaSegundos, 'second');
-                                tiempoNeto = totalTiempoTrabajado.subtract(tiempoPausa);
+
+                                const jornadaNetaSegundos = jornadaSegundos - tiempoPausa.asSeconds();
+
+                                const jornadaNeta = dayjs.duration(jornadaNetaSegundos, 'second');
+
+
+                                //totalTiempoTrabajado = totalTiempoTrabajado.add(jornadaSegundos, 'second');
+                                //tiempoNeto = totalTiempoTrabajado.subtract(tiempoPausa);
+                                
+                                totalHorasPerfil = totalHorasPerfil.add(jornadaNeta);
+
                                 jornadaInicio = null;
-                                totalHorasPerfil = totalHorasPerfil.add(tiempoNeto)
+                                pausaInicio = null;
+                                tiempoPausa = dayjs.duration(0);
                             }
                             break;
                     }
                 }
-
-                //console.log('Total cada jornada', tiempoNeto.format('HH:mm'))
             }
         }
 
-        //console.log(totalHorasPerfil)
-
-        const minutosSemana = Math.round(horasSemana.asMinutes());
+        console.log('Horas trabajadas',formatTime(totalHorasPerfil.asMinutes()));
+        console.log('Horas esperadas',horasSemana.asHours())
+        console.log('Horas restantes:', formatTime(horasSemana.subtract(totalHorasPerfil).asMinutes()));
 
         const horasRestantes = horasSemana.subtract(totalHorasPerfil);
         const minutosTotales = Math.round(horasRestantes.asMinutes());
@@ -231,7 +239,7 @@ export async function GET(req: NextRequest) {
             apellido: profile.apellido,
             email: profile.email,
             image: profile.image,
-            horas_semanales: formatTime(minutosSemana),
+            horas_semanales: formatTime(horasSemana.asMinutes()),
             horas_restantes: formatTime(minutosTotales)
         });
 

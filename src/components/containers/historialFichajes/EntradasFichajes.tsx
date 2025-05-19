@@ -37,7 +37,7 @@ export default function EntradasFichajes({ date, eventos }: { date: string, even
         case 'Inicio Pausa':
           if (jornadaInicio && !pausaInicio) {
             pausaInicio = hora;
-            console.log('Inicio Pausa: ', pausaInicio.format('HH:mm'));
+            //console.log('Inicio Pausa: ', pausaInicio.format('HH:mm'));
           }
           break;
         case 'Fin Pausa':
