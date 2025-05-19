@@ -54,6 +54,7 @@ export default function TooltipUserInfo({ children, id }: TooltipProps) {
                 place='bottom-start'
                 noArrow
                 className={styles.tooltipCustom}
+                openOnClick
             >
                 <div className={styles.header}></div>
                 <div className={styles.mainContent}>
