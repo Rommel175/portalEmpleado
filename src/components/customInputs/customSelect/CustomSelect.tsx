@@ -29,6 +29,9 @@ export default function CustomSelect({ localizacionFichaje, setLocalizacionFicha
 
     return (
         <div className={styles.customSelect} onClick={() => setShow(!show)} ref={dropdownRef}>
+            {
+                //JSON.stringify(localizacionFichaje)
+            }
             {localizacionFichaje.charAt(0).toUpperCase() + localizacionFichaje.slice(1)}
             <svg xmlns="http://www.w3.org/2000/svg" width="13" height="12" viewBox="0 0 13 12" fill="none">
                 <rect width="11.9999" height="11.9999" transform="translate(12.3333) rotate(90)" fill="white" />

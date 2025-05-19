@@ -17,6 +17,40 @@ export default function ContainerSuperior({ profile, fichaje, eventos }: { profi
     const supabase = createClient();
 
     useEffect(() => {
+        const fetchLocation = async () => {
+            const supabase = createClient();
+
+            const { data: dataFichaje, error: errorFichaje } = await supabase
+                .from('fichaje_jornada')
+                .select('id')
+                .eq('profile_id', profile.id);
+
+            if (errorFichaje) {
+                console.log('Error fetching fichaje: ', errorFichaje);
+            }
+
+            if (dataFichaje && dataFichaje.length > 0) {
+                const { data: dataEventos, error: errorEventos } = await supabase
+                    .from('fichaje_eventos')
+                    .select('localizacion')
+                    .eq('fichaje_id', dataFichaje[0].id)
+                    .order('date', { ascending: false });
+
+                if (errorEventos) {
+                    console.log('Error fetching fichaje: ', errorEventos);
+                }
+
+                if (dataEventos && dataEventos.length > 0) {
+                    setLocalizacionFichaje(dataEventos[0].localizacion);
+                }
+            }
+        }
+
+        fetchLocation();
+
+    }, [])
+
+    useEffect(() => {
 
         const jornadaRealTime = supabase
             .channel('realtime-fichaje_jornada-contenedor_datos3')
@@ -63,8 +97,8 @@ export default function ContainerSuperior({ profile, fichaje, eventos }: { profi
             })
             .subscribe();
 
-        /*const eventosRealTime = supabase
-            .channel('realtime-fichaje_jornada-contenedor_datos3')
+        const eventosRealTime = supabase //Posiblmnete noi haga falta
+            .channel('realtime-fichaje_jornada-contenedor_datos6')
             .on('postgres_changes', {
                 event: '*',
                 schema: 'public',
@@ -113,22 +147,23 @@ export default function ContainerSuperior({ profile, fichaje, eventos }: { profi
                         break;
                     case 'UPDATE':
                         const updatedItem = payload.new;
+                        console.log('Insert', updatedItem);
                         if (!updatedItem.fichaje_id) return;
                         fetchData(updatedItem.fichaje_id);
                         break;
                 }
             })
-            .subscribe();*/
+            .subscribe();
 
         return () => {
             supabase.removeChannel(jornadaRealTime);
-            //supabase.removeChannel(eventosRealTime);
+            supabase.removeChannel(eventosRealTime);
         };
     }, []);
 
-    useEffect(() => {
+    /*useEffect(() => {
         console.log('localizacionFichaje', localizacionFichaje);
-    }, [localizacionFichaje])
+    }, [localizacionFichaje])*/
 
     return (
         <div className={styles.containerSuperior}>

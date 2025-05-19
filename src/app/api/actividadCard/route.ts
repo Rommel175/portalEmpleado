@@ -89,8 +89,8 @@ export async function GET(req: NextRequest) {
                 let jornadaInicio: dayjs.Dayjs | null = null;
                 let pausaInicio: dayjs.Dayjs | null = null;
                 let tiempoPausa = dayjs.duration(0);
-                let totalTiempoTrabajado = dayjs.duration(0);
-                let tiempoNeto = dayjs.duration(0);
+                //let totalTiempoTrabajado = dayjs.duration(0);
+                //let tiempoNeto = dayjs.duration(0);
 
                 for (const evento of eventos || []) {
                     const hora = dayjs(evento.date);
@@ -116,10 +116,12 @@ export async function GET(req: NextRequest) {
                         case 'Jornada Finalizada':
                             if (jornadaInicio) {
                                 const jornadaSegundos = hora.diff(jornadaInicio, 'second');
-                                totalTiempoTrabajado = totalTiempoTrabajado.add(jornadaSegundos, 'second');
-                                tiempoNeto = totalTiempoTrabajado.subtract(tiempoPausa);
+                                const jornadaNetaSegundos = jornadaSegundos - tiempoPausa.asSeconds();
+                                totalHoras = totalHoras.add(jornadaNetaSegundos, 'second');
+
                                 jornadaInicio = null;
-                                totalHoras = totalHoras.add(tiempoNeto)
+                                pausaInicio = null;
+                                tiempoPausa = dayjs.duration(0);
                             }
                             break;
                     }
@@ -139,8 +141,8 @@ export async function GET(req: NextRequest) {
                 let jornadaInicio: dayjs.Dayjs | null = null;
                 let pausaInicio: dayjs.Dayjs | null = null;
                 let tiempoPausa = dayjs.duration(0);
-                let totalTiempoTrabajado = dayjs.duration(0);
-                let tiempoNeto = dayjs.duration(0);
+                //let totalTiempoTrabajado = dayjs.duration(0);
+                //let tiempoNeto = dayjs.duration(0);
 
                 for (const evento of eventos || []) {
                     const hora = dayjs(evento.date);
@@ -166,10 +168,12 @@ export async function GET(req: NextRequest) {
                         case 'Jornada Finalizada':
                             if (jornadaInicio) {
                                 const jornadaSegundos = hora.diff(jornadaInicio, 'second');
-                                totalTiempoTrabajado = totalTiempoTrabajado.add(jornadaSegundos, 'second');
-                                tiempoNeto = totalTiempoTrabajado.subtract(tiempoPausa);
+                                const jornadaNetaSegundos = jornadaSegundos - tiempoPausa.asSeconds();
+                                totalHoras = totalHoras.add(jornadaNetaSegundos, 'second');
+
                                 jornadaInicio = null;
-                                totalHoras = totalHoras.add(tiempoNeto)
+                                pausaInicio = null;
+                                tiempoPausa = dayjs.duration(0);
                             }
                             break;
                     }

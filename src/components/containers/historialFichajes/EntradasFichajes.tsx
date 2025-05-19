@@ -20,8 +20,8 @@ export default function EntradasFichajes({ date, eventos }: { date: string, even
     let jornadaInicio: dayjs.Dayjs | null = null;
     let pausaInicio: dayjs.Dayjs | null = null;
     let tiempoPausa = dayjs.duration(0);
-    let totalTiempoTrabajado = dayjs.duration(0);
-    let tiempoNeto = dayjs.duration(0);
+    //let totalTiempoTrabajado = dayjs.duration(0);
+    //let tiempoNeto = dayjs.duration(0);
     let totalHoras = dayjs.duration(0);
 
     for (const evento of eventos || []) {
@@ -31,29 +31,48 @@ export default function EntradasFichajes({ date, eventos }: { date: string, even
       switch (evento.evento) {
         case 'Inicio Jornada':
           jornadaInicio = hora;
+          //console.log('Inicio Joranda: ', jornadaInicio.format('HH:mm'));
           pausaInicio = null;
           break;
         case 'Inicio Pausa':
           if (jornadaInicio && !pausaInicio) {
             pausaInicio = hora;
+            console.log('Inicio Pausa: ', pausaInicio.format('HH:mm'));
           }
           break;
         case 'Fin Pausa':
           if (jornadaInicio && pausaInicio) {
+            //console.log('Fin Pausa: ', hora.format('HH:mm'));
             const pausaSegundos = hora.diff(pausaInicio, 'second');
+            //console.log('Timepo pausa Individual: ', pausaSegundos);
             tiempoPausa = tiempoPausa.add(pausaSegundos, 'second');
             pausaInicio = null;
           }
           break;
-        case 'Jornada Finalizada':
+        /*case 'Jornada Finalizada':
           if (jornadaInicio) {
             const jornadaSegundos = hora.diff(jornadaInicio, 'second');
+
             totalTiempoTrabajado = totalTiempoTrabajado.add(jornadaSegundos, 'second');
             tiempoNeto = totalTiempoTrabajado.subtract(tiempoPausa);
             jornadaInicio = null;
             totalHoras = totalHoras.add(tiempoNeto)
           }
+          break;*/
+        case 'Jornada Finalizada':
+          if (jornadaInicio) {
+            const jornadaSegundos = hora.diff(jornadaInicio, 'second');
+
+            const jornadaNetaSegundos = jornadaSegundos - tiempoPausa.asSeconds();
+
+            totalHoras = totalHoras.add(jornadaNetaSegundos, 'second');
+
+            jornadaInicio = null;
+            pausaInicio = null;
+            tiempoPausa = dayjs.duration(0);
+          }
           break;
+
       }
     }
 

@@ -145,6 +145,7 @@ export async function GET(req: NextRequest) {
                         }
 
                         if (dataEvento && dataEvento.length > 0) {
+                            //console.log(dataEvento)
                             const eventosData = dataEvento.map(item => ({
                                 id: item.id,
                                 fichaje_id: item.fichaje_id,
@@ -191,7 +192,7 @@ export async function GET(req: NextRequest) {
             }
         }
 
-        console.log(resultadoFinal)
+        //console.log(resultadoFinal.eventos)
 
         return NextResponse.json({ success: true, data: resultadoFinal, profile: dataProfile[0], horas_semana: horas }, { status: 200 });
     }

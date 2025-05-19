@@ -3,34 +3,119 @@
 import styles from './containerFichaje.module.css'
 import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
-import { Profile } from "@/types/Types";
+import { Fichaje_eventos, Profile } from "@/types/Types";
 import { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
+import duration from 'dayjs/plugin/duration';
+
+dayjs.extend(duration);
 
 export default function ContainerFichaje({ estado, setEstado, profile, localizacionFichaje }: { estado: string, setEstado: React.Dispatch<React.SetStateAction<string>>, profile: Profile, localizacionFichaje: string }) {
 
     const [isOpen, setIsOpen] = useState(false);
     const [isRunning, setRunning] = useState<boolean>(false);
-    const [time, setTime] = useState<number>(0);
+    //const [time, setTime] = useState<number>(0);
     const [currentDate, setCurrentDate] = useState<string>("");
     const [horaFinalAprox, setHoraFinalAprox] = useState<Date | null>(null);
     const [horaInicio, setHoraInicio] = useState<Date | null>(null);
+    const [tiempoBase, setTiempoBase] = useState<number | null>(null);
+    const [eventos, setEventos] = useState<Fichaje_eventos[] | null>(null);
+    //const [offsets, setOffsets] = useState<number[]>([]);
     //const supabase = createClient();
 
-    useEffect(() => {
-        const localTime = localStorage.getItem('time');
-        //const run = localStorage.getItem('run');
+    function tiempoTrabajado(eventos: Fichaje_eventos[]) {
+        let pausaInicio: dayjs.Dayjs | null = null;
+        let jornadaInicio: dayjs.Dayjs | null = null;
+        //let enPausa = false;
 
-        if (localTime) {
-            setTime(Number(localTime));
+        let tiempoPausa = dayjs.duration(0);
+        let finJornada: dayjs.Dayjs | null = null;
+
+        const nuevosOffsets: number[] = [];
+
+        for (const e of eventos) {
+            const hora = dayjs(e.date);
+
+            switch (e.evento) {
+                case 'Inicio Jornada':
+                    if (finJornada) {
+                        const offsetHoras = hora.diff(finJornada, 'second');
+                        if (offsetHoras > 0) {
+                            nuevosOffsets.push(offsetHoras);
+                        }
+                        finJornada = null;
+                    }
+                    jornadaInicio = hora;
+                    pausaInicio = null;
+                    break;
+                case 'Inicio Pausa':
+                    if (jornadaInicio && !pausaInicio) {
+                        pausaInicio = hora;
+                        //enPausa = true;
+                    }
+                    break;
+                case 'Fin Pausa':
+                    if (jornadaInicio && pausaInicio) {
+                        const pausaSegundos = hora.diff(pausaInicio, 'second');
+                        tiempoPausa = tiempoPausa.add(pausaSegundos, 'second');
+                        pausaInicio = null;
+                        //enPausa = false;
+                    }
+                    break;
+                case 'Jornada Finalizada':
+                    if (jornadaInicio) {
+                        finJornada = hora;
+                    }
+                    break;
+            }
         }
 
-        /*if (run === 'true') {
+        function calculoOffset(offsets: number[]) {
+            let total = 0;
+
+            for (const offset of offsets) {
+                total += offset;
+            }
+
+            return total;
+        }
+
+        //console.log('Tiempo pausa 1',tiempoPausa.format('HH:mm'))
+        //console.log('Tiempo pausa 2',tiempoPausa)
+        //console.log('offsets',nuevosOffsets)
+        //console.log('Calculo de offsets',calculoOffset(nuevosOffsets));
+        //console.log('Format offset total: ', segundosOffset.format('HH:mm'));
+        //console.log(calculoOffset(nuevosOffsets))
+        //console.log(dayjs(horaInicio))
+        const segundosOffset = dayjs.duration(calculoOffset(nuevosOffsets), 'seconds');
+        //setOffsets(nuevosOffsets);
+        const totalDuracion = tiempoPausa.add(segundosOffset);
+
+        if (pausaInicio) {
+            const now = dayjs();
+            const pausaEnCurso = now.diff(pausaInicio, 'seconds');
+
+            return totalDuracion.add(pausaEnCurso, 'seconds');
+        }
+        //console.log('total offset + pasua', totalDuracion.format('HH:mm'))
+
+        return totalDuracion;
+    }
+
+    useEffect(() => {
+        //const localTime = localStorage.getItem('time');
+        const run = localStorage.getItem('run');
+
+        /*if (localTime) {
+            setTime(Number(localTime));
+        }*/
+
+        if (run === 'true') {
             setRunning(true);
         } else {
             setRunning(false);
-        }*/
+        }
 
         dayjs.locale('es');
 
@@ -64,8 +149,60 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
                 return;
             }
 
+            //console.log(data)
+
             if (data && data.length > 0) {
-                setHoraInicio(data[0].date);
+                const { data: dataEventos, error: errorEventos } = await supabase
+                    .from('fichaje_eventos')
+                    .select('*')
+                    .eq('fichaje_id', data[0].id)
+                    .order('date', { ascending: true })
+
+                if (errorEventos) {
+                    console.error('Error al obtener fichaje:', errorEventos);
+                    return;
+                }
+
+                if (dataEventos && dataEventos.length > 0) {
+                    console.log(dataEventos)
+
+                    setHoraInicio(data[0].date);
+                    setEventos(dataEventos);
+
+                    if (estado == 'Pausa' || estado == 'Activo') {
+                        const tiempoDuracion = tiempoTrabajado(dataEventos);
+                        const now = dayjs();
+                        console.log('Fecha 1',now.format('HH:mm'));
+                        console.log('Fecha 2',dayjs(data[0].date).format('HH:mm'));
+                        const diffInSeconds = now.diff(dayjs(data[0].date), 'second');
+                        console.log(formatTimer(diffInSeconds))
+
+                        const segundosTrabajados = tiempoDuracion.asSeconds();
+                        console.log(tiempoDuracion.format('HH:mm:ss'));
+                        console.log(segundosTrabajados)
+
+                        const time = diffInSeconds - segundosTrabajados;
+                        console.log('Tiempo 1', time);
+                        console.log('Tiempo 2', formatTimer(time));
+                        setTiempoBase(time);
+                    }
+
+                    /*console.log('hora inicio jornada', dayjs(data[0].date).format('HH:mm:ss'))
+
+                    const tiempoDuracion = tiempoTrabajado(dataEventos);
+                    const now = dayjs()
+                    const diffInSeconds = now.diff(dayjs(data[0].date), 'second');
+                    console.log(formatTimer(diffInSeconds))
+
+                    const segundosTrabajados = tiempoDuracion.asSeconds();
+                    console.log(tiempoDuracion.format('HH:mm:ss'));
+                    console.log(segundosTrabajados)
+
+                    const time = diffInSeconds - segundosTrabajados;
+                    console.log('Tiempo 1', time);
+                    console.log('Tiempo 2', formatTimer(time));
+                    setTiempoBase(time);*/
+                }
             }
         };
 
@@ -81,6 +218,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
                 switch (payload.eventType) {
                     case 'UPDATE':
                         if (payload.new.id !== profile.id) return;
+                        console.log(payload.new);
                         const updatedItem = payload.new;
                         setEstado(updatedItem.estado);
                         break;
@@ -110,15 +248,14 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
 
     //AL cambiar el estado fichaje realizar las accions del timer
     useEffect(() => {
-
         if (estado == 'Activo') {
             setRunning(true);
             localStorage.setItem('run', 'true');
         } else if (estado == 'Inactivo' || estado == 'Jornada Finalizada') {
             setRunning(false);
-            setTime(0);
+            setTiempoBase(0);
             localStorage.setItem('run', 'false');
-            localStorage.setItem('time', '0');
+            //localStorage.setItem('time', '0');
         } else if (estado === 'Pausa') {
             setRunning(false);
             localStorage.setItem('run', 'false');
@@ -229,7 +366,8 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
     }
 
     //Accion del timer
-    useEffect(() => {
+
+    /*useEffect(() => {
 
         if (!isRunning || !horaInicio) return;
 
@@ -239,16 +377,49 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
             const start = dayjs(horaInicio);
             const diffInSeconds = now.diff(start, 'second');
 
-            /*setTime(prevTime => {
+            setTime(prevTime => {
                 const newTime = prevTime + 1;
                 localStorage.setItem('time', String(newTime));
                 return newTime;
-            });*/
+            });
+
+
             setTime(diffInSeconds);
         }, 1000)
 
         return () => clearInterval(timer);
-    }, [isRunning, horaInicio])
+    }, [isRunning, horaInicio, tiempoBase])*/
+
+    useEffect(() => {
+        if (!isRunning || eventos == null) return;
+
+        const tiempoDuracion = tiempoTrabajado(eventos);
+
+        const timer = window.setInterval(() => {
+            const now = dayjs()
+            const diffInSeconds = now.diff(dayjs(horaInicio), 'second');
+
+            const segundosTrabajados = tiempoDuracion.asSeconds();
+            const time = diffInSeconds - segundosTrabajados;
+            setTiempoBase(time)
+        }, 1000);
+
+
+        /*const timer = window.setInterval(() => {
+            setTiempoBase(prev => {
+                if (prev == null) return null;
+                const newTime = prev + 1;
+                //localStorage.setItem('time', String(newTime));
+                return newTime;
+            })
+        }, 1000)*/
+
+        return () => clearInterval(timer);
+
+
+
+    }, [isRunning, eventos, horaInicio, estado])
+
 
     function formatTimer(s: number) {
         const hours = String(Math.floor(s / 3600)).padStart(2, "0");
@@ -292,7 +463,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
                 <div className={styles.date}>
                     <h3>{currentDate}</h3>
                     <div className={styles.counter}>
-                        <h2>{formatTimer(time)}</h2>
+                        <h2>{formatTimer(tiempoBase ?? 0)}</h2>
                     </div>
                 </div>
                 <div className={styles.buttons}>
