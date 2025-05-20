@@ -388,7 +388,8 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
 
         const timer = window.setInterval(() => {
             const now = dayjs()
-            console.log(now.toISOString())
+            console.log('ahora',now.toISOString())
+            console.log('horaInicio',horaInicio);
             const diffInSeconds = now.diff(dayjs(horaInicio), 'second');
             console.log(diffInSeconds)
 
