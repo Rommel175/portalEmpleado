@@ -43,3 +43,16 @@ export type Fichaje_eventos = {
     date: Date,
     localizacion: string,
 }
+
+export type SolicitudesType = {
+    id: string,
+    created_at: Date,
+    profile_id: string,
+    fichaje_evento_id: string,
+    fecha_original: Date,
+    fecha_solicitada: Date,
+    evento: string,
+    estado: string,
+    motivo: string,
+    fecha_revision: Date | null
+}

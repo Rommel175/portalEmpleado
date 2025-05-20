@@ -19,46 +19,29 @@ export default function EntradasFichajes({ date, eventos }: { date: string, even
     dayjs.extend(duration);
     let jornadaInicio: dayjs.Dayjs | null = null;
     let pausaInicio: dayjs.Dayjs | null = null;
-    let tiempoPausa = dayjs.duration(0);
-    //let totalTiempoTrabajado = dayjs.duration(0);
-    //let tiempoNeto = dayjs.duration(0);
+    let tiempoPausa = dayjs.duration(0);;
     let totalHoras = dayjs.duration(0);
 
     for (const evento of eventos || []) {
       const hora = dayjs(evento.date);
-      //console.log(hora.format('HH:mm'))
 
       switch (evento.evento) {
         case 'Inicio Jornada':
           jornadaInicio = hora;
-          //console.log('Inicio Joranda: ', jornadaInicio.format('HH:mm'));
           pausaInicio = null;
           break;
         case 'Inicio Pausa':
           if (jornadaInicio && !pausaInicio) {
             pausaInicio = hora;
-            //console.log('Inicio Pausa: ', pausaInicio.format('HH:mm'));
           }
           break;
         case 'Fin Pausa':
           if (jornadaInicio && pausaInicio) {
-            //console.log('Fin Pausa: ', hora.format('HH:mm'));
             const pausaSegundos = hora.diff(pausaInicio, 'second');
-            //console.log('Timepo pausa Individual: ', pausaSegundos);
             tiempoPausa = tiempoPausa.add(pausaSegundos, 'second');
             pausaInicio = null;
           }
           break;
-        /*case 'Jornada Finalizada':
-          if (jornadaInicio) {
-            const jornadaSegundos = hora.diff(jornadaInicio, 'second');
-
-            totalTiempoTrabajado = totalTiempoTrabajado.add(jornadaSegundos, 'second');
-            tiempoNeto = totalTiempoTrabajado.subtract(tiempoPausa);
-            jornadaInicio = null;
-            totalHoras = totalHoras.add(tiempoNeto)
-          }
-          break;*/
         case 'Jornada Finalizada':
           if (jornadaInicio) {
             const jornadaSegundos = hora.diff(jornadaInicio, 'second');
@@ -115,7 +98,7 @@ export default function EntradasFichajes({ date, eventos }: { date: string, even
 
           {
             eventos.map((item, index) => {
-              return <EntradaFichajesItem key={index} action={item.evento} date={date} hour={parseHora(item.date)} localizacion={item.localizacion} />
+              return <EntradaFichajesItem key={index} action={item.evento} date={date} hour={parseHora(item.date)} localizacion={item.localizacion} id={item.id} />
             })
           }
         </>

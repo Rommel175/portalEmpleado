@@ -7,10 +7,11 @@ type Prop = {
     action: string,
     hour: string,
     date: string,
-    localizacion: string
+    localizacion: string,
+    id: number
 }
 
-export default function EntradaFichajesItem({ action, hour, date, localizacion }: Prop) {
+export default function EntradaFichajesItem({ action, hour, date, localizacion, id }: Prop) {
 
     return (
         <div className={styles.item}>
@@ -18,7 +19,7 @@ export default function EntradaFichajesItem({ action, hour, date, localizacion }
             <h3>{hour}</h3>
             <h3>{localizacion}</h3>
 
-            <ButtonModificar hour={hour} date={date} />
+            <ButtonModificar hour={hour} date={date} id={id} action={action} />
 
         </div>
     );
