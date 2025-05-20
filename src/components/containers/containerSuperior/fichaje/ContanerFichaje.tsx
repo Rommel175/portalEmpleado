@@ -8,9 +8,7 @@ import { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
 import duration from 'dayjs/plugin/duration';
-import utc from 'dayjs/plugin/utc'
 
-dayjs.extend(utc);
 dayjs.extend(duration);
 
 export default function ContainerFichaje({ estado, setEstado, profile, localizacionFichaje }: { estado: string, setEstado: React.Dispatch<React.SetStateAction<string>>, profile: Profile, localizacionFichaje: string }) {
@@ -35,7 +33,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
         const nuevosOffsets: number[] = [];
 
         for (const e of eventos) {
-            const hora = dayjs(e.date).utc();
+            const hora = dayjs(e.date);
 
             switch (e.evento) {
                 case 'Inicio Jornada':
@@ -93,7 +91,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
         const totalDuracion = tiempoPausa.add(segundosOffset);
 
         if (pausaInicio) {
-            const now = dayjs().utc();
+            const now = dayjs();
             const pausaEnCurso = now.diff(pausaInicio, 'seconds');
 
             return totalDuracion.add(pausaEnCurso, 'seconds');
@@ -160,15 +158,15 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
                 }
 
                 if (dataEventos && dataEventos.length > 0) {
-                    setHoraInicio(dayjs(data[0].date).utc().toDate());
+                    setHoraInicio(data[0].date);
                     setEventos(dataEventos);
 
                     if (estado == 'Pausa' || estado == 'Activo') {
                         const tiempoDuracion = tiempoTrabajado(dataEventos);
-                        const now = dayjs().utc();
+                        const now = dayjs();
                         //console.log('Fecha 1',now.format('HH:mm'));
                         //console.log('Fecha 2',dayjs(data[0].date).format('HH:mm'));
-                        const diffInSeconds = now.diff(dayjs(data[0].date).utc(), 'second');
+                        const diffInSeconds = now.diff(dayjs(data[0].date), 'second');
                         //console.log(formatTimer(diffInSeconds))
 
                         const segundosTrabajados = tiempoDuracion.asSeconds();
@@ -389,12 +387,12 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
         const tiempoDuracion = tiempoTrabajado(eventos);
 
         const timer = window.setInterval(() => {
-            const now = dayjs().utc();
-            const diffInSeconds = now.diff(dayjs(horaInicio).utc(), 'second');
+            const now = dayjs()
+            const diffInSeconds = now.diff(dayjs(horaInicio), 'second');
 
             const segundosTrabajados = tiempoDuracion.asSeconds();
-            const time = diffInSeconds - segundosTrabajados;
-            setTiempoBase(time)
+            const time = Math.max(0, diffInSeconds - segundosTrabajados);
+            setTiempoBase(time);
         }, 1000);
 
         return () => clearInterval(timer);
