@@ -192,7 +192,7 @@ export async function GET(req: NextRequest) {
             }
         }
 
-        //console.log(resultadoFinal.eventos)
+        //console.log('AAAAAAAAAAAAAA',resultadoFinal)
 
         return NextResponse.json({ success: true, data: resultadoFinal, profile: dataProfile[0], horas_semana: horas }, { status: 200 });
     }

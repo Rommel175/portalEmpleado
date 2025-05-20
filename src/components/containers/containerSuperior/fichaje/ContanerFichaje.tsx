@@ -231,7 +231,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
                 switch (payload.eventType) {
                     case 'UPDATE':
                         if (payload.new.id !== profile.id) return;
-                        console.log(payload.new);
+                        //console.log(payload.new);
                         const updatedItem = payload.new;
                         setEstado(updatedItem.estado);
                         fetchData();

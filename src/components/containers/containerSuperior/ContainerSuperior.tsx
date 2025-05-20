@@ -84,13 +84,13 @@ export default function ContainerSuperior({ profile, fichaje, eventos }: { profi
                         if (insertItem.profile_id !== profile.id) return;
                         fetchData(insertItem.id);
                         setHoraInicio(insertItem.date);
-                        setHoraFinalAprox(insertItem.date);
+                        setHoraFinalAprox(insertItem.date_final_aprox);
                         break;
                     case 'UPDATE':
                         const updatedItem = payload.new;
                         if (updatedItem.profile_id !== profile.id) return;
                         setHoraInicio(updatedItem.date);
-                        setHoraFinalAprox(updatedItem.date);
+                        setHoraFinalAprox(updatedItem.date_final_aprox);
                         fetchData(updatedItem.id);
                         break;
                 }
