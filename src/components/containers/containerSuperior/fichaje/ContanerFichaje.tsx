@@ -21,8 +21,9 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
     const [horaInicio, setHoraInicio] = useState<Date | null>(null);
     const [tiempoBase, setTiempoBase] = useState<number | null>(null);
     const [eventos, setEventos] = useState<Fichaje_eventos[] | null>(null);
+
+    const supabase = createClient();
     //const [offsets, setOffsets] = useState<number[]>([]);
-    //const supabase = createClient();
 
     function tiempoTrabajado(eventos: Fichaje_eventos[]) {
         let pausaInicio: dayjs.Dayjs | null = null;
@@ -88,7 +89,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
         //console.log('Format offset total: ', segundosOffset.format('HH:mm'));
         //console.log(calculoOffset(nuevosOffsets))
         //console.log(dayjs(horaInicio))
-        
+
         //setOffsets(nuevosOffsets);
 
         const segundosOffset = dayjs.duration(calculoOffset(nuevosOffsets), 'seconds');
@@ -131,8 +132,6 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
 
         setHoraFinalAprox(horaFinal.toDate());
 
-        const supabase = createClient();
-
         const fetchFichaje = async () => {
 
             const date = dayjs();
@@ -174,18 +173,18 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
                     if (estado == 'Pausa' || estado == 'Activo') {
                         const tiempoDuracion = tiempoTrabajado(dataEventos);
                         const now = dayjs();
-                        console.log('Fecha 1',now.format('HH:mm'));
-                        console.log('Fecha 2',dayjs(data[0].date).format('HH:mm'));
+                        //console.log('Fecha 1',now.format('HH:mm'));
+                        //console.log('Fecha 2',dayjs(data[0].date).format('HH:mm'));
                         const diffInSeconds = now.diff(dayjs(data[0].date), 'second');
-                        console.log(formatTimer(diffInSeconds))
+                        //console.log(formatTimer(diffInSeconds))
 
                         const segundosTrabajados = tiempoDuracion.asSeconds();
-                        console.log(tiempoDuracion.format('HH:mm:ss'));
-                        console.log(segundosTrabajados)
+                        //console.log(tiempoDuracion.format('HH:mm:ss'));
+                        //console.log(segundosTrabajados)
 
                         const time = diffInSeconds - segundosTrabajados;
-                        console.log('Tiempo 1', time);
-                        console.log('Tiempo 2', formatTimer(time));
+                        //console.log('Tiempo 1', time);
+                        //console.log('Tiempo 2', formatTimer(time));
                         setTiempoBase(time);
                     }
 
@@ -217,12 +216,53 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
                 schema: 'public',
                 table: 'profiles',
             }, (payload: RealtimePostgresChangesPayload<Profile>) => {
+
+                const fetchData = async () => {
+                    const date = dayjs();
+                    const startDate = date.startOf('day');
+                    const endDate = startDate.add(1, 'day');
+
+                    const { data, error } = await supabase
+                        .from('fichaje_jornada')
+                        .select('*')
+                        .gte('date', startDate.toISOString())
+                        .lt('date', endDate.toISOString())
+                        .eq('profile_id', profile.id);
+
+                    if (error) {
+                        console.log('Error realTime 1: ', error);
+                    }
+
+                    if (data && data.length > 0) {
+                        const { data: dataEventos, error: errorEventos } = await supabase
+                            .from('fichaje_eventos')
+                            .select('*')
+                            .eq('fichaje_id', data[0].id)
+                            .order('date', { ascending: true })
+
+                        if (errorEventos) {
+                            console.error('Error al obtener fichaje:', errorEventos);
+                            return;
+                        }
+
+                        //console.log('AAAAAAA' ,dataEventos[0].date)
+
+                        if (dataEventos && dataEventos.length > 0) {
+                            setHoraInicio(dataEventos[0].date);
+                            setEventos(dataEventos);
+                        }
+                    }
+
+                }
+
+
                 switch (payload.eventType) {
                     case 'UPDATE':
                         if (payload.new.id !== profile.id) return;
                         console.log(payload.new);
                         const updatedItem = payload.new;
                         setEstado(updatedItem.estado);
+                        fetchData();
                         break;
                 }
             })
