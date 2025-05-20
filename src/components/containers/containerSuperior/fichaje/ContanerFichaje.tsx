@@ -388,10 +388,14 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
 
         const timer = window.setInterval(() => {
             const now = dayjs()
+            console.log(now.toISOString())
             const diffInSeconds = now.diff(dayjs(horaInicio), 'second');
+            console.log(diffInSeconds)
 
             const segundosTrabajados = tiempoDuracion.asSeconds();
-            const time = Math.max(0, diffInSeconds - segundosTrabajados);
+            const time = diffInSeconds - segundosTrabajados;
+            console.log(time);
+            //const time = Math.max(0, diffInSeconds - segundosTrabajados);
             setTiempoBase(time);
         }, 1000);
 
