@@ -38,16 +38,17 @@ export async function GET(/*req: NextRequest*/) {
                     apellido: dataProfile[0].apellido ?? '',
                     email: dataProfile[0].email ?? '',
                     fecha_original: solicitud.fecha_original ?? '',
-                    fecha_solicitada: solicitud.fecha_solicitada,
-                    created_at: solicitud.created_at,
-                    motivo: solicitud.motivo,
-                    evento: solicitud.evento
+                    fecha_solicitada: solicitud.fecha_solicitada ?? '',
+                    created_at: solicitud.created_at ?? '',
+                    motivo: solicitud.motivo ?? '',
+                    evento: solicitud.evento ?? '',
+                    fichaje_evento_id: solicitud.fichaje_evento_id ?? ''
                 })
             }
         }
     }
 
-    console.log(resultadoFinal);
+    //console.log(resultadoFinal);
 
     return NextResponse.json({ success: true, data: resultadoFinal }, { status: 200 });    
 }

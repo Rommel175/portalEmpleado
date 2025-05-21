@@ -14,7 +14,8 @@ type Solicitud = {
   fecha_solicitada: Date,
   created_at: Date,
   motivo: string,
-  evento: string
+  evento: string,
+  fichaje_evento_id: string
 }
 
 export default function Incidencias() {
@@ -60,8 +61,11 @@ export default function Incidencias() {
   return (
     <div className={styles.container}>
       {
+        //JSON.stringify(soicitudes)
+      }
+      {
         soicitudes.map((item, index) => {
-          return <IncidenciasCard key={index} image={item.image} nombre={item.nombre} apellido={item.apellido} email={item.email} created_at={item.created_at} evento={item.evento} fecha_original={item.fecha_original} fecha_solicitada={item.fecha_solicitada} motivo={item.motivo} />
+          return <IncidenciasCard key={index} id={item.id} image={item.image} nombre={item.nombre} apellido={item.apellido} email={item.email} created_at={item.created_at} evento={item.evento} fecha_original={item.fecha_original} fecha_solicitada={item.fecha_solicitada} motivo={item.motivo} fichaje_evento_id={item.fichaje_evento_id} />
         })
       }
     </div>

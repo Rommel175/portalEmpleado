@@ -1,7 +1,12 @@
 import styles from './comentariosCardHeader.module.css';
 import Image from 'next/image';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import dayjs from 'dayjs';
 
-export default function ComentariosCardHeader( {nombre, apellido, email, image} : { nombre: string, apellido: string, email: string, image: string } ) {
+dayjs.extend(relativeTime);
+dayjs.locale('es');
+
+export default function ComentariosCardHeader( {nombre, apellido, email, image, date} : { nombre: string, apellido: string, email: string, image: string, date: Date } ) {
     return (
         <div className={styles.headerCard}>
             <div>
@@ -13,7 +18,7 @@ export default function ComentariosCardHeader( {nombre, apellido, email, image} 
                     </div>
                 </div>
             </div>
-            <p>hace 2 horas</p>
+            <p>{dayjs(date).fromNow()}</p>
         </div>
     );
 }

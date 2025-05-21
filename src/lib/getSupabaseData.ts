@@ -74,7 +74,7 @@ export async function getUserData() {
     const equipo = dataEquipo && dataEquipo.length > 0 ? dataEquipo : [];
 
     //console.log(eventos)
-    console.log(eventos[eventos.length - 1])
+    //console.log(eventos[eventos.length - 1])
 
     return {
         user,

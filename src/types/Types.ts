@@ -42,6 +42,7 @@ export type Fichaje_eventos = {
     evento: string,
     date: Date,
     localizacion: string,
+    modificado: boolean,
 }
 
 export type SolicitudesType = {

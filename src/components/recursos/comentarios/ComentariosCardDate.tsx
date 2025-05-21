@@ -2,9 +2,9 @@ import styles from './comentariosCardDate.module.css';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
 
-export default function ComentariosCardDate({ date, comentario }: { date: Date, comentario: string }) {
+dayjs.locale('es');
 
-    dayjs.locale('es');
+export default function ComentariosCardDate({ date, comentario }: { date: Date, comentario: string }) {
 
     function formatDate(date: Date) {
         const date2 = dayjs(date)

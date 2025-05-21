@@ -107,7 +107,7 @@ export async function GET(/*req: NextRequest*/) {
             }
         }
 
-        console.log(usersData)
+        //console.log(usersData)
 
         return NextResponse.json({ success: true, usersData: usersData }, { status: 200 })
     }
