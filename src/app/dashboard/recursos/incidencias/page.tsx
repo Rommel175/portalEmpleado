@@ -3,6 +3,9 @@
 import IncidenciasCard from '@/components/recursos/incidencias/IncidenciasCard';
 import styles from './incidencias.module.css'
 import { useEffect, useState } from 'react';
+import { SolicitudesType } from '@/types/Types';
+import { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
+import { createClient } from '@/utils/supabase/client';
 
 type Solicitud = {
   id: string,
@@ -21,6 +24,7 @@ type Solicitud = {
 export default function Incidencias() {
 
   const [soicitudes, setSolicitudes] = useState<Solicitud[]>([]);
+  const supabase = createClient();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -56,6 +60,30 @@ export default function Incidencias() {
     }
 
     fetchData();
+
+    const colicitudesRealTime = supabase
+      .channel('realtime-solicitudes1')
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'solicitudes',
+      }, async (payload: RealtimePostgresChangesPayload<SolicitudesType[]>) => {
+
+        switch (payload.eventType) {
+          case 'INSERT':
+          case 'DELETE':
+          case 'UPDATE':
+            console.log(payload.new);
+            fetchData();
+            break;
+        }
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(colicitudesRealTime);
+    };
+
   }, [])
 
   return (
