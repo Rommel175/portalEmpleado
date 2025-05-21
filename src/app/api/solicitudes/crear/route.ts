@@ -31,11 +31,11 @@ export async function POST(req: NextRequest) {
         //console.log(now.toISOString());
 
         const fechaOriginal = dayjs(fecha_original);
-        //console.log(fechaOriginal.toISOString());
+        console.log(fechaOriginal.toISOString());
 
         const [horas, minutos] = fecha_solicitada.split(':');
         const fechaSolicitada = fechaOriginal.hour(horas).minute(minutos);
-        //console.log(fechaSolicitada.toISOString());
+        console.log('fecha solicitada: ',fechaSolicitada.toISOString());
 
         const { error: errorInsert } = await supabase
             .from('solicitudes')
