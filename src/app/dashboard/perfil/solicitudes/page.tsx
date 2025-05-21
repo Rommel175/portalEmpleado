@@ -89,7 +89,7 @@ export default function Solicitudes() {
   return (
     <>
       <div className={styles.options}>
-        <DropdownExportarSolicitudes />
+        <DropdownExportarSolicitudes solicitudes={solicitudes} />
         <ContainerOptions
           recientes={true}
           tipoRegistro={true}

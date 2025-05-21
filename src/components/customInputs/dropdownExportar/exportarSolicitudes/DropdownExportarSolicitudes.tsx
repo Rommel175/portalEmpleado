@@ -2,8 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 import styles from './dropdownExportarSolicitudes.module.css';
+import { SolicitudesType } from "@/types/Types";
+import ExcelJS from 'exceljs';
+import { saveAs } from 'file-saver';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
-export default function DropdownExportarSolicitudes() {
+export default function DropdownExportarSolicitudes({ solicitudes }: { solicitudes: SolicitudesType[] }) {
 
     const [show, setShow] = useState(false);
     const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -25,6 +30,106 @@ export default function DropdownExportarSolicitudes() {
         setShow(prevState => !prevState);
     }
 
+    function handleExportExcel() {
+        const exportar = async () => {
+            const workbook = new ExcelJS.Workbook();
+            const worksheet = workbook.addWorksheet('Solicitudes');
+
+            worksheet.columns = [
+                { header: 'ID', key: 'id', width: 10 },
+                { header: 'Evento', key: 'evento', width: 30 },
+                { header: 'Fecha original', key: 'fecha_original', width: 35 },
+                { header: 'Fecha solicitada', key: 'fecha_solicitada', width: 35 },
+                { header: 'Fecha creación', key: 'created_at', width: 35 },
+                { header: 'Motivo', key: 'motivo', width: 35 }
+            ];
+
+            worksheet.getRow(1).eachCell((cell) => {
+                cell.font = { bold: true };
+            });
+
+            const data = solicitudes.map(item => [
+                item.id?.toString() ?? '',
+                item.evento?.toString() ?? '',
+                item.fecha_original?.toString() ?? '',
+                item.fecha_solicitada?.toString() ?? '',
+                item.created_at?.toString() ?? '',
+                item.motivo?.toString() ?? ''
+            ])
+
+            data.forEach((item) => {
+                worksheet.addRow(item)
+            });
+
+            const buffer = await workbook.xlsx.writeBuffer();
+
+            const blob = new Blob([buffer], {
+                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            });
+
+            saveAs(blob, 'Solicitudes.xlsx');
+        }
+
+        exportar();
+    }
+
+    function handleExportPdf() {
+        const doc = new jsPDF();
+        const headers = [['ID', 'Evento', 'Fecha original', 'Fecha solicitada', 'Fecha creación', 'Motivo']];
+
+        const data = solicitudes.map(item => [
+            item.id?.toString() ?? '',
+            item.evento?.toString() ?? '',
+            item.fecha_original?.toString() ?? '',
+            item.fecha_solicitada?.toString() ?? '',
+            item.created_at?.toString() ?? '',
+            item.motivo?.toString() ?? ''
+        ])
+
+        /*const data = solicitudes.flatMap(({ solicitudes }) =>
+            solicitudes.map((item) => [
+                item.id?.toString() ?? '',
+                item.evento?.toString() ?? '',
+                item.fecha_original?.toString() ?? '',
+                item.fecha_solicitada?.toString() ?? '',
+                item.created_at?.toString() ?? '',
+                item.motivo?.toString() ?? ''
+            ])
+        );*/
+
+        doc.setFontSize(16);
+        doc.text('Historial de solicitudes', 14, 20);
+
+        autoTable(doc, {
+            head: headers,
+            body: data,
+            startY: 30,
+            theme: 'striped',
+            headStyles: {
+                fillColor: [22, 160, 133],
+                textColor: 255,
+                fontStyle: 'bold',
+            },
+            styles: {
+                fontSize: 10,
+                halign: 'center',
+                valign: 'middle',
+                cellPadding: 4,
+                lineColor: [200, 200, 200],
+                lineWidth: 0.5,
+            },
+            alternateRowStyles: { fillColor: [245, 245, 245] },
+            columnStyles: {
+                0: { cellWidth: 20 },
+                1: { cellWidth: 30 },
+                5: { cellWidth: 40 }
+            },
+            margin: { top: 10, bottom: 10 },
+        });
+
+        doc.save(`solicitudes.pdf`);
+    }
+
     return (
         <div className={styles.containerExportar} ref={dropdownRef} onClick={handleDropdown}>
             <div className={styles.nameContainer}>
@@ -41,8 +146,8 @@ export default function DropdownExportarSolicitudes() {
                 <>
                     <div className={styles.main}>
                         <div className={styles.options}>
-                            <div className={styles.option}>Excel</div>
-                            <div className={styles.option}>Pdf</div>
+                            <div className={styles.option} onClick={handleExportExcel}>Excel</div>
+                            <div className={styles.option} onClick={handleExportPdf}>Pdf</div>
                         </div>
                     </div>
                 </>
