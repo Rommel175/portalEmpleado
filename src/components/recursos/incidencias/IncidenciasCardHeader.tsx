@@ -1,20 +1,29 @@
 import styles from './incidenciasCardHeader.module.css'
 import Image from 'next/image';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 
-export default function IncidenciasCardHeader() {
+dayjs.extend(relativeTime);
+dayjs.locale('es');
+
+export default function IncidenciasCardHeader( {image, nombre, apellido, email, created_at}: {image: string, nombre: string, apellido: string, email: string, created_at: Date} ) {
     return (
         <div className={styles.headerCard}>
             <div>
                 <div className={styles.personalInfo}>
-                    <Image src={'https://lh3.googleusercontent.com/a/ACg8ocLM80DGO-2W6Ou8eM4Pl4BEj6insLI3HZt1ce3XyRk0Rd3cVQ=s96-c'} alt='avatar' width={40} height={40} />
+                    {
+                        image &&
+                        <Image src={image} alt='avatar' width={40} height={40} />
+                    }
+                    
                     <div>
-                        <h2>Jane Cooper</h2>
-                        <h3>jane.cooper@example.com</h3>
+                        <h2>{nombre} {apellido}</h2>
+                        <h3>{email}</h3>
                     </div>
                 </div>
                 <p>Ha solicitado una modificación de la jornada laboral</p>
             </div>
-            <p>hace 2 horas</p>
+            <p>{dayjs(created_at).fromNow()}</p>
         </div>
     );
 }

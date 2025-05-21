@@ -82,7 +82,7 @@ export async function GET(req: NextRequest) {
             return NextResponse.json({error: errorProfile}, {status: 500});
         }    
 
-        console.log(dataSolicitudes);
+        //console.log(dataSolicitudes);
 
         return NextResponse.json({ success: true, data: dataSolicitudes }, { status: 200 });
     }
