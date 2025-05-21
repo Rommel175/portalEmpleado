@@ -158,7 +158,8 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
                 }
 
                 if (dataEventos && dataEventos.length > 0) {
-                    setHoraInicio(data[0].date);
+                    console.log(dataEventos[0].date);
+                    setHoraInicio(dataEventos[0].date);
                     setEventos(dataEventos);
 
                     if (estado == 'Pausa' || estado == 'Activo') {
@@ -388,8 +389,8 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
 
         const timer = window.setInterval(() => {
             const now = dayjs()
-            console.log('ahora',now.toISOString())
-            console.log('horaInicio',horaInicio);
+            console.log('ahora', now.toISOString())
+            console.log('horaInicio', horaInicio);
             const diffInSeconds = now.diff(dayjs(horaInicio), 'second');
             console.log(diffInSeconds)
 

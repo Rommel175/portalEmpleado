@@ -67,11 +67,11 @@ export default function EntradasFichajes({ date, eventos }: { date: string, even
   }
 
 
-  function parseHora(hora: string | Date): string {
+  /*function parseHora(hora: string | Date): string {
     const date = dayjs(hora);
     if (!date.isValid()) return '-';
     return date.format('HH:mm:ss')
-  }
+  }*/
 
   function parseFecha(fecha: string | Date): string {
     const date = dayjs(fecha);
@@ -98,7 +98,7 @@ export default function EntradasFichajes({ date, eventos }: { date: string, even
 
           {
             eventos.map((item, index) => {
-              return <EntradaFichajesItem key={index} action={item.evento} date={date} hour={parseHora(item.date)} localizacion={item.localizacion} id={item.id} />
+              return <EntradaFichajesItem key={index} action={item.evento} date={date}  hour={item.date} localizacion={item.localizacion} id={item.id} />
             })
           }
         </>

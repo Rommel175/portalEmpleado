@@ -4,23 +4,47 @@ import { createClient } from '@/utils/supabase/client'
 import styles from './incidenciasCard.module.css'
 import IncidenciasCardDate from './IncidenciasCardDate'
 import IncidenciasCardHeader from './IncidenciasCardHeader'
+import dayjs from 'dayjs'
+import { Profile } from '@/types/Types'
 
-export default function IncidenciasCard({ id, image, nombre, apellido, email, created_at, evento, fecha_original, fecha_solicitada, motivo, fichaje_evento_id }: { id: string, image: string, nombre: string, apellido: string, email: string, created_at: Date, evento: string, fecha_original: Date, fecha_solicitada: Date, motivo: string, fichaje_evento_id: string }) {
+export default function IncidenciasCard({ id, image, nombre, apellido, email, created_at, evento, fecha_original, fecha_solicitada, motivo, fichaje_evento_id, supervisor }: { id: string, image: string, nombre: string, apellido: string, email: string, created_at: Date, evento: string, fecha_original: Date, fecha_solicitada: Date, motivo: string, fichaje_evento_id: string, supervisor: Profile[] }) {
 
   const supabase = createClient();
 
   //Completar
   function handleAceptar() {
-    console.log(fichaje_evento_id);
+
+    const now = dayjs();
+
     const aceptar = async () => {
       const { error: errorAceptar } = await supabase
         .from('solicitudes')
-        .update({ 'estado': 'aceptada' })
+        .update({ estado: 'aceptada' })
         .eq('id', id);
 
       if (errorAceptar) {
         console.log('Error updatingAceptarSolicitud:', errorAceptar);
+        return;
       }
+
+      const { error: errorFichajeEvento } = await supabase
+        .from('fichaje_eventos')
+        .update({modificado: true})
+        .eq('id', fichaje_evento_id);
+       
+      if (errorFichajeEvento) {
+        console.log('Error updatingAceptarSolicitud:', errorFichajeEvento);
+        return;
+      }  
+
+      const { error: errorInsertModificacion } = await supabase
+        .from('modificaciones_eventos')
+        .insert({created_at: now.toISOString(), fichaje_evento_id: fichaje_evento_id, supervisor_id: supervisor[0].id, fecha_original: dayjs(fecha_original).toISOString(), fecha_modificada: dayjs(fecha_solicitada).toISOString(), evento: evento, motivo: motivo})
+
+      if (errorInsertModificacion) {
+        console.log('Error insert Modificación: ', errorInsertModificacion);
+        return;
+      }  
     }
 
     aceptar();

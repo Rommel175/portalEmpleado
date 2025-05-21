@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
     }
 
-    const checkedState = JSON.parse(req.nextUrl.searchParams.get('checkedState') || '{}'); 
+    const checkedState = JSON.parse(req.nextUrl.searchParams.get('checkedState') || '{}');
     const option = req.nextUrl.searchParams.get('option');
     const startDate = req.nextUrl.searchParams.get('startDate');
     const endDate = req.nextUrl.searchParams.get('endDate');
@@ -62,7 +62,7 @@ export async function GET(req: NextRequest) {
     const { data: dataProfile, error: errorProfile } = await supabase
         .from('profiles')
         .select('*')
-        //.eq('id', '18')
+    //.eq('id', '18')
 
     if (errorProfile) {
         return NextResponse.json({ error: errorProfile }, { status: 500 });
@@ -157,7 +157,7 @@ export async function GET(req: NextRequest) {
             .lt('date', end.toISOString())
             .order('date', { ascending: !reciente });;
 
-        console.log(dataFichaje);
+        //console.log(dataFichaje);
 
         if (errorFichaje) {
             return NextResponse.json({ error: errorFichaje }, { status: 500 });
@@ -167,7 +167,7 @@ export async function GET(req: NextRequest) {
             for (const jornada of dataFichaje) {
                 const { data: eventos, error: errorEventos } = await supabase
                     .from('fichaje_eventos')
-                    .select('evento, date')
+                    .select('evento, date, id, modificado')
                     .eq('fichaje_id', jornada.id)
                     .order('date', { ascending: true });
 
@@ -182,8 +182,27 @@ export async function GET(req: NextRequest) {
                 //let tiempoNeto = dayjs.duration(0);
 
                 for (const evento of eventos || []) {
-                    const hora = dayjs(evento.date);
-                    //console.log(hora.format('HH:mm'))
+                    //const hora = dayjs(evento.date);
+
+                    let hora;
+
+                    if (evento.modificado) {
+                        const { data: modificacionesData, error: errorModificacionesData } = await supabase
+                            .from('modificaciones_eventos')
+                            .select('fecha_modificada')
+                            .eq('fichaje_evento_id', evento.id)
+                            .order('created_at', { ascending: false })
+
+                        if (errorModificacionesData) {
+                            console.log('Error modificaciones data: ', errorModificacionesData);
+                            return NextResponse.json({ error: errorModificacionesData }, { status: 500 })
+                        }
+
+                        hora = dayjs(modificacionesData[0].fecha_modificada);
+                    } else {
+                        hora = dayjs(evento.date);
+                    }
+
 
                     switch (evento.evento) {
                         case 'Inicio Jornada':
@@ -213,7 +232,7 @@ export async function GET(req: NextRequest) {
 
                                 //totalTiempoTrabajado = totalTiempoTrabajado.add(jornadaSegundos, 'second');
                                 //tiempoNeto = totalTiempoTrabajado.subtract(tiempoPausa);
-                                
+
                                 totalHorasPerfil = totalHorasPerfil.add(jornadaNeta);
 
                                 jornadaInicio = null;
@@ -226,8 +245,8 @@ export async function GET(req: NextRequest) {
             }
         }
 
-        console.log('Horas trabajadas',formatTime(totalHorasPerfil.asMinutes()));
-        console.log('Horas esperadas',horasSemana.asHours())
+        console.log('Horas trabajadas', formatTime(totalHorasPerfil.asMinutes()));
+        console.log('Horas esperadas', horasSemana.asHours())
         console.log('Horas restantes:', formatTime(horasSemana.subtract(totalHorasPerfil).asMinutes()));
 
         const horasRestantes = horasSemana.subtract(totalHorasPerfil);

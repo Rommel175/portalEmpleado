@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/es';
 
 type Prop = {
-    hour: string,
+    hour: Date,
     date: string,
     id: number,
     action: string
@@ -49,7 +49,7 @@ export default function ButtonModificar({ hour, date, id, action }: Prop) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 fichaje_evento_id: id,
-                fecha_original: date,
+                fecha_original: hour,
                 fecha_solicitada: horaSolicitada.value,
                 evento: action,
                 motivo: motivo
@@ -99,7 +99,7 @@ export default function ButtonModificar({ hour, date, id, action }: Prop) {
                             <div className={styles.containerHours}>
                                 <div className={styles.hourItem}>
                                     <label>Hora actual</label>
-                                    <input type="text" value={hour} readOnly />
+                                    <input type="text" value={dayjs(hour).format('HH:mm:ss')} readOnly />
                                 </div>
 
                                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">

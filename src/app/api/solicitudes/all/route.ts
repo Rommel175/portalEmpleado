@@ -5,6 +5,24 @@ import { /*NextRequest,*/ NextResponse } from "next/server";
 export async function GET(/*req: NextRequest*/) {
     const supabase = await createClient();
 
+    const { data, error } = await supabase.auth.getUser();
+
+    const user = data.user;
+    
+    if (!user || error) {
+        return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { data: dataProfile, error: errorProfile } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('user_id', user.id);
+
+    if (errorProfile) {
+        console.log('Error 0: ', errorProfile);
+        return NextResponse.json({ error: errorProfile }, { status: 600 });
+    }    
+
     const resultadoFinal = [];
 
     const { data: dataSolicitudes, error: errorSolicitudes } = await supabase
@@ -48,7 +66,7 @@ export async function GET(/*req: NextRequest*/) {
         }
     }
 
-    //console.log(resultadoFinal);
+    console.log(resultadoFinal);
 
-    return NextResponse.json({ success: true, data: resultadoFinal }, { status: 200 });    
+    return NextResponse.json({ success: true, data: resultadoFinal, supervisor: dataProfile }, { status: 200 });    
 }

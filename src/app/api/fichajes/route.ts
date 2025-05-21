@@ -146,7 +146,8 @@ export async function GET(req: NextRequest) {
 
                         if (dataEvento && dataEvento.length > 0) {
                             //console.log(dataEvento)
-                            const eventosData = dataEvento.map(item => ({
+
+                            /*const eventosData = dataEvento.map(item => ({
                                 id: item.id,
                                 fichaje_id: item.fichaje_id,
                                 evento: item.evento,
@@ -154,7 +155,40 @@ export async function GET(req: NextRequest) {
                                 localizacion: item.localizacion,
                             }));
 
-                            eventos.push(...eventosData)
+                            eventos.push(...eventosData)*/
+
+                            const eventosData = [];
+
+                            for (const item of dataEvento) {
+                                let date;
+
+                                if (item.modificado) {
+                                    const { data: modificacionesData, error: errorModificacionesData } = await supabase
+                                        .from('modificaciones_eventos')
+                                        .select('fecha_modificada')
+                                        .eq('fichaje_evento_id', item.id)
+                                        .order('created_at', {ascending: false})
+
+                                    if (errorModificacionesData) {
+                                        console.log('Error modificaciones data: ', errorModificacionesData);
+                                        return NextResponse.json({ error: errorModificacionesData }, { status: 500 })
+                                    }
+
+                                    date = new Date(modificacionesData[0].fecha_modificada)
+                                } else {
+                                    date = new Date(item.date);
+                                }
+
+                                eventosData.push({
+                                    id: item.id,
+                                    fichaje_id: item.fichaje_id,
+                                    evento: item.evento,
+                                    date: date,
+                                    localizacion: item.localizacion,
+                                })
+                            }
+
+                            eventos.push(...eventosData);
                         }
 
                     } else {
@@ -171,15 +205,46 @@ export async function GET(req: NextRequest) {
                         }
 
                         if (dataEvento && dataEvento.length > 0) {
-                            const eventosData = dataEvento.map(item => ({
+                            /*const eventosData = dataEvento.map(item => ({
                                 id: item.id,
                                 fichaje_id: item.fichaje_id,
                                 evento: item.evento,
                                 date: item.date,
                                 localizacion: item.localizacion,
-                            }));
+                            }));*/
 
-                            eventos.push(...eventosData)
+                            const eventosData = [];
+
+                            for (const item of dataEvento) {
+                                let date;
+
+                                if (item.modificado) {
+                                    const { data: modificacionesData, error: errorModificacionesData } = await supabase
+                                        .from('modificaciones_eventos')
+                                        .select('fecha_modificada')
+                                        .eq('fichaje_evento_id', item.id)
+                                        .order('created_at', {ascending: false})
+
+                                    if (errorModificacionesData) {
+                                        console.log('Error modificaciones data: ', errorModificacionesData);
+                                        return NextResponse.json({ error: errorModificacionesData }, { status: 500 })
+                                    }
+
+                                    date = new Date(modificacionesData[0].fecha_modificada)
+                                } else {
+                                    date = new Date(item.date);
+                                }
+
+                                eventosData.push({
+                                    id: item.id,
+                                    fichaje_id: item.fichaje_id,
+                                    evento: item.evento,
+                                    date: date,
+                                    localizacion: item.localizacion,
+                                })
+                            }
+
+                            eventos.push(...eventosData);
                         }
 
                     }
