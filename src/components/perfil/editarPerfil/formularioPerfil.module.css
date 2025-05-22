@@ -2,6 +2,36 @@
     width: 100%
 }
 
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    align-self: stretch;
+}
+
+.profile>img {
+    border-radius: 60px;
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+}
+
+.cambioImagen {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    display: flex;
+    padding: 6px 12px;
+    align-items: center;
+    gap: 6px;
+    color: var(--dark-02, #7B8794);
+    text-align: center;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
 .form {
     display: flex;
     padding: 24px 0px;
@@ -11,14 +41,13 @@
     align-self: stretch;
 }
 
-.form > h3 {
+.form>h3 {
     align-self: stretch;
-    color: #281D1B;
-    font-size: 20px;
+    color: var(--primary, #0B3C70);
+    font-size: 17px;
     font-style: normal;
-    font-weight: 700;
-    line-height: 24px; /* 120% */
-    letter-spacing: -0.4px;
+    font-weight: 500;
+    line-height: 24px;
 }
 
 .formGroup {
@@ -28,15 +57,23 @@
     align-self: stretch;
 }
 
+.formGroup2 {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    align-self: stretch;
+    width: 50%;
+}
+
 .formItem {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 4px;
+    gap: 6px;
     flex: 1 0 0;
 }
 
-.formItem > h3 {
+.formItem>h3 {
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
@@ -47,12 +84,13 @@
     font-size: 13px;
     font-style: normal;
     font-weight: 500;
-    line-height: 16px; /* 123.077% */
+    line-height: normal;
+    /* 123.077% */
 }
 
-.formItem > input[type="text"],
-.formItem > input[type="email"],
-.formItem > input[type="tel"] {
+.formItem>input[type="text"],
+.formItem>input[type="email"],
+.formItem>input[type="tel"] {
     display: flex;
     padding: 8px 12px;
     align-items: center;
@@ -66,16 +104,15 @@
     -webkit-line-clamp: 1;
     flex: 1 0 0;
     overflow: hidden;
-    color: rgba(55, 55, 55, 0.40);
+    color: var(--dark-02, #7B8794);
     text-overflow: ellipsis;
-    font-size: 15px;
+    font-size: 13px;
     font-style: normal;
     font-weight: 400;
-    line-height: 20px; /* 133.333% */
-    letter-spacing: -0.075px;
+    line-height: normal;
 }
 
-.formItem > select {
+.formItem>select {
     display: flex;
     padding: 8px 12px;
     align-items: center;
@@ -88,7 +125,8 @@
     font-size: 15px;
     font-style: normal;
     font-weight: 400;
-    line-height: 20px; /* 133.333% */
+    line-height: 20px;
+    /* 133.333% */
 }
 
 .buttons {
@@ -99,7 +137,7 @@
     align-self: stretch;
 }
 
-.buttons > input:first-child {
+.buttons>input:first-child {
     display: flex;
     padding: 8px 60px;
     justify-content: center;
@@ -110,11 +148,12 @@
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
-    line-height: 20px; /* 142.857% */
+    line-height: 20px;
+    /* 142.857% */
     letter-spacing: -0.08px;
 }
 
-.buttons > input:last-child {
+.buttons>input:last-child {
     display: flex;
     padding: 8px 60px;
     justify-content: center;
@@ -125,10 +164,11 @@
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
-    line-height: 20px; /* 142.857% */
+    line-height: 20px;
+    /* 142.857% */
     letter-spacing: -0.08px;
 }
 
-.buttons > input:hover {
+.buttons>input:hover {
     cursor: pointer;
 }

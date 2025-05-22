@@ -1,36 +1,24 @@
 .wraper {
     display: flex;
-    padding: 12px 18px;
+    padding: 20px;
     flex-direction: column;
     align-items: flex-start;
-    gap: 18px;
+    gap: 24px;
     align-self: stretch;
     border-radius: 12px;
     background: #FFF;
     margin-top: 90px;
 }
 
-.nav {
+.header {
     display: flex;
+    flex-direction: column;
     align-items: flex-start;
+    gap: 12px;
     align-self: stretch;
-    border-bottom: 1.5px solid #EDEDED;
-}
-
-.nav > div {
-    display: flex;
-    padding: 14px 24px;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    border-bottom: 1.5px solid #0B3C70;
-}
-
-.nav > div p {
-    color: #0B3C70;
-    font-family: Poppins;
-    font-size: 14px;
+    color: var(--primary, #0B3C70);
+    font-size: 21px;
     font-style: normal;
-    font-weight: 400;
-    line-height: 20px; /* 142.857% */
+    font-weight: 500;
+    line-height: normal;
 }

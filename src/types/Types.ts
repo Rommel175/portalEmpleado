@@ -12,7 +12,15 @@ export type Profile = {
     image: string,
     estado: string,
     alta: boolean,
-    is_admin: boolean
+    is_admin: boolean,
+    zona_horaria: string,
+    hora_fin_lunes: Date,
+    hora_fin_martes: Date,
+    hora_fin_miercoles: Date,
+    hora_fin_jueves: Date,
+    hora_fin_viernes: Date,
+    dias_vacaciones: number,
+    precio_hora: number
 }
 
 export type Equipo = {

@@ -1,7 +1,6 @@
 import FormularioPerfil from '@/components/perfil/editarPerfil/FormularioPerfil';
 import styles from '../editarPerfil.module.css'
 import { redirect } from 'next/navigation';
-import InformacionUsuario from '@/components/perfil/editarPerfil/InformacionUsuario';
 import { getUserData, getUsersProfile } from '@/lib/getSupabaseData';
 import ContainerSuperior from '@/components/containers/containerSuperior/ContainerSuperior';
 
@@ -39,8 +38,6 @@ export default async function profilesPage({ params }: { params: Promise<{ id: s
                         <p>Editar Perfil</p>
                     </div>
                 </nav>
-
-                <InformacionUsuario profile={profileUser} />
 
                 <FormularioPerfil profile={profileUser} isAdmin={isAdmin} />
             </div>
