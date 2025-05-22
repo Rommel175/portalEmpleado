@@ -19,8 +19,8 @@ export type Profile = {
     hora_fin_miercoles: Date,
     hora_fin_jueves: Date,
     hora_fin_viernes: Date,
-    dias_vacaciones: number,
-    precio_hora: number
+    dias_vacaciones: string,
+    precio_hora: string
 }
 
 export type Equipo = {

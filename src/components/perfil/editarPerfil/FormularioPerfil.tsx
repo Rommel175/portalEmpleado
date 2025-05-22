@@ -3,8 +3,9 @@
 import { Profile } from '@/types/Types';
 import styles from './formularioPerfil.module.css';
 import { useEffect, useState } from 'react';
-import { createClient } from '@/utils/supabase/client';
+//import { createClient } from '@/utils/supabase/client';
 import Image from 'next/image';
+import dayjs from 'dayjs';
 
 type Props = {
     profile: Profile,
@@ -20,8 +21,10 @@ export default function FormularioPerfil({ profile, isAdmin }: Props) {
     //const [emailPersonal, setEmailPersonal] = useState('');
     const [telefono, setTelefono] = useState('');
     const [telefonoPersonal, setTelefonoPersonal] = useState('');
-    
-    /*const [horaLunes, setHoraLunes] = useState({
+    const [coste, setCoste] = useState('');
+    const [diasVacaciones, setDiasVacaciones] = useState('');
+
+    const [horaLunes, setHoraLunes] = useState({
         value: '',
         hasError: false
     });
@@ -46,16 +49,43 @@ export default function FormularioPerfil({ profile, isAdmin }: Props) {
         hasError: false
     });
 
-    const hourRegexp = new RegExp(/^(?:[01]\d|2[0-3]):[0-5]\d$/);
-
-    function handleChangeHoraLunes(e: React.ChangeEvent<HTMLInputElement>) {
-        setHoraLunes({ ...horaLunes, value: e.target.value });
+    function parseHora(hora: string | Date | null): string {
+        if (!hora) return '';
+        return dayjs(hora).isValid() ? dayjs(hora).format("HH:mm") : '';
     }
 
-    function handleBlurHoraLunes() {
-        const hasError = !hourRegexp.test(horaLunes.value);
-        setHoraLunes((prev) => ({ ...prev, hasError }))
-    }*/
+    const hourRegexp = new RegExp(/^(?:[01]\d|2[0-3]):[0-5]\d$/);
+
+    function handleHoraChange(
+        e: React.ChangeEvent<HTMLInputElement>,
+        setHora: React.Dispatch<React.SetStateAction<{ value: string; hasError: boolean }>>
+    ) {
+        setHora({ value: e.target.value, hasError: false });
+    }
+
+    function handleHoraBlur(
+        hora: { value: string; hasError: boolean },
+        setHora: React.Dispatch<React.SetStateAction<{ value: string; hasError: boolean }>>
+    ) {
+        const hasError = hora.value !== '' && !hourRegexp.test(hora.value);
+        setHora((prev) => ({ ...prev, hasError }))
+    }
+
+    function handleChangeCoste(e: React.ChangeEvent<HTMLInputElement>) {
+        /*let value = e.target.value;
+
+        value = value.replace(',', '.');
+
+        const num = parseFloat(value);
+
+        if (!isNaN(num)) {
+            setCoste(num.toFixed(2));  
+        } else {
+            setCoste('');
+        }*/
+
+        setCoste(e.target.value.replace(',', '.'));
+    }
 
     useEffect(() => {
         if (profile) {
@@ -67,6 +97,14 @@ export default function FormularioPerfil({ profile, isAdmin }: Props) {
             //setEmailPersonal(profile.email_personal ?? '');
             setTelefono(profile.telefono_empresa ?? '');
             setTelefonoPersonal(profile.telefono_personal ?? '');
+            setCoste(profile.precio_hora ?? '');
+            setDiasVacaciones(profile.dias_vacaciones ?? '');
+            setHoraLunes({ value: parseHora(profile.hora_fin_lunes), hasError: false });
+            setHoraMartes({ value: parseHora(profile.hora_fin_martes), hasError: false });
+            setHoraMiercoles({ value: parseHora(profile.hora_fin_miercoles), hasError: false });
+            setHoraJueves({ value: parseHora(profile.hora_fin_jueves), hasError: false });
+            setHoraViernes({ value: parseHora(profile.hora_fin_viernes), hasError: false });
+
         }
     }, [profile]);
 
@@ -80,58 +118,41 @@ export default function FormularioPerfil({ profile, isAdmin }: Props) {
             //setEmailPersonal(profile.email_personal ?? '');
             setTelefono(profile.telefono_empresa ?? '');
             setTelefonoPersonal(profile.telefono_personal ?? '');
+            setCoste(profile.precio_hora ?? '');
+            setDiasVacaciones(profile.dias_vacaciones ?? '');
+            setHoraLunes({ value: parseHora(profile.hora_fin_lunes), hasError: false });
+            setHoraMartes({ value: parseHora(profile.hora_fin_martes), hasError: false });
+            setHoraMiercoles({ value: parseHora(profile.hora_fin_miercoles), hasError: false });
+            setHoraJueves({ value: parseHora(profile.hora_fin_jueves), hasError: false });
+            setHoraViernes({ value: parseHora(profile.hora_fin_viernes), hasError: false });
+
         }
     }
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
-        const date = new Date();
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = date.getFullYear();
-
-        const startDate = new Date(`${year}-${month}-${day}T00:00:00Z`);
-
-        const endDate = new Date(startDate);
-        endDate.setUTCDate(startDate.getUTCDate() + 1);
-
-        const supabase = createClient();
-
-        const { error: errorUpdate } = await supabase
-            .from('profiles')
-            .update({ nombre: nombre, apellido: apellido, email: email, puesto: puesto, horas_semana: horasSemana, telefono_empresa: telefono, telefono_personal: telefonoPersonal })
-            .eq('id', profile.id)
-
-        if (errorUpdate) {
-            console.log('Error updating Profile: ', errorUpdate);
-        }
-
-        const { data: fichaje, error: errorFichaje } = await supabase
-            .from('fichaje_jornada')
-            .select('id, date')
-            .eq('profile_id', profile.id)
-            .gte('date', startDate.toISOString())
-            .lt('date', endDate.toISOString())
-
-        if (errorFichaje) {
-            console.log('Error fetching jornada: ', errorFichaje)
-        }
-
-        if (fichaje && fichaje.length > 0) {
-            const date = new Date(fichaje[0].date);
-            const horasTrabajo = Number(horasSemana) / 5;
-            date.setHours(date.getHours() + horasTrabajo);
-
-            const { error: errorUpdating } = await supabase
-                .from('fichaje_jornada')
-                .update({ date_final_aprox: date.toISOString() })
-                .eq('id', fichaje[0].id);
-
-            if (errorUpdating) {
-                console.log('Error updating jotnada: ', errorUpdating);
-            }
-        }
+        await fetch('/api/profile/update', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                id: profile.id,
+                nombre: nombre,
+                apellido: apellido,
+                email: email,
+                puesto: puesto,
+                horasSemana: horasSemana,
+                telefono: telefono,
+                telefonoPersonal: telefonoPersonal,
+                coste: coste,
+                diasVacaciones: diasVacaciones,
+                horaLunes: horaLunes.value,
+                horaMartes: horaMartes.value,
+                horaMiercoles: horaMiercoles.value,
+                horaJueves: horaJueves.value,
+                horaViernes: horaViernes.value
+            })
+        });
     }
 
     return (
@@ -184,6 +205,7 @@ export default function FormularioPerfil({ profile, isAdmin }: Props) {
 
             <div className={styles.form}>
                 <h3>Configuraciones de hora de finalización</h3>
+
                 <div className={styles.formGroup}>
                     <div className={styles.formItem}>
                         <h3>Zona horaria</h3>
@@ -193,27 +215,47 @@ export default function FormularioPerfil({ profile, isAdmin }: Props) {
                     </div>
                     <div className={styles.formItem}>
                         <h3>Hora de finalización del lunes</h3>
-                        <input type="text" />
+                        <input type="text" value={horaLunes.value} onChange={(e) => handleHoraChange(e, setHoraLunes)} onBlur={() => handleHoraBlur(horaLunes, setHoraLunes)} />
+                        {
+                            horaLunes.hasError &&
+                            <span style={{ color: 'red' }}>No es una hora válida</span>
+                        }
                     </div>
                 </div>
                 <div className={styles.formGroup}>
                     <div className={styles.formItem}>
                         <h3>Hora de finalización del martes</h3>
-                        <input type="text" />
+                        <input type="text" value={horaMartes.value} onChange={(e) => handleHoraChange(e, setHoraMartes)} onBlur={() => handleHoraBlur(horaMartes, setHoraMartes)} />
+                        {
+                            horaMartes.hasError &&
+                            <span style={{ color: 'red' }}>No es una hora válida</span>
+                        }
                     </div>
                     <div className={styles.formItem}>
                         <h3>Hora de finalización del miércoless</h3>
-                        <input type="text" />
+                        <input type="text" value={horaMiercoles.value} onChange={(e) => handleHoraChange(e, setHoraMiercoles)} onBlur={() => handleHoraBlur(horaMiercoles, setHoraMiercoles)} />
+                        {
+                            horaMiercoles.hasError &&
+                            <span style={{ color: 'red' }}>No es una hora válida</span>
+                        }
                     </div>
                 </div>
                 <div className={styles.formGroup}>
                     <div className={styles.formItem}>
                         <h3>Hora de finalización del jueves</h3>
-                        <input type="text" />
+                        <input type="text" value={horaJueves.value} onChange={(e) => handleHoraChange(e, setHoraJueves)} onBlur={() => handleHoraBlur(horaJueves, setHoraJueves)} />
+                        {
+                            horaJueves.hasError &&
+                            <span style={{ color: 'red' }}>No es una hora válida</span>
+                        }
                     </div>
                     <div className={styles.formItem}>
                         <h3>Hora de finalización del viernes</h3>
-                        <input type="text" />
+                        <input type="text" value={horaViernes.value} onChange={(e) => handleHoraChange(e, setHoraViernes)} onBlur={() => handleHoraBlur(horaViernes, setHoraViernes)} />
+                        {
+                            horaViernes.hasError &&
+                            <span style={{ color: 'red' }}>No es una hora válida</span>
+                        }
                     </div>
                 </div>
             </div>
@@ -225,11 +267,11 @@ export default function FormularioPerfil({ profile, isAdmin }: Props) {
                     <div className={styles.formGroup}>
                         <div className={styles.formItem}>
                             <h3>Dias de vacaciones anuales</h3>
-                            <input type="text" />
+                            <input type="text" value={diasVacaciones} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDiasVacaciones(e.target.value)} />
                         </div>
                         <div className={styles.formItem}>
                             <h3>Costo/hora</h3>
-                            <input type="text" />
+                            <input type="text" value={coste} onChange={handleChangeCoste} />
                         </div>
                     </div>
                 </div>
@@ -247,13 +289,13 @@ export default function FormularioPerfil({ profile, isAdmin }: Props) {
                             </div>
                             <div className={styles.formItem}>
                                 <h3>Costo/hora</h3>
-                                <input type="text" />
+                                <input type="text" value={coste ?? ''} onChange={handleChangeCoste} />
                             </div>
                         </div>
                         <div className={styles.formGroup2}>
                             <div className={styles.formItem}>
                                 <h3>Dias de vacaciones anuales</h3>
-                                <input type="text" />
+                                <input type="text" value={diasVacaciones} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDiasVacaciones(e.target.value)} />
                             </div>
                         </div>
 
