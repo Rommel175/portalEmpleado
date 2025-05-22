@@ -8,6 +8,8 @@ import { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
 import duration from 'dayjs/plugin/duration';
+import SnackbarSuccess from '@/components/snackbar/success/SnackbarSuccess';
+import SnackbarError from '@/components/snackbar/error/SnackbarError';
 
 dayjs.extend(duration);
 
@@ -20,6 +22,20 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
     const [horaInicio, setHoraInicio] = useState<Date | null>(null);
     const [tiempoBase, setTiempoBase] = useState<number | null>(null);
     const [eventos, setEventos] = useState<Fichaje_eventos[] | null>(null);
+
+    //snackbars
+    const [snackbarSuccess, setSnackbarSuccess] = useState(false);
+    const [message, setMessage] = useState('');
+    const [snackbarError, setSnackbarError] = useState(false);
+
+    useEffect(() => {
+        if (snackbarSuccess) {
+            const timer = setTimeout(() => {
+                setSnackbarSuccess(false);
+            }, 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [snackbarSuccess]);
 
     const supabase = createClient();
 
@@ -290,12 +306,19 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
             })
         });
 
+        if (!res.ok) {
+            console.error('Error en la respuesta:', res.status);
+            setSnackbarError(true);
+            setMessage('Tu hora de entrada no ha sido registrada correctamente.');
+            return;
+        }
+
         const result = await res.json();
 
         if (result && result.estado) {
             setEstado(result.estado);
-        } else {
-            console.error("Error al activar el timer:", result.error);
+            setSnackbarSuccess(true);
+            setMessage('Tu hora de entrada ha sido registrada correctamente.');
         }
     };
 
@@ -315,12 +338,19 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
             })
         });
 
+        if (!res.ok) {
+            console.error('Error en la respuesta:', res.status);
+            setSnackbarError(true);
+            setMessage('Tu pausa no ha sido registrada correctamente.');
+            return;
+        }
+
         const result = await res.json();
 
         if (result && result.estado) {
             setEstado(result.estado);
-        } else {
-            console.error("Error al pausar el timer:", result.error);
+            setSnackbarSuccess(true);
+            setMessage('Tu pausa ha sido registrada correctamente.');
         }
     }
 
@@ -340,12 +370,19 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
             })
         });
 
+        if (!res.ok) {
+            console.error('Error en la respuesta:', res.status);
+            setSnackbarError(true);
+            setMessage('Tu hora de entrada no ha sido registrada correctamente.');
+            return;
+        }
+
         const result = await res.json();
 
         if (result && result.estado) {
             setEstado(result.estado);
-        } else {
-            console.error("Error al reanudar el timer:", result.error);
+            setSnackbarSuccess(true);
+            setMessage('Tu hora de entrada ha sido registrada correctamente.');
         }
     }
 
@@ -365,12 +402,19 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
             })
         });
 
+        if (!res.ok) {
+            console.error('Error en la respuesta:', res.status);
+            setSnackbarError(true);
+            setMessage('Tu hora de salida no ha sido registrada correctamente.');
+            return;
+        }
+
         const result = await res.json();
 
         if (result && result.estado) {
             setEstado(result.estado);
-        } else {
-            console.error("Error al parar el timer:", result.error);
+            setSnackbarSuccess(true);
+            setMessage('Tu hora de salida ha sido registrada correctamente.');
         }
     }
 
@@ -381,7 +425,6 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
     }
 
     //Accion del timer
-
     useEffect(() => {
         if (!isRunning || eventos == null) return;
 
@@ -434,6 +477,16 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
                         </div>
                     </div>
                 )
+            }
+
+            {
+                (snackbarSuccess) && 
+                <SnackbarSuccess setSnackbarSuccess={setSnackbarSuccess} message={message} />
+            }
+
+            {
+                (snackbarError) &&
+                <SnackbarError setSnackbarError={setSnackbarError} message={message} />
             }
 
             <div className={styles.container}>

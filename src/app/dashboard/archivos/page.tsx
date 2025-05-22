@@ -9,7 +9,6 @@ export default async function FilesPage() {
       <div style={{ display: 'none' }}>
         <ContainerSuperior profile={profile} fichaje={fichaje} eventos={eventos} />
       </div>
-      
     </>
   );
 }

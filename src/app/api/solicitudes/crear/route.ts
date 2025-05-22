@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
         const now = dayjs();
         //console.log(now.toISOString());
 
-        const fechaOriginal = dayjs(fecha_original).tz('Europe/Madrid');
+        const fechaOriginal = dayjs(fecha_original).tz('Europe/Madrid'); //sacar las zonas horarias de la BD
         console.log(fechaOriginal.format());
 
         const [horas, minutos] = fecha_solicitada.split(':');
