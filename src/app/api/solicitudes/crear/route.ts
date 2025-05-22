@@ -1,6 +1,11 @@
 import { createClient } from "@/utils/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone)
 
 export async function POST(req: NextRequest) {
     const supabase = await createClient();
@@ -30,22 +35,31 @@ export async function POST(req: NextRequest) {
         const now = dayjs();
         //console.log(now.toISOString());
 
-        const fechaOriginal = dayjs(fecha_original);
-        console.log(fechaOriginal.toISOString());
+        const fechaOriginal = dayjs(fecha_original).tz('Europe/Madrid');
+        console.log(fechaOriginal.format());
 
         const [horas, minutos] = fecha_solicitada.split(':');
-        const fechaSolicitada = fechaOriginal.hour(horas).minute(minutos);
-        console.log('fecha solicitada: ',fechaSolicitada.toISOString());
+        const fechaSolicitada = fechaOriginal.hour(parseInt(horas)).minute(parseInt(minutos));
+
+        const fechaSolicitadaUTC = fechaSolicitada.utc().toISOString();
+
+        console.log("fecha original UTC: ", dayjs(fecha_original).toISOString());
+        console.log("fecha solicitada en Madrid: ", fechaSolicitada.format());
+        console.log("fecha solicitada UTC: ", fechaSolicitadaUTC);
+
+        //console.log(`fecha solicitada 1: ${horas}:${minutos}`)
+        //const fechaSolicitada = fechaOriginal.hour(horas).minute(minutos);
+        //console.log('fecha solicitada: ',fechaSolicitada.toISOString());
 
         const { error: errorInsert } = await supabase
             .from('solicitudes')
-            .insert({ profile_id: dataProfile[0].id, fichaje_evento_id: fichaje_evento_id, fecha_original: fechaOriginal.toISOString(), fecha_solicitada: fechaSolicitada.toISOString(), evento: evento, motivo: motivo, created_at: now.toISOString(), estado: 'pendiente'});
+            .insert({ profile_id: dataProfile[0].id, fichaje_evento_id: fichaje_evento_id, fecha_original: fechaOriginal.toISOString(), fecha_solicitada: fechaSolicitadaUTC, evento: evento, motivo: motivo, created_at: now.toISOString(), estado: 'pendiente'});
 
         if (errorInsert) {
-            //console.log('Error inertar', errorInsert);
+            console.log('Error inertar', errorInsert);
             return NextResponse.json({ error: errorInsert }, { status: 500 })
         }
-        
+
         return NextResponse.json({ success: true }, { status: 200 })
     }
 
