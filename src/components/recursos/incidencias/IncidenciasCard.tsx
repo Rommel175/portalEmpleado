@@ -11,7 +11,6 @@ export default function IncidenciasCard({ id, image, nombre, apellido, email, cr
 
   const supabase = createClient();
 
-  //Completar
   function handleAceptar() {
 
     const now = dayjs();

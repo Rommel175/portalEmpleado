@@ -1,14 +1,20 @@
+import { Roboto } from 'next/font/google';
 import styles from './snackbarError.module.css';
+
+const roboto = Roboto({
+  weight: ['900','800','800','700', '600', '500', '400', '300', '200', '100'],
+  subsets: ['latin']
+});
 
 export default function SnackbarError( {setSnackbarError, message}: {setSnackbarError: React.Dispatch<React.SetStateAction<boolean>>, message: string} ) {
     return (
-        <div className={styles.container}>
+        <div className={`${styles.container} ${roboto.className}`}>
             <div className={styles.content}>
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" className={styles.error}>
-                    <rect width="14" height="14" rx="7" fill="#E53935" />
-                    <path d="M4.5 4.5L9.5 9.5" stroke="white" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M9.5 4.5L4.5 9.5" stroke="white" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
+                        <rect width="14" height="14" rx="7" fill="#E53935" />
+                        <path d="M4.5 4.5L9.5 9.5" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d="M9.5 4.5L4.5 9.5" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
                 {message}
             </div>
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className={styles.close} onClick={() => { setSnackbarError(false) }}>

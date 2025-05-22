@@ -8,8 +8,8 @@ import { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
 import duration from 'dayjs/plugin/duration';
-import SnackbarSuccess from '@/components/snackbar/success/SnackbarSuccess';
-import SnackbarError from '@/components/snackbar/error/SnackbarError';
+import SnackbarSuccess from '@/components/snackbar/fichajes/success/SnackbarSuccess';
+import SnackbarError from '@/components/snackbar/fichajes/error/SnackbarError';
 
 dayjs.extend(duration);
 
