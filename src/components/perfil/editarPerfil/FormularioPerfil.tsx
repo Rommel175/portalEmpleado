@@ -160,7 +160,7 @@ export default function FormularioPerfil({ profile, isAdmin }: Props) {
         <form className={styles.wraper} onSubmit={handleSubmit}>
             <div className={styles.profile}>
                 <Image src={profile.image} width={60} height={60} alt="img" />
-                <button className={styles.cambioImagen}>Cambiar Imagen</button>
+                {/*<button className={styles.cambioImagen}>Cambiar Imagen</button>*/}
             </div>
 
             <div className={styles.form}>
