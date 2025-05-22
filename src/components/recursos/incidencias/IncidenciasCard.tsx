@@ -18,7 +18,7 @@ export default function IncidenciasCard({ id, image, nombre, apellido, email, cr
     const aceptar = async () => {
       const { error: errorAceptar } = await supabase
         .from('solicitudes')
-        .update({ estado: 'aceptada' })
+        .update({ estado: 'aceptada', fecha_revision: now.toString() })
         .eq('id', id);
 
       if (errorAceptar) {
@@ -50,10 +50,12 @@ export default function IncidenciasCard({ id, image, nombre, apellido, email, cr
   }
 
   function handleRechazar() {
+    const now = dayjs();
+
     const rechazar = async () => {
       const { error: errorRechazar } = await supabase
         .from('solicitudes')
-        .update({ 'estado': 'rechazada' })
+        .update({ estado: 'rechazada', fecha_revision: now.toString() })
         .eq('id', id);
 
       if (errorRechazar) {

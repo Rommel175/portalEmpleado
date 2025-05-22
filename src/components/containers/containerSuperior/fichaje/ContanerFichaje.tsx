@@ -37,6 +37,15 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
         }
     }, [snackbarSuccess]);
 
+    useEffect(() => {
+        if (snackbarError) {
+            const timer = setTimeout(() => {
+                setSnackbarError(false);
+            }, 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [snackbarError]);
+
     const supabase = createClient();
 
     function tiempoTrabajado(eventos: Fichaje_eventos[]) {

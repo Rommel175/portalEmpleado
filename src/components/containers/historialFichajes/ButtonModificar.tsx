@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './buttonModificar.module.css';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
@@ -26,6 +26,24 @@ export default function ButtonModificar({ hour, date, id, action }: Prop) {
     const [snackbarSuccess, setSnackbarSuccess] = useState(false);
     const [snackbarError, setSnackbarError] = useState(false);
     const [message, setMessage] = useState('');
+
+    useEffect(() => {
+        if (snackbarSuccess) {
+            const timer = setTimeout(() => {
+                setSnackbarSuccess(false);
+            }, 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [snackbarSuccess]);
+
+    useEffect(() => {
+        if (snackbarError) {
+            const timer = setTimeout(() => {
+                setSnackbarError(false);
+            }, 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [snackbarError]);
 
     const hourRegexp = new RegExp(/^(?:[01]\d|2[0-3]):[0-5]\d$/);
 
