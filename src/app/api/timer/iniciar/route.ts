@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
     if (!dataFichaje || dataFichaje.length == 0) {
         const { error: errorInsert } = await supabase
             .from('fichaje_jornada')
-            .insert({ date: date.toISOString(), profile_id: profileId, date_final_aprox: dayjs(horaFinalAprox).toISOString() })
+            .insert({ date: date.toISOString(), profile_id: profileId, date_final_aprox:  horaFinalAprox ? dayjs(horaFinalAprox).toISOString() : null })
 
         if (errorInsert) {
             return NextResponse.json({ error: errorInsert }, { status: 500 });

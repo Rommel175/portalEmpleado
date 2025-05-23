@@ -104,7 +104,7 @@ export async function POST(req: NextRequest) {
             .insert({
                 profile_id: profileId,
                 date: date.toISOString(),
-                date_final_aprox: dayjs(horaFinalAprox).toISOString(),
+                date_final_aprox: horaFinalAprox ? dayjs(horaFinalAprox).toISOString() : null,
                 comentario: comentario
             })
             .select();

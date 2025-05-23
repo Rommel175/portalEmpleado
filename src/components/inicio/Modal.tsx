@@ -35,7 +35,7 @@ export default function Modal({ profile }: { profile: Profile }) {
         } else {
             setHoraFinalAprox(null);
         }
-        
+
     }, []);
 
     async function fichar() {
@@ -63,6 +63,13 @@ export default function Modal({ profile }: { profile: Profile }) {
 
     function handleChangeMensaje(e: React.ChangeEvent<HTMLTextAreaElement>) {
         setMensaje(e.target.value)
+    }
+
+    function parseHora(hora: string | Date | null): string {
+        if (!hora) return '';
+        const date = dayjs(hora)
+        if (!date.isValid()) return '';
+        return date.format('HH:mm')
     }
 
     return (
@@ -103,7 +110,7 @@ export default function Modal({ profile }: { profile: Profile }) {
                                     </svg>
                                 </Tooltips>
                             </label>
-                            <input type="text" defaultValue={dayjs(horaFinalAprox).format('HH:mm')} readOnly />
+                            <input type="text" defaultValue={parseHora(horaFinalAprox)} readOnly />
                         </div>
 
                         <div className={styles.note}>
