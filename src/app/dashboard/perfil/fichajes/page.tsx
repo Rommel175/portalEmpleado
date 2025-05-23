@@ -34,6 +34,12 @@ export default function Fichajes() {
   const [registroSelected, setRegistroSelected] = useState(0);
   const [activarFiltros, setActivarFiltros] = useState(0);
   const [borrarFiltros, setBorrarFiltros] = useState(0);
+  const [filtrosAplicados, setFiltrosAplicados] = useState({
+    option: 'Esta semana',
+    localizacion: 'all',
+    reciente: true,
+    checkedStateRegistro: {},
+  });
 
   const [eventosPorFecha, setEventosPorFecha] = useState<EventosPorFechaType[]>([]);
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -94,12 +100,12 @@ export default function Fichajes() {
     setRegistroSelected(countSelected);
   }, [checkedStateRegistro]);
 
-  const hayFiltrosActivos = (
+  /*const hayFiltrosActivos = (
     option !== 'Esta semana' ||
     localizacion !== 'all' ||
     !reciente ||
     Object.values(checkedStateRegistro).some((val) => val)
-  );
+  );*/
 
   function resetFiltros() {
     setReciente(true);
@@ -108,6 +114,25 @@ export default function Fichajes() {
     setCheckedStateRegistro({});
     setBorrarFiltros(prev => prev + 1)
   }
+
+  function activarFiltrosHandler() {
+    setActivarFiltros(prev => prev + 1);
+    setFiltrosAplicados({
+      option,
+      localizacion,
+      reciente,
+      checkedStateRegistro,
+    });
+  };
+
+  const hayCambiosEnFiltros = (
+    option !== filtrosAplicados.option ||
+    localizacion !== filtrosAplicados.localizacion ||
+    reciente !== filtrosAplicados.reciente ||
+    JSON.stringify(checkedStateRegistro) !== JSON.stringify(filtrosAplicados.checkedStateRegistro)
+  );
+
+
 
   return (
     <>
@@ -154,8 +179,8 @@ export default function Fichajes() {
           <div className={styles.buttons}>
             <button
               className={styles.filtroBtn}
-              disabled={!hayFiltrosActivos}
-              onClick={() => setActivarFiltros(prev => prev + 1)}
+              disabled={!hayCambiosEnFiltros}
+              onClick={activarFiltrosHandler}
             >
               Activar Filtros
             </button>

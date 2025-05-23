@@ -35,6 +35,11 @@ export default function InformesPage() {
   const [activarFiltros, setActivarFiltros] = useState(0);
   const [borrarFiltros, setBorrarFiltros] = useState(0);
   const isSelected = Object.values(checkedState).some((val) => val === true);
+  const [filtrosAplicados, setFiltrosAplicados] = useState<{
+    option: string;
+    checkedState: { [key: string]: boolean };
+  } | null>(null);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -92,22 +97,48 @@ export default function InformesPage() {
   }, [activarFiltros, borrarFiltros]);
 
   useEffect(() => {
+    const allUsersLoaded = usersData.length > 0;
+    const allCheckboxesLoaded = Object.keys(checkedState).length === usersData.length;
+
+    if (allUsersLoaded && allCheckboxesLoaded && filtrosAplicados === null) {
+      setFiltrosAplicados({
+        option,
+        checkedState,
+      });
+    }
+  }, [checkedState, usersData, filtrosAplicados, option]);
+
+
+  useEffect(() => {
     const countSelected = Object.values(checkedState).filter((val) => val === true).length;
     setUsersSelected(countSelected);
   }, [checkedState]);
 
-  const hayFiltrosActivos = (
+  /*const hayFiltrosActivos = (
     option !== 'Esta semana' ||
     !reciente ||
     Object.values(checkedState).some((val) => val)
-  );
+  );*/
 
   function resetFiltros() {
-    setReciente(true);
     setOption('Esta semana');
     setCheckedState({});
-    setBorrarFiltros(prev => prev + 1);
+    setBorrarFiltros(prev => prev + 1)
+  }
+
+  function activarFiltrosHandler() {
+    setActivarFiltros(prev => prev + 1);
+    setFiltrosAplicados({
+      option,
+      checkedState,
+    });
   };
+
+  const hayCambiosEnFiltros = filtrosAplicados !== null && (
+    option !== filtrosAplicados.option ||
+    JSON.stringify(checkedState) !== JSON.stringify(filtrosAplicados.checkedState)
+  );
+
 
   return (
     <div className={styles.container}>
@@ -125,7 +156,7 @@ export default function InformesPage() {
         </div>
 
         <ContainerOptions
-          recientes={true}
+          /*recientes={true}*/
           usuarios={true}
           date={true}
           startDate={startDate}
@@ -147,8 +178,8 @@ export default function InformesPage() {
           <div className={styles.buttons}>
             <button
               className={styles.filtroBtn}
-              disabled={!hayFiltrosActivos}
-              onClick={() => setActivarFiltros(prev => prev + 1)}
+              disabled={!hayCambiosEnFiltros}
+              onClick={activarFiltrosHandler}
             >
               Activar Filtros
             </button>
