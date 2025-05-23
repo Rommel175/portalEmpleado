@@ -104,6 +104,7 @@ export default function ButtonModificar({ hour, date, id, action }: Prop) {
             setHoraSolicitada((prev) => ({ ...prev, hasError: true }));
             return;
         }
+        
         setIsOpen(false);
         enviarSolicitud();
     }

@@ -9,7 +9,10 @@ import SnackbarError from "@/components/snackbar/createUser/error/SnackbarError"
 export default function FormularioAdd() {
     const [nombre, setNombre] = useState('');
     const [apellido, setApellido] = useState('');
-    const [email, setEmail] = useState('');
+    const [email, setEmail] = useState({
+        value: '',
+        hasError: false
+    });
     const [puesto, setPuesto] = useState('');
     const [horasSemana, setHorasSemana] = useState('');
     //const [emailPersonal, setEmailPersonal] = useState('');
@@ -71,20 +74,24 @@ export default function FormularioAdd() {
     }
 
     const hourRegexp = new RegExp(/^(?:[01]\d|2[0-3]):[0-5]\d$/);
+    //const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    function handleHoraChange(
-        e: React.ChangeEvent<HTMLInputElement>,
-        setHora: React.Dispatch<React.SetStateAction<{ value: string; hasError: boolean }>>
-    ) {
+    function handleHoraChange(e: React.ChangeEvent<HTMLInputElement>, setHora: React.Dispatch<React.SetStateAction<{ value: string; hasError: boolean }>>) {
         setHora({ value: e.target.value, hasError: false });
     }
 
-    function handleHoraBlur(
-        hora: { value: string; hasError: boolean },
-        setHora: React.Dispatch<React.SetStateAction<{ value: string; hasError: boolean }>>
-    ) {
+    function handleHoraBlur(hora: { value: string; hasError: boolean }, setHora: React.Dispatch<React.SetStateAction<{ value: string; hasError: boolean }>>) {
         const hasError = hora.value !== '' && !hourRegexp.test(hora.value);
         setHora((prev) => ({ ...prev, hasError }))
+    }
+
+    function handleChangeEmail(e: React.ChangeEvent<HTMLInputElement>) {
+        setEmail({ value: e.target.value, hasError: false })
+    }
+
+    function handleEmailBlur() {
+        const hasError = email.value.endsWith('@xanasystem.com');
+        setEmail((prev) => ({ ...prev, hasError }))
     }
 
     function handleChangeCoste(e: React.ChangeEvent<HTMLInputElement>) {
@@ -106,7 +113,7 @@ export default function FormularioAdd() {
     function resetForm() {
         setNombre('');
         setApellido('');
-        setEmail('');
+        setEmail({ value: '', hasError: false });
         setPuesto('');
         setHorasSemana(String(''));
         //setEmailPersonal('');
@@ -123,6 +130,42 @@ export default function FormularioAdd() {
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
+        const isHoraValidaLunes = hourRegexp.test(horaLunes.value) || horaLunes.value === "";
+        const isHoraValidaMartes = hourRegexp.test(horaMartes.value) || horaMartes.value === "";
+        const isHoraValidaMiercoles = hourRegexp.test(horaMiercoles.value) || horaMiercoles.value === "";
+        const isHoraValidaJueves = hourRegexp.test(horaJueves.value) || horaJueves.value === "";
+        const isHoraValidaViernes = hourRegexp.test(horaViernes.value) || horaViernes.value === "";
+        const isEmailValid = email.value.endsWith('@xanasystem.com');
+
+        if (!isEmailValid) {
+            setEmail((prev) => ({ ...prev, hasError: true }));
+            return;
+        }
+
+        if (!isHoraValidaLunes) {
+            setHoraLunes((prev) => ({ ...prev, hasError: true }));
+            return;
+        }
+
+        if (!isHoraValidaMartes) {
+            setHoraMartes((prev) => ({ ...prev, hasError: true }));
+            return;
+        }
+
+        if (!isHoraValidaMiercoles) {
+            setHoraMiercoles((prev) => ({ ...prev, hasError: true }));
+            return;
+        }
+
+        if (!isHoraValidaJueves) {
+            setHoraJueves((prev) => ({ ...prev, hasError: true }));
+            return;
+        }
+
+        if (!isHoraValidaViernes) {
+            setHoraViernes((prev) => ({ ...prev, hasError: true }));
+            return;
+        }
 
         const res = await fetch('/api/gestion/addUser', {
             method: 'POST',
@@ -130,7 +173,7 @@ export default function FormularioAdd() {
             body: JSON.stringify({
                 nombre: nombre,
                 apellido: apellido,
-                email: email,
+                email: email.value,
                 puesto: puesto,
                 horasSemana: horasSemana,
                 telefono: telefono,
@@ -202,7 +245,11 @@ export default function FormularioAdd() {
                         </div>
                         <div className={styles.formItem}>
                             <h3>Correo electrónico</h3>
-                            <input type="email" value={email} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)} />
+                            <input type="email" value={email.value} onChange={handleChangeEmail} onBlur={handleEmailBlur} />
+                            {
+                                (email.hasError) &&
+                                <span style={{ color: 'red' }}>No es una email corporativo</span>
+                            }
                         </div>
                     </div>
 

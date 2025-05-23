@@ -16,7 +16,7 @@ export default function SnackbarSuccess({ setSnackbarSuccess, message }: { setSn
                         <rect width="14" height="14" rx="7" fill="#04B500" />
                         <path d="M3.55127 7.5376L6.01343 9.99976L10.4453 4.58301" stroke="white" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
-                    Solicitud enviada
+                    Usuario creado
                 </div>
                 <div className={styles.text}>
                     <p>{message}</p>
