@@ -169,6 +169,12 @@
     letter-spacing: -0.08px;
 }
 
-.buttons>input:hover {
+.buttons>input:first-child:hover {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.07) 0%, rgba(0, 0, 0, 0.07) 100%), #F9F9F9;
+    cursor: pointer;
+}
+
+.buttons>input:last-child:hover {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.30) 0%, rgba(0, 0, 0, 0.30) 100%), #0B3C70;
     cursor: pointer;
 }

@@ -1,0 +1,44 @@
+.container {
+    display: flex;
+    width: 390px;
+    padding: 18px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    border-radius: 6px;
+    background: #FFF;
+    box-shadow: 4px 4px 11px 4px rgba(0, 0, 0, 0.15);
+    position: fixed;
+    right: 10px;
+    top: 70px;
+    /*transition: all 1s linear;*/
+}
+
+.content {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 8px;
+    color: var(--dark-01, #333);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    position: relative;
+}
+
+.close {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    width: 16px;
+    height: 16px;
+}
+
+.close:hover {
+    cursor: pointer;
+}
+
+.error {
+    align-self: center;
+}

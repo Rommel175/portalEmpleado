@@ -19,7 +19,7 @@ export default function EquipoItem({ id, nombre, apellido, email, foto, estado =
     return (
         <div className={styles.item}>
             <div className={styles.usuario}>
-                <Image src={foto || ''} width={40} height={40} alt='img_profile' />
+                <Image src={foto || '/images/default.jpg'} width={40} height={40} alt='img_profile' />
                 <div className={styles.personalInfo}>
                     <div className={styles.name}>
                         <h2>{nombre} {apellido}</h2>

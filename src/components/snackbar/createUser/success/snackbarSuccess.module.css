@@ -1,0 +1,85 @@
+.container {
+    display: flex;
+    width: 460px;
+    padding: 18px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    border-radius: 6px;
+    background: #FFF;
+    box-shadow: 4px 4px 11px 4px rgba(0, 0, 0, 0.15);
+    position: fixed;
+    right: 10px;
+    top: 70px;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 8px;
+    align-self: stretch;
+    position: relative;
+}
+
+.title {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    color: var(--dark-01, #333);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.check {
+    align-self: center;
+}
+
+.text {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+}
+
+.text>p {
+    align-self: stretch;
+    color: var(--light-03, #7B8794);
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.text>a {
+    color: var(--light-03, #7B8794);
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-skip-ink: none;
+    text-decoration-thickness: auto;
+    text-underline-offset: auto;
+    text-underline-position: from-font;
+}
+
+.text>a:hover {
+    text-decoration-line: none;
+}
+
+.close {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    width: 16px;
+    height: 16px;
+}
+
+.close:hover {
+    cursor: pointer;
+}

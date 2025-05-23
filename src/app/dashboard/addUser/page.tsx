@@ -2,9 +2,14 @@ import ContainerSuperior from "@/components/containers/containerSuperior/Contain
 import { getUserData } from "@/lib/getSupabaseData";
 import styles from './AddUser.module.css';
 import FormularioAdd from "@/components/recursos/gestion/addUser/FormularioAdd";
+import { redirect } from "next/navigation";
 
 export default async function AddUser() {
     const { profile, fichaje, eventos } = await getUserData();
+
+    if (!profile.is_admin) {
+        redirect('/')
+    }
 
     return (
         <>

@@ -113,7 +113,7 @@ export async function POST(req: NextRequest) {
             hora_fin_miercoles: miercolesUTC,
             hora_fin_jueves: juevesUTC,
             hora_fin_viernes: viernesUTC,
-            dias_vacaciones: diasVacaciones,
+            dias_vacaciones: diasVacaciones ? parseInt(diasVacaciones) : null,
             precio_hora: coste ? parseFloat(coste).toFixed(2) : null
         });
 
