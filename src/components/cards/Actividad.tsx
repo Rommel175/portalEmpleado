@@ -17,7 +17,7 @@ export default function ActividadCard({ horas, total }: Props) {
     const porcentaje = Math.min((horaDecimal / total) * 100, 100);
 
     return (
-        <div className={styles.container}>
+        <div className={styles.container} style={{ display: 'none' }}>
             <h3>Actividad semanal</h3>
 
             <div className={styles.content}>

@@ -79,7 +79,7 @@ export default function ActividadCardIndividual({ totalHoras, setTotalHorasTraba
     
 
     return (
-        <div className={styles.container}>
+        <div className={styles.container} style={{ display: 'none' }}>
             <h3>Actividad</h3>
             <div className={styles.content}>
                 <div className={styles.header}>
