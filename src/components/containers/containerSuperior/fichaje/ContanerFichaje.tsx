@@ -146,11 +146,23 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
 
         setCurrentDate(date.format("DD MMMM YYYY"));
 
-        const horasTrabajo = profile.horas_semana / 5;
+        //const horasTrabajo = profile.horas_semana / 5;
 
-        const horaFinal = date.add(horasTrabajo, 'hour');
+        //const horaFinal = date.add(horasTrabajo, 'hour');
 
-        setHoraFinalAprox(horaFinal.toDate());
+        const hoy = date.format('dddd').toLowerCase();
+
+        const campo = `hora_fin_${hoy}` as keyof Profile;
+
+        const horaAproxFin = profile[campo] as string | null;
+
+        console.log(horaAproxFin);
+
+        if (horaAproxFin) {
+            setHoraFinalAprox(dayjs(horaAproxFin).toDate())
+        } else {
+            setHoraFinalAprox(null);
+        }
 
         const fetchFichaje = async () => {
 
@@ -489,7 +501,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
             }
 
             {
-                (snackbarSuccess) && 
+                (snackbarSuccess) &&
                 <SnackbarSuccess setSnackbarSuccess={setSnackbarSuccess} message={message} />
             }
 

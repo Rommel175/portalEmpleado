@@ -8,6 +8,7 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/es';
 import Tooltips from '../tooltip/Tooltips';
 import CustomSelect from '../customInputs/customSelect/CustomSelect';
+dayjs.locale('es');
 
 export default function Modal({ profile }: { profile: Profile }) {
     const [isOpen, setIsOpen] = useState(true);
@@ -15,21 +16,26 @@ export default function Modal({ profile }: { profile: Profile }) {
     const [currentTime, setCurrentTime] = useState<string>("");
     const [localizacionFichaje, setLocalizacionFichaje] = useState('oficina');
     const [horaFinalAprox, setHoraFinalAprox] = useState<Date | null>(null);
-    const [horaFinalAproxVisualizer, setHoraFinalAproxVisualizer] = useState('');
     const [mensaje, setMensaje] = useState('');
     useEffect(() => {
-        dayjs.locale('es');
-
         const date = dayjs();
 
         setCurrentDate(date.format("DD [de] MMMM [de] YYYY"));
         setCurrentTime(date.format("HH:mm"));
 
-        const horasTrabajo = profile.horas_semana / 5;
+        const hoy = date.format('dddd').toLowerCase();
 
-        const horaFinal = date.add(horasTrabajo, 'hour');
-        setHoraFinalAprox(horaFinal.toDate());
-        setHoraFinalAproxVisualizer(horaFinal.format('HH:mm'));
+        const campo = `hora_fin_${hoy}` as keyof Profile;
+
+
+        const horaAproxFin = profile[campo] as string | null;
+
+        if (horaAproxFin) {
+            setHoraFinalAprox(dayjs(horaAproxFin).toDate())
+        } else {
+            setHoraFinalAprox(null);
+        }
+        
     }, []);
 
     async function fichar() {
@@ -97,7 +103,7 @@ export default function Modal({ profile }: { profile: Profile }) {
                                     </svg>
                                 </Tooltips>
                             </label>
-                            <input type="text" defaultValue={horaFinalAproxVisualizer} readOnly />
+                            <input type="text" defaultValue={dayjs(horaFinalAprox).format('HH:mm')} readOnly />
                         </div>
 
                         <div className={styles.note}>

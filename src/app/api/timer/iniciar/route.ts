@@ -14,6 +14,8 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { profileId, horaFinalAprox, localizacion } = body;
 
+    //console.log(horaFinalAprox);
+
     const date = dayjs();
     const startDate = date.startOf('day');
     const endDate = startDate.add(1, 'day');
