@@ -1,6 +1,7 @@
 import ContainerSuperior from "@/components/containers/containerSuperior/ContainerSuperior";
 import { getUserData } from "@/lib/getSupabaseData";
 import styles from './AddUser.module.css';
+import FormularioAdd from "@/components/recursos/gestion/addUser/FormularioAdd";
 
 export default async function AddUser() {
     const { profile, fichaje, eventos } = await getUserData();
@@ -16,7 +17,7 @@ export default async function AddUser() {
                     Perfil
                 </div>
 
-                {/*FormularioPerfil profile={profile} isAdmin={profile.is_admin} />*/}
+                <FormularioAdd />
             </div>
         </>
     );

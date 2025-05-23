@@ -11,6 +11,7 @@ export async function GET(request: Request) {
   const origin = requestUrl.origin;
   const redirectTo = requestUrl.searchParams.get("redirect_to")?.toString();
   const next = requestUrl.searchParams.get("next");
+  const supabaseAdmin = await createClientAdmin;
 
   if (!code) {
     return NextResponse.redirect(`${origin}/login`);
@@ -27,8 +28,6 @@ export async function GET(request: Request) {
 
   const user = data.user
   const email = user?.user_metadata.email;
-  const name = user?.user_metadata.full_name;
-  const full_name = name.split(' ');
 
   if (email == 'rommel.xana@gmail.com' || email == 'example.xana@gmail.com' || email.endsWith('@xanasystem.com') || email.endsWith('@xanatechnolgies.com') || email == 'rrhh.portalxana@gmail.com') {
 
@@ -38,22 +37,24 @@ export async function GET(request: Request) {
       .eq('user_id', user.id)
 
     if (errorProfle) {
-      console.log('Error fetching Profile ID: ', errorProfle)
+      console.log('Error fetching Profile ID: ', errorProfle);
+      return NextResponse.json({ error: errorProfle }, { status: 500})
     }
 
     if (!dataProfile || dataProfile.length === 0) {
-      const { data: dataInsertProfile, error: errorInsertProfile } = await supabase
-        .from('profiles')
-        .insert({ user_id: user.id, nombre: full_name[0], apellido: full_name[1], email: user.email, image: user.user_metadata.avatar_url, estado: 'Inactivo', alta: true, is_admin: false, horas_semana: 40 })
+      
+      try {
+        const id = user?.id;
 
-      if (errorInsertProfile) {
-        console.log('Error insert Profile: ', errorInsertProfile);
-        return;
+        if (id) {
+          await supabaseAdmin.auth.admin.deleteUser(id)
+        }
+      } catch (e) {
+        console.log('Error eliminando usuario no autorizado ' + e);
+        return NextResponse.json({ error: `Error eliminando usuario no autorizado ${e}` }, { status: 500 });
       }
 
-      if (dataInsertProfile) {
-        console.log(dataInsertProfile);
-      }
+      return NextResponse.redirect(`${origin}/login`);
 
     } else {
       const currentImage = dataProfile[0].image;
@@ -66,6 +67,7 @@ export async function GET(request: Request) {
 
         if (errorUpdateImage) {
           console.log('Error actualizando imagen de perfil: ', errorUpdateImage);
+          return NextResponse.json({ error: errorUpdateImage }, { status: 500 });
         }
       }
 
@@ -76,7 +78,8 @@ export async function GET(request: Request) {
           .eq('user_id', user.id);
 
         if (errorUpdateImage) {
-          console.log('Error actualizando imagen de perfil: ', errorUpdateImage);
+          console.log('Error actualizando estado del perfil: ', errorUpdateImage);
+          return NextResponse.json({ error: errorUpdateImage }, { status: 500 });
         }
       }
     }
@@ -93,8 +96,6 @@ export async function GET(request: Request) {
 
   } else {
 
-    const supabaseAdmin = await createClientAdmin;
-
     try {
       const id = user?.id;
 
@@ -102,7 +103,8 @@ export async function GET(request: Request) {
         await supabaseAdmin.auth.admin.deleteUser(id)
       }
     } catch (e) {
-      console.log('Error eliminando usuario no autorizado ' + e)
+      console.log('Error eliminando usuario no autorizado ' + e);
+      return NextResponse.json({ error: `Error eliminando usuario no autorizado ${e}` }, { status: 500 });
     }
 
     return NextResponse.redirect(`${origin}/login`);

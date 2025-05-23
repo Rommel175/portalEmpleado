@@ -1,0 +1,174 @@
+.wraper {
+    width: 100%
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    align-self: stretch;
+}
+
+.profile>img {
+    border-radius: 60px;
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+}
+
+.cambioImagen {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    display: flex;
+    padding: 6px 12px;
+    align-items: center;
+    gap: 6px;
+    color: var(--dark-02, #7B8794);
+    text-align: center;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.form {
+    display: flex;
+    padding: 24px 0px;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    align-self: stretch;
+}
+
+.form>h3 {
+    align-self: stretch;
+    color: var(--primary, #0B3C70);
+    font-size: 17px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px;
+}
+
+.formGroup {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    align-self: stretch;
+}
+
+.formGroup2 {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    align-self: stretch;
+    width: 50%;
+}
+
+.formItem {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    flex: 1 0 0;
+}
+
+.formItem>h3 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    align-self: stretch;
+    overflow: hidden;
+    color: #281D1B;
+    text-overflow: ellipsis;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    /* 123.077% */
+}
+
+.formItem>input[type="text"],
+.formItem>input[type="email"],
+.formItem>input[type="tel"] {
+    display: flex;
+    padding: 8px 12px;
+    align-items: center;
+    gap: 8px;
+    align-self: stretch;
+    border-radius: 8px;
+    border: 1.5px solid rgba(0, 0, 0, 0.00);
+    background: #F6F6F6;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    flex: 1 0 0;
+    overflow: hidden;
+    color: var(--dark-02, #7B8794);
+    text-overflow: ellipsis;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.formItem>select {
+    display: flex;
+    padding: 8px 12px;
+    align-items: center;
+    gap: 8px;
+    align-self: stretch;
+    border-radius: 8px;
+    border: 1.5px solid rgba(0, 0, 0, 0.00);
+    background: rgba(155, 155, 155, 0.09);
+    color: rgba(0, 0, 0, 0.36);
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    /* 133.333% */
+}
+
+.buttons {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    align-self: stretch;
+}
+
+.buttons>input:first-child {
+    display: flex;
+    padding: 8px 60px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 96px;
+    background: #F6F6F6;
+    color: #0B3C70;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    /* 142.857% */
+    letter-spacing: -0.08px;
+}
+
+.buttons>input:last-child {
+    display: flex;
+    padding: 8px 60px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 96px;
+    background: #0B3C70;
+    color: var(--text-button-primary, #FFF);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    /* 142.857% */
+    letter-spacing: -0.08px;
+}
+
+.buttons>input:hover {
+    cursor: pointer;
+}
