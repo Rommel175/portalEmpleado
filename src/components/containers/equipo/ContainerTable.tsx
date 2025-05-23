@@ -8,6 +8,7 @@ import { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 import { Equipo, Fichaje_eventos, Fichaje_jornada, Profile } from '@/types/Types';
 import dayjs from 'dayjs';
 import Tooltips from '@/components/tooltip/Tooltips';
+dayjs.locale('es');
 
 type Users = {
   id: string,
@@ -35,6 +36,13 @@ export default function ContainerTable({ equipo }: { equipo: Equipo[] }) {
 
     setCurrentDate(date.format('DD-MM-YYYY'));
 
+    const hoy = date.format('dddd').toLowerCase();
+
+    const campo = `hora_fin_${hoy}` as keyof Equipo;
+
+
+
+
     const usersData: Users[] = [];
 
     equipo.map((equipoItem) => {
@@ -44,7 +52,9 @@ export default function ContainerTable({ equipo }: { equipo: Equipo[] }) {
 
       const localizacion = eventos && eventos.length > 0 ? eventos[eventos.length - 1].localizacion : '-';
       const hora = ultimaJornada?.date ?? '-';
-      const hora_aprox_salida = ultimaJornada?.date_final_aprox ?? '-';
+
+      const horaAproxFin = equipoItem[campo] as string | null;
+
       usersData.push({
         id: equipoItem.id,
         fichaje_id: ultimaJornada?.id,
@@ -56,7 +66,7 @@ export default function ContainerTable({ equipo }: { equipo: Equipo[] }) {
         image: equipoItem.image,
         localizacion,
         hora: parseHora(hora),
-        hora_aprox_salida: parseHora(hora_aprox_salida),
+        hora_aprox_salida: parseHora(horaAproxFin),
         fecha: parseFecha(ultimaJornada?.date)
       });
     })
@@ -70,11 +80,11 @@ export default function ContainerTable({ equipo }: { equipo: Equipo[] }) {
         schema: 'public',
         table: 'profiles',
       }, (payload: RealtimePostgresChangesPayload<Profile>) => {
-        //console.log(payload);
+        console.log(payload);
         switch (payload.eventType) {
           case 'UPDATE':
             const updatedItem = payload.new;
-            //console.log(updatedItem.id)
+            console.log(updatedItem.id)
             setUsers((prevState) => prevState.map(user => user.id === updatedItem.id ? { ...user, estado: updatedItem.estado, name: updatedItem.nombre, email: updatedItem.email, image: updatedItem.image } : user));
             break;
         }
@@ -135,7 +145,7 @@ export default function ContainerTable({ equipo }: { equipo: Equipo[] }) {
 
   }, [])
 
-  function parseHora(hora: string | Date): string {
+  function parseHora(hora: string | Date | null): string {
     if (!hora) return '-';
     const date = dayjs(hora);
     if (!date.isValid()) return '-';

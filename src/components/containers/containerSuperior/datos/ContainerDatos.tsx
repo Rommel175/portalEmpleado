@@ -13,7 +13,7 @@ import Tooltips from '@/components/tooltip/Tooltips';
 import CustomSelect from '@/components/customInputs/customSelect/CustomSelect';
 //import { useEffect } from 'react';
 
-export default function DatosContainer({ profile, estado, localizacionFichaje, setLocalizacionFichaje, horaInicio, /*setHoraInicio,*/ horaFinalAprox/*, setHoraFinalAprox*/ }: { profile: Profile, estado: string, localizacionFichaje: string, setLocalizacionFichaje: React.Dispatch<React.SetStateAction<string>>, horaInicio: string | Date, setHoraInicio: React.Dispatch<React.SetStateAction<Date>>, horaFinalAprox: string | Date, setHoraFinalAprox: React.Dispatch<React.SetStateAction<Date>>}) {
+export default function DatosContainer({ profile, estado, localizacionFichaje, setLocalizacionFichaje, horaInicio, /*setHoraInicio,*/ horaFinalAprox/*, setHoraFinalAprox*/ }: { profile: Profile, estado: string, localizacionFichaje: string, setLocalizacionFichaje: React.Dispatch<React.SetStateAction<string>>, horaInicio: string | Date, setHoraInicio: React.Dispatch<React.SetStateAction<Date>>, horaFinalAprox: null | Date, setHoraFinalAprox: React.Dispatch<React.SetStateAction<Date | null>>}) {
 
     /*const supabase = createClient();
 
@@ -53,7 +53,7 @@ export default function DatosContainer({ profile, estado, localizacionFichaje, s
 
     
     
-    function parseHora(hora: string | Date): string {
+    function parseHora(hora: string | Date | null): string {
         if (!hora) return '-';
         const date = dayjs(hora)
         if (!date.isValid()) return '—';

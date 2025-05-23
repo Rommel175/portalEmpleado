@@ -31,6 +31,11 @@ export type Equipo = {
     image: string,
     estado: string,
     horas_semana: number,
+    hora_fin_lunes: Date,
+    hora_fin_martes: Date,
+    hora_fin_miercoles: Date,
+    hora_fin_jueves: Date,
+    hora_fin_viernes: Date,
     fichaje_jornada: Fichaje_jornada[]
 }
 

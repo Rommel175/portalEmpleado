@@ -7,16 +7,32 @@ import ContainerFichaje from "./fichaje/ContanerFichaje";
 import { Fichaje_eventos, Fichaje_jornada, Profile } from "@/types/Types";
 import { createClient } from "@/utils/supabase/client";
 import { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
-
+import dayjs from "dayjs";
+dayjs.locale('es');
 
 export default function ContainerSuperior({ profile, fichaje, eventos }: { profile: Profile, fichaje: Fichaje_jornada[], eventos: Fichaje_eventos[] }) {
     const [estado, setEstado] = useState(profile.estado ?? '');
     const [localizacionFichaje, setLocalizacionFichaje] = useState(eventos?.[eventos.length - 1]?.localizacion ?? 'oficina');
     const [horaInicio, setHoraInicio] = useState(fichaje?.[0]?.date ?? '');
-    const [horaFinalAprox, setHoraFinalAprox] = useState(fichaje?.[0]?.date_final_aprox);
+    const [horaFinalAprox, setHoraFinalAprox] = useState<Date | null>(null);
     const supabase = createClient();
 
     useEffect(() => {
+        const date = dayjs();
+        const hoy = date.format('dddd').toLowerCase();
+
+        const campo = `hora_fin_${hoy}` as keyof Profile;
+
+
+        const horaAproxFin = profile[campo] as string | null;
+
+        if (horaAproxFin) {
+            setHoraFinalAprox(dayjs(horaAproxFin).toDate())
+        } else {
+            setHoraFinalAprox(null);
+        }
+
+
         const fetchLocation = async () => {
             const supabase = createClient();
 

@@ -64,7 +64,7 @@ export async function getUserData() {
 
     const { data: dataEquipo, error: errorEquipo } = await supabase
         .from('profiles')
-        .select('id, nombre, apellido, email, image, estado, horas_semana, fichaje_jornada(id, date, date_final_aprox,total_trabajado, comentario, profile_id, fichaje_eventos(*))')
+        .select('id, nombre, apellido, email, image, estado, horas_semana, hora_fin_lunes, hora_fin_martes, hora_fin_miercoles, hora_fin_jueves, hora_fin_viernes, fichaje_jornada(id, date, date_final_aprox,total_trabajado, comentario, profile_id, fichaje_eventos(*))')
         .neq('user_id', user.id);
 
     if (errorEquipo) {
