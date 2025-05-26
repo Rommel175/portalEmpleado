@@ -334,7 +334,7 @@ export default function FormularioPerfil({ profile, isAdmin }: Props) {
                             <div className={styles.formGroup}>
                                 <div className={styles.formItem}>
                                     <h3>Horas semanales</h3>
-                                    <input type="text" value={horasSemana} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setHorasSemana(e.target.value)} />
+                                    <input type="text" value={(horasSemana !== null && horasSemana !== 'null') ? String(horasSemana) : ""} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setHorasSemana(e.target.value)} />
                                 </div>
                                 <div className={styles.formItem}>
                                     <h3>Costo/hora</h3>

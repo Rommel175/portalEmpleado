@@ -28,23 +28,61 @@ export async function GET(request: Request) {
 
   const user = data.user
   const email = user?.user_metadata.email;
-  //const name = user?.user_metadata.full_name;
-  //const full_name = name.split(' ');
+  const name = user?.user_metadata.full_name;
+  const full_name = name.split(' ');
 
-  if (email == 'rommel.xana@gmail.com' || email == 'example.xana@gmail.com' || email.endsWith('@xanasystem.com') || email.endsWith('@xanatechnolgies.com') || email == 'rrhh.portalxana@gmail.com') {
+  if (email == 'rrhh.portalxana@gmail.com') {
+    const { data: dataProfile, error: errorProfile } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('user_id', user.id);
+
+    if (errorProfile) {
+      console.log('Error profile login: ', errorProfile);
+      return NextResponse.json({ error: errorProfile }, { status: 500 });
+    }
+
+    if (!dataProfile || dataProfile.length === 0) {
+      const { error: errorInsertProfile } = await supabase
+        .from('profiles')
+        .insert({ user_id: user.id, nombre: full_name[0], apellido: full_name[1], email: user.email, image: user.user_metadata.avatar_url, estado: 'Inactivo', alta: true, is_admin: true })
+
+      if (errorInsertProfile) {
+        console.log('Error insert Profile: ', errorInsertProfile);
+        return NextResponse.json({ error: errorInsertProfile }, { status: 500 });
+      }
+    } else {
+      const currentImage = dataProfile[0].image;
+
+      if (currentImage !== user.user_metadata.avatar_url) {
+        const { error: errorUpdateImage } = await supabase
+          .from('profiles')
+          .update({ image: user.user_metadata.avatar_url })
+          .eq('user_id', user.id);
+
+        if (errorUpdateImage) {
+          console.log('Error actualizando imagen de perfil: ', errorUpdateImage);
+          return NextResponse.json({ error: errorUpdateImage }, { status: 500 });
+        }
+      }
+    }
+
+    return NextResponse.redirect(`${origin}/`);
+
+  } else if (email == 'rommel.xana@gmail.com' || email == 'example.xana@gmail.com' || email.endsWith('@xanasystem.com') || email.endsWith('@xanatechnolgies.com')) {
 
     const { data: dataProfile, error: errorProfle } = await supabase
       .from('profiles')
       .select('id, image, estado')
-      .eq('user_id', user.id)
+      .eq('user_id', user.id);
 
     if (errorProfle) {
       console.log('Error fetching Profile ID: ', errorProfle);
-      return NextResponse.json({ error: errorProfle }, { status: 500})
+      return NextResponse.json({ error: errorProfle }, { status: 500 })
     }
 
     if (!dataProfile || dataProfile.length === 0) {
-      
+
       try {
         const id = user?.id;
 
