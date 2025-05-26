@@ -90,9 +90,16 @@ export default function FormularioAdd() {
     }
 
     function handleEmailBlur() {
-        const hasError = email.value.endsWith('@xanasystem.com');
-        setEmail((prev) => ({ ...prev, hasError }))
+        const cleaned = email.value.trim().toLowerCase();
+        const hasError = !(
+            cleaned.endsWith('@xanasystem.com') ||
+            cleaned === 'example.xana@gmail.com' ||
+            cleaned === 'rommel.xana@gmail.com' ||
+            cleaned.endsWith('@xanatechnologies.com')
+        );
+        setEmail((prev) => ({ ...prev, hasError }));
     }
+
 
     function handleChangeCoste(e: React.ChangeEvent<HTMLInputElement>) {
         /*let value = e.target.value;
@@ -135,7 +142,12 @@ export default function FormularioAdd() {
         const isHoraValidaMiercoles = hourRegexp.test(horaMiercoles.value) || horaMiercoles.value === "";
         const isHoraValidaJueves = hourRegexp.test(horaJueves.value) || horaJueves.value === "";
         const isHoraValidaViernes = hourRegexp.test(horaViernes.value) || horaViernes.value === "";
-        const isEmailValid = email.value.endsWith('@xanasystem.com') || email.value == 'example.xana@gmail.com' || email.value == 'rommel.xana@gmail.com' || email.value.endsWith('@xanatechnolgies.com');
+        const trimmedEmail = email.value.trim().toLowerCase();
+        const isEmailValid =
+            trimmedEmail.endsWith('@xanasystem.com') ||
+            trimmedEmail === 'example.xana@gmail.com' ||
+            trimmedEmail === 'rommel.xana@gmail.com' ||
+            trimmedEmail.endsWith('@xanatechnologies.com');
 
         if (!isEmailValid) {
             setEmail((prev) => ({ ...prev, hasError: true }));
