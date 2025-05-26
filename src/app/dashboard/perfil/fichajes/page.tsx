@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import ContainerOptions from '@/components/containers/ContainerOptions';
 import EntradasFichajes from '@/components/containers/historialFichajes/EntradasFichajes';
 import styles from './fichajes.module.css'
-import { Profile } from '@/types/Types';
+import { Fichaje_eventos, Profile } from '@/types/Types';
 import dayjs from 'dayjs';
 import ActividadCardIndividual from '@/components/cards/ActividadIndividual';
 import DropdownExportar from '@/components/customInputs/dropdownExportar/exportarProfile/DropdownExportarProfile';
@@ -45,6 +45,8 @@ export default function Fichajes() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [totalHorasTrabajadas, setTotalHorasTrabajadas] = useState<string>('00:00');
   const [totalHoras, setTotalHoras] = useState(0);
+  const [checkedStateFichaje, setCheckedStateFichaje] = useState<{ [key: string]: boolean }>({});
+  //const isSelected = Object.values(checkedStateFichaje).some((val) => val === true);
 
   useEffect(() => {
     let start = startDate;
@@ -89,6 +91,10 @@ export default function Fichajes() {
         setEventosPorFecha(result.data)
         setProfile(result.profile)
         setTotalHoras(result.horas_semana);
+        const eventos = result.data.flatMap((item: EventosPorFechaType) => item.eventos);
+        //console.log(eventos);
+        const initialState = Object.fromEntries(eventos.map((evento: Fichaje_eventos) => [evento.id, false]));
+        setCheckedStateFichaje(initialState);
       }
     }
 
@@ -153,7 +159,7 @@ export default function Fichajes() {
         />
       )}
       <div className={styles.options}>
-        <DropdownExportar eventos={eventosPorFecha} startDate={startDate} endDate={endDate} />
+        <DropdownExportar eventos={eventosPorFecha} startDate={startDate} endDate={endDate} checkedStateFichajes={checkedStateFichaje} />
 
         <ContainerOptions
           recientes={true}
@@ -195,12 +201,13 @@ export default function Fichajes() {
         eventosPorFecha.length == 0 ? (
           <p>No hay registros.</p>
         ) : (
-
           eventosPorFecha.map((item) => (
             <EntradasFichajes
               key={item.fecha}
               date={item.fecha}
               eventos={item.eventos}
+              checkedStateFichajes={checkedStateFichaje}
+              setCheckedStateFichaje={setCheckedStateFichaje}
             />
           ))
         )

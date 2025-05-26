@@ -21,7 +21,7 @@ type Evento = {
     localizacion: string;
 };
 
-export default function DropdownExportarProfile({ eventos, startDate, endDate }: { eventos: EventosPorFechaType[], startDate: Date | null, endDate: Date | null }) {
+export default function DropdownExportarProfile({ eventos, startDate, endDate, checkedStateFichajes }: { eventos: EventosPorFechaType[], startDate: Date | null, endDate: Date | null, checkedStateFichajes: { [key: string]: boolean } }) {
     const [show, setShow] = useState(false);
     const dropdownRef = useRef<HTMLDivElement | null>(null);
 
@@ -37,6 +37,11 @@ export default function DropdownExportarProfile({ eventos, startDate, endDate }:
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, [])
+
+    const eventosSeleccionados = eventos
+        .flatMap(fechaGrupo => fechaGrupo.eventos)
+        .filter(evento => checkedStateFichajes[evento.id]);
+
 
     function handleExportExcel() {
         const exportar = async () => {
@@ -55,15 +60,13 @@ export default function DropdownExportarProfile({ eventos, startDate, endDate }:
                 cell.font = { bold: true };
             });
 
-            eventos.forEach(({ eventos }) => {
-                eventos.forEach(evento => {
-                    worksheet.addRow({
-                        id: evento.id,
-                        fichaje_id: evento.fichaje_id,
-                        evento: evento.evento,
-                        date: dayjs(evento.date).toLocaleString(),
-                        localizacion: evento.localizacion,
-                    });
+            eventosSeleccionados.forEach(evento => {
+                worksheet.addRow({
+                    id: evento.id,
+                    fichaje_id: evento.fichaje_id,
+                    evento: evento.evento,
+                    date: dayjs(evento.date).toISOString(),
+                    localizacion: evento.localizacion,
                 });
             });
 
@@ -82,7 +85,7 @@ export default function DropdownExportarProfile({ eventos, startDate, endDate }:
     function handleExportPdf() {
         const doc = new jsPDF();
         const headers = [['ID', 'Fichaje_id', 'Evento', 'Fecha', 'Localización']];
-        const data = eventos.flatMap(({ eventos }) =>
+        /*const data = eventos.flatMap(({ eventos }) =>
             eventos.map((e) => [
                 e.id.toString(),
                 e.fichaje_id.toString(),
@@ -90,7 +93,16 @@ export default function DropdownExportarProfile({ eventos, startDate, endDate }:
                 e.date.toString(),
                 e.localizacion.toString()
             ])
-        );
+        );*/
+
+        const data = eventosSeleccionados.map(evento => [
+            evento.id.toString(),
+            evento.fichaje_id.toString(),
+            evento.evento.toString(),
+            dayjs(evento.date).toISOString(),
+            evento.localizacion.toString()
+        ]);
+
 
         doc.setFontSize(16);
         doc.text('Historial de Fichajes', 14, 20);
