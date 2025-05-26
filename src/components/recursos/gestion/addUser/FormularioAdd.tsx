@@ -135,7 +135,7 @@ export default function FormularioAdd() {
         const isHoraValidaMiercoles = hourRegexp.test(horaMiercoles.value) || horaMiercoles.value === "";
         const isHoraValidaJueves = hourRegexp.test(horaJueves.value) || horaJueves.value === "";
         const isHoraValidaViernes = hourRegexp.test(horaViernes.value) || horaViernes.value === "";
-        const isEmailValid = email.value.endsWith('@xanasystem.com');
+        const isEmailValid = email.value.endsWith('@xanasystem.com') || email.value == 'example.xana@gmail.com' || email.value == 'rommel.xana@gmail.com' || email.value.endsWith('@xanatechnolgies.com');
 
         if (!isEmailValid) {
             setEmail((prev) => ({ ...prev, hasError: true }));

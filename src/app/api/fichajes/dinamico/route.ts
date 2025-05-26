@@ -29,6 +29,8 @@ export async function GET(req: NextRequest) {
         selectedTipos = [...EVENT_TYPES];
     }
 
+    let horas;
+
     const { data: dataProfile, error: errorProfile } = await supabase
         .from('profiles')
         .select('*')
@@ -67,6 +69,33 @@ export async function GET(req: NextRequest) {
             }
 
             return [start, end];
+        }
+
+        switch (option) {
+            case 'Hoy':
+            case 'Ayer':
+                horas = dataProfile[0].horas_semana / 5;
+                //console.log('horas', horas);
+                break;
+            case 'Esta semana':
+            case 'Semana pasada':
+                horas = dataProfile[0].horas_semana;
+                //console.log('horas', horas);
+                break;
+            case 'Este mes':
+            case 'Mes pasado':
+                horas = dataProfile[0].horas_semana * 4;
+                //console.log('horas', horas);
+                break;
+            case 'Este año':
+            case 'Año pasado':
+                horas = (dataProfile[0].horas_semana / 5) * 365;
+                //console.log('horas', horas);
+                break;
+            default:
+                horas = dataProfile[0].horas_semana
+                //console.log('horas', horas);
+                break;
         }
 
         const [start, end] = rangosPresets();
@@ -116,15 +145,39 @@ export async function GET(req: NextRequest) {
                         }
 
                         if (dataEvento && dataEvento.length > 0) {
-                            const eventosData = dataEvento.map(item => ({
-                                id: item.id,
-                                fichaje_id: item.fichaje_id,
-                                evento: item.evento,
-                                date: new Date(item.date),
-                                localizacion: item.localizacion,
-                            }));
 
-                            eventos.push(...eventosData)
+                            const eventosData = [];
+
+                            for (const item of dataEvento) {
+                                let date;
+
+                                if (item.modificado) {
+                                    const { data: modificacionesData, error: errorModificacionesData } = await supabase
+                                        .from('modificaciones_eventos')
+                                        .select('fecha_modificada')
+                                        .eq('fichaje_evento_id', item.id)
+                                        .order('created_at', { ascending: false })
+
+                                    if (errorModificacionesData) {
+                                        console.log('Error modificaciones data: ', errorModificacionesData);
+                                        return NextResponse.json({ error: errorModificacionesData }, { status: 500 })
+                                    }
+
+                                    date = new Date(modificacionesData[0].fecha_modificada)
+                                } else {
+                                    date = new Date(item.date);
+                                }
+
+                                eventosData.push({
+                                    id: item.id,
+                                    fichaje_id: item.fichaje_id,
+                                    evento: item.evento,
+                                    date: date,
+                                    localizacion: item.localizacion,
+                                })
+                            }
+
+                            eventos.push(...eventosData);
                         }
 
                     } else {
@@ -140,22 +193,45 @@ export async function GET(req: NextRequest) {
                         }
 
                         if (dataEvento && dataEvento.length > 0) {
-                            const eventosData = dataEvento.map(item => ({
-                                id: item.id,
-                                fichaje_id: item.fichaje_id,
-                                evento: item.evento,
-                                date: item.date,
-                                localizacion: item.localizacion,
-                            }));
 
-                            eventos.push(...eventosData)
+                            const eventosData = [];
+
+                            for (const item of dataEvento) {
+                                let date;
+
+                                if (item.modificado) {
+                                    const { data: modificacionesData, error: errorModificacionesData } = await supabase
+                                        .from('modificaciones_eventos')
+                                        .select('fecha_modificada')
+                                        .eq('fichaje_evento_id', item.id)
+                                        .order('created_at', { ascending: false })
+
+                                    if (errorModificacionesData) {
+                                        console.log('Error modificaciones data: ', errorModificacionesData);
+                                        return NextResponse.json({ error: errorModificacionesData }, { status: 500 })
+                                    }
+
+                                    date = new Date(modificacionesData[0].fecha_modificada)
+                                } else {
+                                    date = new Date(item.date);
+                                }
+
+                                eventosData.push({
+                                    id: item.id,
+                                    fichaje_id: item.fichaje_id,
+                                    evento: item.evento,
+                                    date: date,
+                                    localizacion: item.localizacion,
+                                })
+                            }
+
+                            eventos.push(...eventosData);
                         }
 
                     }
                 }
 
                 resultadoFinal.push({
-                    horas_semana: dataProfile[0].horas_semana,
                     fecha,
                     eventos
                 })
@@ -164,6 +240,6 @@ export async function GET(req: NextRequest) {
 
         console.log(resultadoFinal)
 
-        return NextResponse.json({ success: true, data: resultadoFinal, profile: dataProfile[0] }, { status: 200 });
+        return NextResponse.json({ success: true, data: resultadoFinal, profile: dataProfile[0], horas_semana: horas }, { status: 200 });
     }
 }

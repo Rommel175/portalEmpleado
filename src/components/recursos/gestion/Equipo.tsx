@@ -35,17 +35,28 @@ export default function EquipoAdmin({ equipo }: { equipo: Equipo[] }) {
 
         setCurrentDate(date.format('DD-MM-YYYY'));
 
+        const hoy = date.format('dddd').toLowerCase();
+
+        const campo = `hora_fin_${hoy}` as keyof Equipo;
+
+        console.log(campo);
+
         const usersData: Users[] = [];
 
         equipo.map((equipoItem) => {
+            console.log(equipoItem)
             const jornadas = equipoItem.fichaje_jornada.sort((a, b) => Number(a.id) - Number(b.id));
             const ultimaJornada = jornadas?.[jornadas.length - 1];
             const eventos = ultimaJornada?.fichaje_eventos.sort((a, b) => Number(a.id) - Number(b.id));
 
             const localizacion = eventos && eventos.length > 0 ? eventos[eventos.length - 1].localizacion : '-';
             const hora = ultimaJornada?.date ?? '-';
-            const hora_aprox_salida = ultimaJornada?.date_final_aprox ?? '-';
-            console.log(jornadas)
+            const horaAproxFin = equipoItem[campo] as string | null;
+
+            //console.log(horaAproxFin)
+
+            //console.log(jornadas)
+
             usersData.push({
                 id: equipoItem.id,
                 fichaje_id: ultimaJornada?.id,
@@ -57,7 +68,7 @@ export default function EquipoAdmin({ equipo }: { equipo: Equipo[] }) {
                 image: equipoItem.image,
                 localizacion,
                 hora: parseHora(hora),
-                hora_aprox_salida: parseHora(hora_aprox_salida),
+                hora_aprox_salida: parseHora(horaAproxFin),
                 fecha: parseFecha(ultimaJornada?.date)
             });
         })
@@ -136,7 +147,7 @@ export default function EquipoAdmin({ equipo }: { equipo: Equipo[] }) {
 
     }, [equipo])
 
-    function parseHora(hora: string | Date): string {
+    function parseHora(hora: string | Date | null): string {
         if (!hora) return '-';
         const date = dayjs(hora);
         if (!date.isValid()) return '-';

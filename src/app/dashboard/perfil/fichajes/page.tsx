@@ -7,7 +7,8 @@ import styles from './fichajes.module.css'
 import { Fichaje_eventos, Profile } from '@/types/Types';
 import dayjs from 'dayjs';
 import ActividadCardIndividual from '@/components/cards/ActividadIndividual';
-import DropdownExportar from '@/components/customInputs/dropdownExportar/exportarProfile/DropdownExportarProfile';
+import DropdownExportarProfile from '@/components/customInputs/dropdownExportar/exportarProfile/DropdownExportarProfile';
+
 
 type EventosPorFechaType = {
   fecha: string;
@@ -159,7 +160,7 @@ export default function Fichajes() {
         />
       )}
       <div className={styles.options}>
-        <DropdownExportar eventos={eventosPorFecha} startDate={startDate} endDate={endDate} checkedStateFichajes={checkedStateFichaje} />
+        <DropdownExportarProfile eventos={eventosPorFecha} startDate={startDate} endDate={endDate} checkedStateFichajes={checkedStateFichaje} />
 
         <ContainerOptions
           recientes={true}
@@ -195,7 +196,7 @@ export default function Fichajes() {
             </div>
           </div>
         </ContainerOptions>
-      </div >
+      </div>
 
       {
         eventosPorFecha.length == 0 ? (
