@@ -14,14 +14,15 @@ type EventosPorFechaType = {
 };
 
 type Evento = {
-    id: number;
-    fichaje_id: number;
-    evento: string;
-    modificado: boolean;
-    dateOriginal: Date;
-    dateModificada: Date,
-    dateCalculos: Date,
-    localizacion: string;
+  id: number,
+  fichaje_id: number,
+  evento: string,
+  modificado: boolean,
+  dateOriginal: Date,
+  dateModificada: Date,
+  dateCalculos: Date,
+  localizacion: string,
+  id_modificacion: string
 };
 
 export default function DropdownExportarProfile({ eventos, startDate, endDate, checkedStateFichajes, isSelected }: { eventos: EventosPorFechaType[], startDate: Date | null, endDate: Date | null, checkedStateFichajes: { [key: string]: boolean }, isSelected: boolean }) {
@@ -52,13 +53,14 @@ export default function DropdownExportarProfile({ eventos, startDate, endDate, c
             const worksheet = workbook.addWorksheet('Fichajes');
 
             worksheet.columns = [
-                { header: 'ID', key: 'id', width: 10 },
+                { header: 'Id', key: 'id', width: 10 },
                 { header: 'Fichaje_id', key: 'fichaje_id', width: 30 },
                 { header: 'Evento', key: 'evento', width: 30 },
                 { header: 'Fecha', key: 'date', width: 65 },
                 { header: 'Localización', key: 'localizacion', width: 30 },
                 { header: 'Modificado', key: 'modificado', width: 30 },
-                { header: 'Fecha modificada', key: 'fechaModificada', width: 65 }
+                { header: 'Fecha modificada', key: 'fechaModificada', width: 65 },
+                { header: 'Id_modificación', key: 'id_modificacion', width: 20 },
             ];
 
             worksheet.getRow(1).eachCell((cell) => {
@@ -70,10 +72,11 @@ export default function DropdownExportarProfile({ eventos, startDate, endDate, c
                     id: evento.id,
                     fichaje_id: evento.fichaje_id,
                     evento: evento.evento,
-                    date: dayjs(evento.dateOriginal).isValid() ? dayjs(evento.dateOriginal) : '',
+                    date: dayjs(evento.dateOriginal).isValid() ? dayjs(evento.dateOriginal).toISOString() : '',
                     localizacion: evento.localizacion,
                     modificado: evento.modificado ? 'Sí' : 'No',
-                    fechaModificada: dayjs(evento.dateModificada).isValid() ? dayjs(evento.dateModificada) : ''
+                    fechaModificada: dayjs(evento.dateModificada).isValid() ? dayjs(evento.dateModificada).toISOString() : '',
+                    id_modificacion: evento.id_modificacion
                 });
             });
 
@@ -91,7 +94,7 @@ export default function DropdownExportarProfile({ eventos, startDate, endDate, c
 
     function handleExportPdf() {
         const doc = new jsPDF();
-        const headers = [['ID', 'Fichaje_id', 'Evento', 'Fecha', 'Localización', 'Modificado', 'Fecha modificada']];
+        const headers = [['Id', 'Fichaje_id', 'Evento', 'Fecha', 'Localización', 'Modificado', 'Fecha modificada', 'Id_modificacion']];
         /*const data = eventos.flatMap(({ eventos }) =>
             eventos.map((e) => [
                 e.id.toString(),
@@ -109,7 +112,8 @@ export default function DropdownExportarProfile({ eventos, startDate, endDate, c
             dayjs(evento.dateOriginal).isValid() ? dayjs(evento.dateOriginal).toISOString() : '',
             evento.localizacion.toString(),
             evento.modificado ? 'Sí' : 'No',
-            dayjs(evento.dateModificada).isValid() ? dayjs(evento.dateModificada).toISOString() : ''
+            dayjs(evento.dateModificada).isValid() ? dayjs(evento.dateModificada).toISOString() : '',
+            evento.id_modificacion
         ]);
 
 
@@ -138,11 +142,12 @@ export default function DropdownExportarProfile({ eventos, startDate, endDate, c
             columnStyles: {
                 0: { cellWidth: 12 },
                 1: { cellWidth: 20 },
-                2: { cellWidth: 25 },
-                3: { cellWidth: 30 },
+                2: { cellWidth: 24 },
+                3: { cellWidth: 27 },
                 4: { cellWidth: 30 },
                 5: { cellWidth: 27 },
-                6: { cellWidth: 30 }
+                6: { cellWidth: 27 },
+                7: { cellWidth: 20 }
             },
             margin: { top: 10, bottom: 10 },
         });
@@ -151,7 +156,11 @@ export default function DropdownExportarProfile({ eventos, startDate, endDate, c
     }
 
     function handleDropdown() {
-        setShow(prevState => !prevState);
+        if (!isSelected) {
+            setShow(false)
+        } else {
+            setShow(prevState => !prevState);
+        }
     }
 
     return (

@@ -163,11 +163,12 @@ export async function GET(req: NextRequest) {
                             for (const item of dataEvento) {
                                 let dateModificada;
                                 let dateCalculos;
+                                let id_modificacion;
 
                                 if (item.modificado) {
                                     const { data: modificacionesData, error: errorModificacionesData } = await supabase
                                         .from('modificaciones_eventos')
-                                        .select('fecha_modificada')
+                                        .select('fecha_modificada,id')
                                         .eq('fichaje_evento_id', item.id)
                                         .order('created_at', {ascending: false})
 
@@ -178,9 +179,11 @@ export async function GET(req: NextRequest) {
 
                                     dateModificada = new Date(modificacionesData[0].fecha_modificada);
                                     dateCalculos = new Date(modificacionesData[0].fecha_modificada);
+                                    id_modificacion = modificacionesData[0].id;
                                 } else {
                                     dateModificada = '';
                                     dateCalculos = new Date(item.date);
+                                    id_modificacion = '';
                                 }
 
                                 eventosData.push({
@@ -192,6 +195,7 @@ export async function GET(req: NextRequest) {
                                     dateModificada: dateModificada,
                                     dateCalculos: dateCalculos,
                                     localizacion: item.localizacion,
+                                    id_modificacion: id_modificacion
                                 })
                             }
 
@@ -225,11 +229,12 @@ export async function GET(req: NextRequest) {
                             for (const item of dataEvento) {
                                 let dateModificada;
                                 let dateCalculos;
+                                let id_modificacion;
 
                                 if (item.modificado) {
                                     const { data: modificacionesData, error: errorModificacionesData } = await supabase
                                         .from('modificaciones_eventos')
-                                        .select('fecha_modificada')
+                                        .select('fecha_modificada, id')
                                         .eq('fichaje_evento_id', item.id)
                                         .order('created_at', {ascending: false})
 
@@ -240,9 +245,11 @@ export async function GET(req: NextRequest) {
 
                                     dateModificada = new Date(modificacionesData[0].fecha_modificada);
                                     dateCalculos = new Date(modificacionesData[0].fecha_modificada);
+                                    id_modificacion = modificacionesData[0].id;
                                 } else {
                                     dateModificada = '';
                                     dateCalculos = new Date(item.date);
+                                    id_modificacion = '';
                                 }
 
                                 eventosData.push({
@@ -254,6 +261,7 @@ export async function GET(req: NextRequest) {
                                     dateModificada: dateModificada,
                                     dateCalculos: dateCalculos,
                                     localizacion: item.localizacion,
+                                    id_modificacion: id_modificacion
                                 })
                             }
 

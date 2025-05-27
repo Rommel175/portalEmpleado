@@ -14,14 +14,15 @@ type EventosPorFechaType = {
 };
 
 type Evento = {
-  id: number;
-  fichaje_id: number;
-  evento: string;
-  modificado: boolean;
-  dateOriginal: Date;
+  id: number,
+  fichaje_id: number,
+  evento: string,
+  modificado: boolean,
+  dateOriginal: Date,
   dateModificada: Date,
   dateCalculos: Date,
-  localizacion: string;
+  localizacion: string,
+  id_modificacion: string
 };
 
 export default function FichajesInformes({ params }: { params: Promise<{ id: string }> }) {

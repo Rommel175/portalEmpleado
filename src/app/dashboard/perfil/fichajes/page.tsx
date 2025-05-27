@@ -11,19 +11,20 @@ import DropdownExportarProfile from '@/components/customInputs/dropdownExportar/
 
 
 type EventosPorFechaType = {
-  fecha: string;
-  eventos: Evento[];
+  fecha: string,
+  eventos: Evento[],
 };
 
 type Evento = {
-  id: number;
-  fichaje_id: number;
-  evento: string;
-  modificado: boolean;
-  dateOriginal: Date;
+  id: number,
+  fichaje_id: number,
+  evento: string,
+  modificado: boolean,
+  dateOriginal: Date,
   dateModificada: Date,
   dateCalculos: Date,
-  localizacion: string;
+  localizacion: string,
+  id_modificacion: string
 };
 
 export default function Fichajes() {
