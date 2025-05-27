@@ -9,11 +9,14 @@ type Evento = {
   id: number;
   fichaje_id: number;
   evento: string;
-  date: Date;
+  modificado: boolean;
+  dateOriginal: Date;
+  dateModificada: Date,
+  dateCalculos: Date,
   localizacion: string;
 };
 
-export default function EntradasFichajes({ date, eventos, checkedStateFichajes, setCheckedStateFichaje }: { date: string, eventos: Evento[], checkedStateFichajes: { [key: string]: boolean }, setCheckedStateFichaje: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>> }) {
+export default function EntradasFichajes({ dateJoranda, eventos, checkedStateFichajes, setCheckedStateFichaje }: { dateJoranda: string, eventos: Evento[], checkedStateFichajes: { [key: string]: boolean }, setCheckedStateFichaje: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>> }) {
 
   function tiempoTotal(eventos: Evento[]) {
     dayjs.extend(duration);
@@ -23,7 +26,7 @@ export default function EntradasFichajes({ date, eventos, checkedStateFichajes, 
     let totalHoras = dayjs.duration(0);
 
     for (const evento of eventos || []) {
-      const hora = dayjs(evento.date);
+      const hora = dayjs(evento.dateCalculos);
 
       switch (evento.evento) {
         case 'Inicio Jornada':
@@ -108,7 +111,7 @@ export default function EntradasFichajes({ date, eventos, checkedStateFichajes, 
         (eventos && eventos.length > 0) &&
         <>
           <header className={styles.title}>
-            <h2> {parseFecha(date)} </h2>
+            <h2> {parseFecha(dateJoranda)} </h2>
             <div>
               <h2>Total:</h2>
               <h2>{tiempoTotal(eventos)}</h2>
@@ -120,7 +123,7 @@ export default function EntradasFichajes({ date, eventos, checkedStateFichajes, 
 
           {
             eventos.map((item, index) => {
-              return <EntradaFichajesItem key={index} action={item.evento} date={date} hour={item.date} localizacion={item.localizacion} id={item.id} checkedStateFichajes={checkedStateFichajes[item.id]} setCheckedStateFichajes={setCheckedStateFichaje} isSelected={isSelected} />
+              return <EntradaFichajesItem key={index} action={item.evento} dateJornada={dateJoranda} fechaOriginal={item.dateOriginal} fechaModificacion={item.dateModificada} modificado={item.modificado} localizacion={item.localizacion} id={item.id} checkedStateFichajes={checkedStateFichajes[item.id]} setCheckedStateFichajes={setCheckedStateFichaje} isSelected={isSelected} />
             })
           }
         </>

@@ -17,7 +17,10 @@ type Evento = {
     id: number;
     fichaje_id: number;
     evento: string;
-    date: Date;
+    modificado: boolean;
+    dateOriginal: Date;
+    dateModificada: Date,
+    dateCalculos: Date,
     localizacion: string;
 };
 
@@ -53,7 +56,8 @@ export default function DropdownExportarProfile({ eventos, startDate, endDate, c
                 { header: 'Fichaje_id', key: 'fichaje_id', width: 30 },
                 { header: 'Evento', key: 'evento', width: 30 },
                 { header: 'Fecha', key: 'date', width: 65 },
-                { header: 'Localización', key: 'localizacion', width: 30 }
+                { header: 'Localización', key: 'localizacion', width: 30 },
+                //{ header: 'Modificado', key: 'modificado', width: 10 }
             ];
 
             worksheet.getRow(1).eachCell((cell) => {
@@ -65,7 +69,7 @@ export default function DropdownExportarProfile({ eventos, startDate, endDate, c
                     id: evento.id,
                     fichaje_id: evento.fichaje_id,
                     evento: evento.evento,
-                    date: dayjs(evento.date).toISOString(),
+                    date: dayjs(evento.dateOriginal).toISOString(),
                     localizacion: evento.localizacion,
                 });
             });
@@ -99,7 +103,7 @@ export default function DropdownExportarProfile({ eventos, startDate, endDate, c
             evento.id.toString(),
             evento.fichaje_id.toString(),
             evento.evento.toString(),
-            dayjs(evento.date).toISOString(),
+            dayjs(evento.dateCalculos).toISOString(),
             evento.localizacion.toString()
         ]);
 

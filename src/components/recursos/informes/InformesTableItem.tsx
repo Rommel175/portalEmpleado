@@ -13,7 +13,7 @@ export default function InformesTableItem({ image, nombre, apellido, email, hora
                     (isSelected) &&
                     <SelectOne checkedState={checkedState} setCheckedState={setCheckedState} id={id} />
                 }
-                <Image src={image} width={40} height={40} alt='img' />
+                <Image src={image ?? "/images/default.jpg"} width={40} height={40} alt='img' />
                 <div className={styles.containerInfo}>
                     <h3>{nombre} {apellido}</h3>
                     <h4>{email}</h4>

@@ -17,7 +17,10 @@ type Evento = {
   id: number;
   fichaje_id: number;
   evento: string;
-  date: Date;
+  modificado: boolean;
+  dateOriginal: Date;
+  dateModificada: Date,
+  dateCalculos: Date,
   localizacion: string;
 };
 
@@ -179,7 +182,7 @@ export default function FichajesInformes({ params }: { params: Promise<{ id: str
           eventosPorFecha.map((item) => (
             <EntradasFichajes
               key={item.fecha}
-              date={item.fecha}
+              dateJoranda={item.fecha}
               eventos={item.eventos}
               checkedStateFichajes={checkedStateFichaje}
               setCheckedStateFichaje={setCheckedStateFichaje}

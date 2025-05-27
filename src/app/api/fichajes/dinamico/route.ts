@@ -141,7 +141,8 @@ export async function GET(req: NextRequest) {
                             .order('id', { ascending: true });
 
                         if (errorEvento) {
-                            console.log('Error 4')
+                            console.log('Error 4', errorEvento)
+                            return NextResponse.json({ error: errorEvento }, { status: 500 });
                         }
 
                         if (dataEvento && dataEvento.length > 0) {
@@ -149,7 +150,8 @@ export async function GET(req: NextRequest) {
                             const eventosData = [];
 
                             for (const item of dataEvento) {
-                                let date;
+                                let dateModificada;
+                                let dateCalculos;
 
                                 if (item.modificado) {
                                     const { data: modificacionesData, error: errorModificacionesData } = await supabase
@@ -163,16 +165,21 @@ export async function GET(req: NextRequest) {
                                         return NextResponse.json({ error: errorModificacionesData }, { status: 500 })
                                     }
 
-                                    date = new Date(modificacionesData[0].fecha_modificada)
+                                    dateModificada = new Date(modificacionesData[0].fecha_modificada);
+                                    dateCalculos = new Date(modificacionesData[0].fecha_modificada);
                                 } else {
-                                    date = new Date(item.date);
+                                    dateModificada = '';
+                                    dateCalculos = new Date(item.date);
                                 }
 
                                 eventosData.push({
                                     id: item.id,
                                     fichaje_id: item.fichaje_id,
                                     evento: item.evento,
-                                    date: date,
+                                    modificado: item.modificado,
+                                    dateOriginal: item.date,
+                                    dateModificada: dateModificada,
+                                    dateCalculos: dateCalculos,
                                     localizacion: item.localizacion,
                                 })
                             }
@@ -197,7 +204,8 @@ export async function GET(req: NextRequest) {
                             const eventosData = [];
 
                             for (const item of dataEvento) {
-                                let date;
+                                let dateModificada;
+                                let dateCalculos;
 
                                 if (item.modificado) {
                                     const { data: modificacionesData, error: errorModificacionesData } = await supabase
@@ -211,16 +219,21 @@ export async function GET(req: NextRequest) {
                                         return NextResponse.json({ error: errorModificacionesData }, { status: 500 })
                                     }
 
-                                    date = new Date(modificacionesData[0].fecha_modificada)
+                                    dateModificada = new Date(modificacionesData[0].fecha_modificada);
+                                    dateCalculos = new Date(modificacionesData[0].fecha_modificada);
                                 } else {
-                                    date = new Date(item.date);
+                                    dateModificada = '';
+                                    dateCalculos = new Date(item.date);
                                 }
 
                                 eventosData.push({
                                     id: item.id,
                                     fichaje_id: item.fichaje_id,
                                     evento: item.evento,
-                                    date: date,
+                                    modificado: item.modificado,
+                                    dateOriginal: item.date,
+                                    dateModificada: dateModificada,
+                                    dateCalculos: dateCalculos,
                                     localizacion: item.localizacion,
                                 })
                             }

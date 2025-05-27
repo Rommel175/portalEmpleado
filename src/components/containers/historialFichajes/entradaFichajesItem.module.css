@@ -8,22 +8,34 @@
     background: #FFF;
 }
 
-.item h3:nth-child(odd) {
+.dark {
     width: 120px;
     color: #0B3C70;
     font-size: 14px;
     font-style: normal;
     font-weight: 500;
-    line-height: 20px; /* 142.857% */
+    line-height: 20px;
 }
 
-.item h3:nth-child(even) {
+.light {
     width: 120px;
     color: var(--light-03, #7B8794);
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
+}
+
+.modificada {
+    display: flex;
+    width: 120px;
+    color: var(--light-03, #7B8794);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    display: flex;
+    gap: 10px;
 }
 
 .item .modificacion {
