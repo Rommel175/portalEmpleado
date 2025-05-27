@@ -40,8 +40,8 @@
     /* 114.286% */
 }
 
-/*@media (width < 1024px) {
+@media (width < 1024px) {
     .nav {
         display: none;
     }
-}*/
+}

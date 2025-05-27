@@ -19,10 +19,14 @@
     margin-left: 290px;
 }
 
-@media(width < 400px) {
+@media(width < 900px) {
     .wraper {
         background: #F6F6F6;
         flex-direction: column;
         align-items: flex-start;
+    }
+
+    .container {
+        margin-left: 0;
     }
 }

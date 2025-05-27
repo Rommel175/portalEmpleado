@@ -4,6 +4,7 @@ import { Poppins } from 'next/font/google';
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 import Navbar from '@/components/navbar/Navbar';
+import SidebarResponsive from '@/components/sidebar/sidebarResponsive/SidebarResponsive';
 
 const poppins = Poppins({
   weight: ['900','800','800','700', '600', '500', '400', '300', '200', '100'],
@@ -34,6 +35,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
       <Navbar image={profile.image} nombre={profile.nombre} apellido={profile.apellido} email={profile.email} />
 
       <SidebarComponent is_admin={profile?.is_admin} />
+      <SidebarResponsive is_admin={profile?.is_admin} />
 
       <div className={styles.container}>
         {children}

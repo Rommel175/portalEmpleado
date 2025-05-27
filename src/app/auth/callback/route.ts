@@ -111,7 +111,7 @@ export async function GET(request: Request) {
         }
       }
 
-      if (dataProfile[0].estado == 'Activo' || dataProfile[0].estado == 'Pausa') {
+      /*if (dataProfile[0].estado == 'Activo' || dataProfile[0].estado == 'Pausa') {
         const { error: errorUpdateImage } = await supabase
           .from('profiles')
           .update({ estado: 'Inactivo' })
@@ -121,7 +121,7 @@ export async function GET(request: Request) {
           console.log('Error actualizando estado del perfil: ', errorUpdateImage);
           return NextResponse.json({ error: errorUpdateImage }, { status: 500 });
         }
-      }
+      }*/
     }
 
     if (next) {

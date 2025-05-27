@@ -20,7 +20,7 @@
     align-self: stretch;
 }
 
-.navContainer > h1 {
+.navContainer>h1 {
     color: var(--primary, #0B3C70);
     font-family: Poppins;
     font-size: 24px;
@@ -29,3 +29,46 @@
     line-height: normal;
 }
 
+.title {
+    display: flex;
+    /*width: 240px;*/
+    align-items: center;
+    gap: 12px;
+}
+
+.title>h1 {
+    color: var(--primary, #0B3C70);
+    font-size: 21px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+    /* 114.286% */
+}
+
+.svg {
+    width: 42px;
+    height: 42px;
+}
+
+@media (width > 1024px) {
+    .title {
+        display: none;
+    }
+}
+
+@media (width < 1024px) {
+    .nav {
+        justify-content: space-between
+    }
+}
+
+@media (width < 450px) {
+    .svg {
+        width: 40px;
+        height: 40px;
+    }
+
+    .title>h1 {
+        display: none;
+    }
+}
