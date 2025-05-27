@@ -50,7 +50,7 @@ export default function Fichajes() {
   const [totalHorasTrabajadas, setTotalHorasTrabajadas] = useState<string>('00:00');
   const [totalHoras, setTotalHoras] = useState(0);
   const [checkedStateFichaje, setCheckedStateFichaje] = useState<{ [key: string]: boolean }>({});
-  //const isSelected = Object.values(checkedStateFichaje).some((val) => val === true);
+  const isSelected = Object.values(checkedStateFichaje).some((val) => val === true);
 
   useEffect(() => {
     let start = startDate;
@@ -163,7 +163,7 @@ export default function Fichajes() {
         />
       )}
       <div className={styles.options}>
-        <DropdownExportarProfile eventos={eventosPorFecha} startDate={startDate} endDate={endDate} checkedStateFichajes={checkedStateFichaje} />
+        <DropdownExportarProfile eventos={eventosPorFecha} startDate={startDate} endDate={endDate} checkedStateFichajes={checkedStateFichaje} isSelected={isSelected} />
 
         <ContainerOptions
           recientes={true}
