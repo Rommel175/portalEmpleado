@@ -60,6 +60,7 @@
     font-style: normal;
     font-weight: 400;
     line-height: normal;
+    text-align: justify;
 }
 
 .formGroup {
@@ -279,4 +280,25 @@
 .buttons button:last-child:hover {
     background: linear-gradient(0deg, rgba(0, 0, 0, 0.30) 0%, rgba(0, 0, 0, 0.30) 100%), #0B3C70;
     cursor: pointer;
+}
+
+.image {
+    width: 542px;
+}
+
+@media (width <= 1024px) {
+    .modalContainer {
+        padding-left: 0px;
+        padding: 60px;
+    }
+
+    .image {
+        display: none;
+    }
+}
+
+@media (width < 450px) {
+    .overlay {
+        display: none;
+    }
 }

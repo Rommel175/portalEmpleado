@@ -5,3 +5,10 @@
     align-self: stretch; 
     margin-top: 90px;
 }
+
+@media(width <= 1024px) {
+    .containerSuperior {
+        flex-direction: column-reverse;
+        /*padding: 12px;*/
+    }
+}

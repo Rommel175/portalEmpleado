@@ -219,3 +219,18 @@
     align-items: center;
     gap: 2px;
 }
+
+@media (width < 450px) {
+    .mainContent {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: flex-start;
+        gap: 18px;
+        align-self: stretch;
+    }
+
+    .mainContent>div {
+        width: 100%;
+    }
+}

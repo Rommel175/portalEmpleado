@@ -18,3 +18,9 @@
     font-weight: 500;
     line-height: normal;
 }
+
+@media (width < 450px) {
+    .container {
+        display: none;
+    }
+}

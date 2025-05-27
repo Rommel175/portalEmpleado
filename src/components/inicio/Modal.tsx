@@ -132,7 +132,7 @@ export default function Modal({ profile }: { profile: Profile }) {
                     </div>
 
                 </form>
-                <Image src={'/images/modal_image.jpg'} width={542} height={756} alt='img' />
+                <Image src={'/images/modal_image.jpg'} width={542} height={756} alt='img' className={styles.image}/>
             </div>
         </div>
     )
