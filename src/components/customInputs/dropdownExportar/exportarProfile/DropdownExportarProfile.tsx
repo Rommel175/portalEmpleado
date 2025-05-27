@@ -57,7 +57,8 @@ export default function DropdownExportarProfile({ eventos, startDate, endDate, c
                 { header: 'Evento', key: 'evento', width: 30 },
                 { header: 'Fecha', key: 'date', width: 65 },
                 { header: 'Localización', key: 'localizacion', width: 30 },
-                //{ header: 'Modificado', key: 'modificado', width: 10 }
+                { header: 'Modificado', key: 'modificado', width: 30 },
+                { header: 'Fecha modificada', key: 'fechaModificada', width: 65 }
             ];
 
             worksheet.getRow(1).eachCell((cell) => {
@@ -69,8 +70,10 @@ export default function DropdownExportarProfile({ eventos, startDate, endDate, c
                     id: evento.id,
                     fichaje_id: evento.fichaje_id,
                     evento: evento.evento,
-                    date: dayjs(evento.dateOriginal).toISOString(),
+                    date: dayjs(evento.dateOriginal).isValid() ? dayjs(evento.dateOriginal) : '',
                     localizacion: evento.localizacion,
+                    modificado: evento.modificado ? 'Sí' : 'No',
+                    fechaModificada: dayjs(evento.dateModificada).isValid() ? dayjs(evento.dateModificada) : ''
                 });
             });
 
@@ -88,7 +91,7 @@ export default function DropdownExportarProfile({ eventos, startDate, endDate, c
 
     function handleExportPdf() {
         const doc = new jsPDF();
-        const headers = [['ID', 'Fichaje_id', 'Evento', 'Fecha', 'Localización']];
+        const headers = [['ID', 'Fichaje_id', 'Evento', 'Fecha', 'Localización', 'Modificado', 'Fecha modificada']];
         /*const data = eventos.flatMap(({ eventos }) =>
             eventos.map((e) => [
                 e.id.toString(),
@@ -103,8 +106,10 @@ export default function DropdownExportarProfile({ eventos, startDate, endDate, c
             evento.id.toString(),
             evento.fichaje_id.toString(),
             evento.evento.toString(),
-            dayjs(evento.dateCalculos).toISOString(),
-            evento.localizacion.toString()
+            dayjs(evento.dateOriginal).isValid() ? dayjs(evento.dateOriginal).toISOString() : '',
+            evento.localizacion.toString(),
+            evento.modificado ? 'Sí' : 'No',
+            dayjs(evento.dateModificada).isValid() ? dayjs(evento.dateModificada).toISOString() : ''
         ]);
 
 
@@ -131,8 +136,13 @@ export default function DropdownExportarProfile({ eventos, startDate, endDate, c
             },
             alternateRowStyles: { fillColor: [245, 245, 245] },
             columnStyles: {
-                0: { cellWidth: 20 },
-                3: { halign: 'right' },
+                0: { cellWidth: 12 },
+                1: { cellWidth: 20 },
+                2: { cellWidth: 25 },
+                3: { cellWidth: 30 },
+                4: { cellWidth: 30 },
+                5: { cellWidth: 27 },
+                6: { cellWidth: 30 }
             },
             margin: { top: 10, bottom: 10 },
         });
