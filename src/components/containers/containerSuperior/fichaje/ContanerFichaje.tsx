@@ -48,7 +48,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
 
     const supabase = createClient();
 
-    function tiempoTrabajado(eventos: Fichaje_eventos[]) {
+    async function tiempoTrabajado(eventos: Fichaje_eventos[]) {
         let pausaInicio: dayjs.Dayjs | null = null;
         let jornadaInicio: dayjs.Dayjs | null = null;
 
@@ -58,7 +58,23 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
         const nuevosOffsets: number[] = [];
 
         for (const e of eventos) {
-            const hora = dayjs(e.date);
+            let hora;
+
+            if (e.modificado) {
+                const { data: modificacionesData, error: errorModificacionesData } = await supabase
+                    .from('modificaciones_eventos')
+                    .select('fecha_modificada')
+                    .eq('fichaje_evento_id', e.id)
+                    .order('created_at', { ascending: false })
+
+                if (errorModificacionesData) {
+                    console.log('Error modificaciones data: ', errorModificacionesData);
+                }
+
+                hora = dayjs(modificacionesData?.[0]?.fecha_modificada);
+            } else {
+                hora = dayjs(e.date);
+            }
 
             switch (e.evento) {
                 case 'Inicio Jornada':
@@ -196,11 +212,29 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
 
                 if (dataEventos && dataEventos.length > 0) {
                     console.log(dataEventos[0].date);
-                    setHoraInicio(dataEventos[0].date);
+
+                    if (dataEventos[0].modificado) {
+                        const { data: modificacionesData, error: errorModificacionesData } = await supabase
+                            .from('modificaciones_eventos')
+                            .select('fecha_modificada')
+                            .eq('fichaje_evento_id', dataEventos[0].id)
+                            .order('created_at', { ascending: false })
+
+                        if (errorModificacionesData) {
+                            console.log('Error modificaciones data: ', errorModificacionesData);
+                            return;
+                        }
+
+                        setHoraInicio(modificacionesData[0].fecha_modificada)
+                    } else {
+                        setHoraInicio(dataEventos[0].date);
+                    }
+
+
                     setEventos(dataEventos);
 
                     if (estado == 'Pausa' || estado == 'Activo') {
-                        const tiempoDuracion = tiempoTrabajado(dataEventos);
+                        const tiempoDuracion = await tiempoTrabajado(dataEventos);
                         const now = dayjs();
                         //console.log('Fecha 1',now.format('HH:mm'));
                         //console.log('Fecha 2',dayjs(data[0].date).format('HH:mm'));
@@ -259,7 +293,23 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
                         }
 
                         if (dataEventos && dataEventos.length > 0) {
-                            setHoraInicio(dataEventos[0].date);
+                            if (dataEventos[0].modificado) {
+                                const { data: modificacionesData, error: errorModificacionesData } = await supabase
+                                    .from('modificaciones_eventos')
+                                    .select('fecha_modificada')
+                                    .eq('fichaje_evento_id', dataEventos[0].id)
+                                    .order('created_at', { ascending: false })
+
+                                if (errorModificacionesData) {
+                                    console.log('Error modificaciones data: ', errorModificacionesData);
+                                    return;
+                                }
+
+                                setHoraInicio(modificacionesData[0].fecha_modificada)
+                            } else {
+                                setHoraInicio(dataEventos[0].date);
+                            }
+
                             setEventos(dataEventos);
                         }
                     }
@@ -447,11 +497,29 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
 
     //Accion del timer
     useEffect(() => {
-        if (!isRunning || eventos == null) return;
+        if (!isRunning || eventos == null || estado !== 'Activo') return;
 
-        const tiempoDuracion = tiempoTrabajado(eventos);
+        //const tiempoDuracion = tiempoTrabajado(eventos);
 
-        const timer = window.setInterval(() => {
+        let timer: number;
+
+        const iniciarContador = async () => {
+            const tiempoDuracion = await tiempoTrabajado(eventos);
+
+            timer = window.setInterval(() => {
+                const now = dayjs();
+                const diffInSeconds = now.diff(dayjs(horaInicio), 'second');
+
+                const segundosTrabajados = tiempoDuracion.asSeconds();
+                const time = diffInSeconds - segundosTrabajados;
+                setTiempoBase(time);
+            }, 1000);
+        };
+
+        iniciarContador();
+
+
+        /*const timer = window.setInterval(() => {
             const now = dayjs()
             console.log('ahora', now.toISOString())
             console.log('horaInicio', horaInicio);
@@ -463,7 +531,7 @@ export default function ContainerFichaje({ estado, setEstado, profile, localizac
             console.log(time);
             //const time = Math.max(0, diffInSeconds - segundosTrabajados);
             setTiempoBase(time);
-        }, 1000);
+        }, 1000);*/
 
         return () => clearInterval(timer);
 
