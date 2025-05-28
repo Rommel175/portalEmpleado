@@ -98,7 +98,7 @@ export default function Modal({ profile }: { profile: Profile }) {
 
                         <div className={styles.location}>
                             <label htmlFor="location">Localización</label>
-                            <CustomSelect localizacionFichaje={localizacionFichaje} setLocalizacionFichaje={setLocalizacionFichaje} options={["oficina", "casa", "viaje"]} />
+                            <CustomSelect localizacionFichaje={localizacionFichaje} setLocalizacionFichaje={setLocalizacionFichaje} options={["oficina", "casa", "viaje"]} estado={profile.estado} />
                         </div>
 
                         <div className={styles.departureTime}>

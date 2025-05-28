@@ -3,16 +3,16 @@
 import { useEffect, useRef, useState } from "react";
 import styles from './customSelect.module.css';
 
-export default function CustomSelect({ localizacionFichaje, setLocalizacionFichaje, options }: { localizacionFichaje: string, setLocalizacionFichaje: React.Dispatch<React.SetStateAction<string>>, options: string[] }) {
+export default function CustomSelect({ localizacionFichaje, setLocalizacionFichaje, options, estado }: { localizacionFichaje: string, setLocalizacionFichaje: React.Dispatch<React.SetStateAction<string>>, options: string[], estado: string }) {
     const [show, setShow] = useState(false);
     const dropdownRef = useRef<HTMLDivElement | null>(null);
 
     function handleSelect(option: string) {
-        setLocalizacionFichaje(option);
-        setShow(false);
+        if (estado == 'Jornada Finalizada' || estado == 'Pausa') {
+            setLocalizacionFichaje(option);
+            setShow(false);
+        }
     }
-
-
 
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
@@ -28,7 +28,11 @@ export default function CustomSelect({ localizacionFichaje, setLocalizacionFicha
     }, [])
 
     return (
-        <div className={styles.customSelect} onClick={() => setShow(!show)} ref={dropdownRef}>
+        <div className={styles.customSelect} onClick={() => {
+            if (estado === 'Jornada Finalizada' || estado === 'Pausa') {
+                setShow(!show);
+            }
+        }} ref={dropdownRef}>
             {
                 //JSON.stringify(localizacionFichaje)
             }

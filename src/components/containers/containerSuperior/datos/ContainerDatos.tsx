@@ -146,7 +146,7 @@ export default function DatosContainer({ profile, estado, localizacionFichaje, s
             <div className={styles.mainContent}>
                 <div>
                     <h4>Ubicación</h4>
-                    <CustomSelect localizacionFichaje={localizacionFichaje} setLocalizacionFichaje={setLocalizacionFichaje} options={["oficina", "casa", "viaje"]} />
+                    <CustomSelect localizacionFichaje={localizacionFichaje} setLocalizacionFichaje={setLocalizacionFichaje} options={["oficina", "casa", "viaje"]} estado={estado} />
                 </div>
 
                 <div>
