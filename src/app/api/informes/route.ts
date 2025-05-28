@@ -250,7 +250,8 @@ export async function GET(req: NextRequest) {
         console.log('Horas restantes:', formatTime(horasSemana.subtract(totalHorasPerfil).asMinutes()));
 
         const horasRestantes = horasSemana.subtract(totalHorasPerfil);
-        const minutosTotales = Math.round(horasRestantes.asMinutes());
+        //const minutosTotales = Math.round(horasRestantes.asMinutes());
+        const minutosTotales = Math.max(0, Math.round(horasRestantes.asMinutes()));
         const minutosTrabajados = Math.round(totalHorasPerfil.asMinutes());
 
         users.push({
