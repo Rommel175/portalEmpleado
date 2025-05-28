@@ -55,10 +55,6 @@ export async function GET(req: NextRequest) {
             break;
     }
 
-    switch (option) {
-        case 'Hoy':
-    }
-
     const { data: dataProfile, error: errorProfile } = await supabase
         .from('profiles')
         .select('*')

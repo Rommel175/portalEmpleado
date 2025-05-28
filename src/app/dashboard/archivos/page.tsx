@@ -1,4 +1,5 @@
 import ContainerSuperior from "@/components/containers/containerSuperior/ContainerSuperior";
+import ActividadSemanal from "@/components/dashboards/ActividadSemanal";
 import { getUserData } from "@/lib/getSupabaseData";
 
 export default async function FilesPage() {
@@ -9,6 +10,7 @@ export default async function FilesPage() {
       <div style={{ display: 'none' }}>
         <ContainerSuperior profile={profile} fichaje={fichaje} eventos={eventos} />
       </div>
+      <ActividadSemanal />
     </>
   );
 }
