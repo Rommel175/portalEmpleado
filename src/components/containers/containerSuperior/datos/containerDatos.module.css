@@ -38,6 +38,10 @@
     background: lightgray 50% / cover no-repeat;
 }
 
+.containerImage {
+    position: relative;
+}
+
 .containerImage::after {
     content: "";
     position: absolute;
@@ -240,9 +244,5 @@
 
     .mainContent>div {
         width: 100%;
-    }
-
-    .edit {
-        bottom: 23px;
     }
 }

@@ -13,7 +13,7 @@ import Tooltips from '@/components/tooltip/Tooltips';
 import CustomSelect from '@/components/customInputs/customSelect/CustomSelect';
 //import { useEffect } from 'react';
 
-export default function DatosContainer({ profile, estado, localizacionFichaje, setLocalizacionFichaje, horaInicio, /*setHoraInicio,*/ horaFinalAprox/*, setHoraFinalAprox*/ }: { profile: Profile, estado: string, localizacionFichaje: string, setLocalizacionFichaje: React.Dispatch<React.SetStateAction<string>>, horaInicio: string | Date | null/*, setHoraInicio: React.Dispatch<React.SetStateAction<Date>>*/, horaFinalAprox: null | Date, setHoraFinalAprox: React.Dispatch<React.SetStateAction<Date | null>>}) {
+export default function DatosContainer({ profile, estado, localizacionFichaje, setLocalizacionFichaje, horaInicio, /*setHoraInicio,*/ horaFinalAprox/*, setHoraFinalAprox*/ }: { profile: Profile, estado: string, localizacionFichaje: string, setLocalizacionFichaje: React.Dispatch<React.SetStateAction<string>>, horaInicio: string | Date | null/*, setHoraInicio: React.Dispatch<React.SetStateAction<Date>>*/, horaFinalAprox: null | Date, setHoraFinalAprox: React.Dispatch<React.SetStateAction<Date | null>> }) {
 
     /*const supabase = createClient();
 
@@ -51,8 +51,8 @@ export default function DatosContainer({ profile, estado, localizacionFichaje, s
         };
     }, [])*/
 
-    
-    
+
+
     function parseHora(hora: string | Date | null): string {
         if (!hora) return '-';
         const date = dayjs(hora)
@@ -79,9 +79,7 @@ export default function DatosContainer({ profile, estado, localizacionFichaje, s
                                 alt="img"
                                 className={styles.personalImage}
                             />
-                        </Link>
-                        <div className={styles.edit}>
-                            <Link href={'/dashboard/editar_perfil'}>
+                            <div className={styles.edit}>
                                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <g clipPath="url(#clip0_197_8779)">
                                         <path d="M8.5 1.50003C8.63132 1.36871 8.78722 1.26454 8.9588 1.19347C9.13038 1.1224 9.31428 1.08582 9.5 1.08582C9.68572 1.08582 9.86962 1.1224 10.0412 1.19347C10.2128 1.26454 10.3687 1.36871 10.5 1.50003C10.6313 1.63135 10.7355 1.78725 10.8066 1.95883C10.8776 2.13041 10.9142 2.31431 10.9142 2.50003C10.9142 2.68575 10.8776 2.86964 10.8066 3.04123C10.7355 3.21281 10.6313 3.36871 10.5 3.50003L3.75 10.25L1 11L1.75 8.25003L8.5 1.50003Z" stroke="white" strokeWidth="0.75" strokeLinecap="round" strokeLinejoin="round" />
@@ -92,9 +90,9 @@ export default function DatosContainer({ profile, estado, localizacionFichaje, s
                                         </clipPath>
                                     </defs>
                                 </svg>
-                            </Link>
+                            </div>
+                        </Link>
 
-                        </div>
                     </div>
 
                 </Tooltips2>
