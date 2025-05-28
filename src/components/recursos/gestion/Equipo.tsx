@@ -31,49 +31,68 @@ export default function EquipoAdmin({ equipo }: { equipo: Equipo[] }) {
     const supabase = createClient();
 
     useEffect(() => {
-        const date = dayjs();
+        const fetchData = async () => {
+            const date = dayjs();
 
-        setCurrentDate(date.format('DD-MM-YYYY'));
+            setCurrentDate(date.format('DD-MM-YYYY'));
 
-        const hoy = date.format('dddd').toLowerCase();
+            const hoy = date.format('dddd').toLowerCase();
 
-        const campo = `hora_fin_${hoy}` as keyof Equipo;
+            const campo = `hora_fin_${hoy}` as keyof Equipo;
 
-        console.log(campo);
+            const usersDataPromises = equipo.map(async (equipoItem) => {
+                const jornadas = equipoItem.fichaje_jornada.sort((a, b) => Number(a.id) - Number(b.id));
+                const ultimaJornada = jornadas?.[jornadas.length - 1];
+                const eventos = ultimaJornada?.fichaje_eventos.sort((a, b) => Number(a.id) - Number(b.id)) || [];
 
-        const usersData: Users[] = [];
+                const localizacion = eventos.length > 0 ? eventos[eventos.length - 1].localizacion : '-';
 
-        equipo.map((equipoItem) => {
-            console.log(equipoItem)
-            const jornadas = equipoItem.fichaje_jornada.sort((a, b) => Number(a.id) - Number(b.id));
-            const ultimaJornada = jornadas?.[jornadas.length - 1];
-            const eventos = ultimaJornada?.fichaje_eventos.sort((a, b) => Number(a.id) - Number(b.id));
+                const modificado = eventos[0]?.modificado;
 
-            const localizacion = eventos && eventos.length > 0 ? eventos[eventos.length - 1].localizacion : '-';
-            const hora = ultimaJornada?.date ?? '-';
-            const horaAproxFin = equipoItem[campo] as string | null;
+                let hora;
 
-            //console.log(horaAproxFin)
+                if (modificado) {
+                    const { data, error } = await supabase
+                        .from('modificaciones_eventos')
+                        .select('fecha_modificada')
+                        .eq('fichaje_evento_id', eventos[0].id)
+                        .order('created_at', { ascending: false });
 
-            //console.log(jornadas)
+                    if (error) {
+                        console.log('Error modificaciones data: ', error);
+                    }
 
-            usersData.push({
-                id: equipoItem.id,
-                fichaje_id: ultimaJornada?.id,
-                evento_id: eventos?.[eventos.length - 1].id,
-                nombre: equipoItem.nombre,
-                apellido: equipoItem.apellido,
-                email: equipoItem.email,
-                estado: equipoItem.estado,
-                image: equipoItem.image,
-                localizacion,
-                hora: parseHora(hora),
-                hora_aprox_salida: parseHora(horaAproxFin),
-                fecha: parseFecha(ultimaJornada?.date)
+                    if (data && data.length > 0) {
+                        hora = data[0].fecha_modificada;
+                    }
+                } else {
+                    hora = eventos[0]?.date;
+                }
+
+                const horaAproxFin = equipoItem[campo] as string | null;
+
+                return {
+                    id: equipoItem.id,
+                    fichaje_id: ultimaJornada?.id,
+                    evento_id: eventos[eventos.length - 1]?.id,
+                    nombre: equipoItem.nombre,
+                    apellido: equipoItem.apellido,
+                    email: equipoItem.email,
+                    estado: equipoItem.estado,
+                    image: equipoItem.image,
+                    localizacion,
+                    hora: parseHora(hora),
+                    hora_aprox_salida: parseHora(horaAproxFin),
+                    fecha: parseFecha(ultimaJornada?.date),
+                };
             });
-        })
 
-        setUsers(usersData);
+            const usersData = await Promise.all(usersDataPromises);
+
+            setUsers(usersData);
+        };
+
+        fetchData();
 
         const profilesRealTime = supabase
             .channel('realtime-profiles-admin')
