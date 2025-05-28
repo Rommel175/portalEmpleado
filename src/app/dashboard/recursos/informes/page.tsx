@@ -153,7 +153,7 @@ export default function InformesPage() {
               <label> {usersSelected} seleccionados</label>
             </div>
           }
-          <DropdownExportarInformes checkedState={checkedState} usersData={usersData} isSelected={isSelected} />
+          <DropdownExportarInformes checkedState={checkedState} usersData={usersData} titulo={titulo} />
         </div>
 
         <ContainerOptions
