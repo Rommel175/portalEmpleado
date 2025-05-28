@@ -90,7 +90,7 @@
     align-items: center;
     position: absolute;
     left: 34px;
-    bottom: 10px;
+    bottom: 8px;
     border-radius: 60.5px;
     border: 0.917px solid #FFFBFA;
     background: var(--colors-Info, #285FF5);
@@ -220,7 +220,15 @@
     gap: 2px;
 }
 
-@media (width < 450px) {
+@media (width <= 1024px) {
+    .edit {
+        bottom: 5px;
+    }
+}
+
+
+
+@media (width < 410px) {
     .mainContent {
         display: flex;
         flex-direction: column;
@@ -232,5 +240,9 @@
 
     .mainContent>div {
         width: 100%;
+    }
+
+    .edit {
+        bottom: 20px;
     }
 }

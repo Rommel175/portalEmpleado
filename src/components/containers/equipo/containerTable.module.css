@@ -54,3 +54,33 @@
     font-weight: 500;
     line-height: normal;
 }
+
+@media (width <=1024px) {
+    .tableHeader h3:first-child {
+        width: 240px;
+    }
+
+    .tableHeader h3:nth-child(2) {
+        width: 150px;
+    }
+
+    .tableHeader h3:nth-child(3) {
+        width: 100px;
+        text-align: center;
+    }
+
+    .tableHeader h3:nth-child(4) {
+        text-align: center;
+        width: 130px;
+    }
+
+    .tableHeader h3:last-child {
+        justify-content: center;
+        width: 120px;
+    }
+
+    .svg {
+        width: 10px;
+        height: 10px;
+    }
+}

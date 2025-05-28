@@ -217,3 +217,23 @@
     font-weight: 400;
     line-height: normal;
 }
+
+@media (width <=1024px) {
+    .usuario {
+        width: 225px;
+    }
+
+    .estado {
+        width: 130px;
+    }
+
+    .localizacion {
+        width: 80px;
+        text-align: center;
+    }
+
+    .jornada {
+        width: 110px;
+        padding: 2px 4px;
+    }
+}
