@@ -16,7 +16,8 @@ type UserData = {
   email: string,
   image: string,
   horas_semanales: string,
-  horas_restantes: string
+  horas_restantes: string,
+  horas_trabajadas: string
 };
 
 export default function InformesPage() {

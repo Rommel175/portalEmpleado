@@ -3,7 +3,7 @@ import styles from './informesTableItem.module.css'
 import Image from 'next/image';
 import SelectOne from '@/components/customInputs/customCheckbox/SelectOne';
 
-export default function InformesTableItem({ image, nombre, apellido, email, horas_semana, horas_restantes, id, checkedState, setCheckedState, isSelected }: { image: string, nombre: string, apellido: string, email: string, horas_semana: string, horas_restantes: string, id: string, checkedState: boolean, setCheckedState: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>, isSelected: boolean }) {
+export default function InformesTableItem({ image, nombre, apellido, email, horas_trabajadas, horas_restantes, id, checkedState, setCheckedState, isSelected }: { image: string, nombre: string, apellido: string, email: string, horas_trabajadas: string, horas_restantes: string, id: string, checkedState: boolean, setCheckedState: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>, isSelected: boolean }) {
 
 
     return (
@@ -20,7 +20,7 @@ export default function InformesTableItem({ image, nombre, apellido, email, hora
                 </div>
             </div>
 
-            <p className={styles.horasSemanales}>{horas_semana}h</p>
+            <p className={styles.horasSemanales}>{horas_trabajadas}h</p>
 
             <p className={styles.horasRestantes}>{horas_restantes}h</p>
 

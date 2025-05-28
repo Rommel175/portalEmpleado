@@ -11,11 +11,12 @@ type UserData = {
   id: string,
   nombre: string,
   apellido: string,
-  email: string
+  email: string,
   image: string,
   horas_semanales: string,
   horas_restantes: string,
-}
+  horas_trabajadas: string
+};
 
 export default function InformesTable({ users, totalHorasTrabajadas, checkedState, setCheckedState, titulo, isSelected }: { users: UserData[], totalHorasTrabajadas: string, checkedState: { [key: string]: boolean }, setCheckedState: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>, titulo: string, isSelected: boolean }) {
 
@@ -102,7 +103,7 @@ export default function InformesTable({ users, totalHorasTrabajadas, checkedStat
             nombre={item.nombre}
             apellido={item.apellido}
             email={item.email}
-            horas_semana={item.horas_semanales}
+            horas_trabajadas={item.horas_trabajadas}
             horas_restantes={item.horas_restantes}
             id={item.id}
             checkedState={checkedState[item.id]}

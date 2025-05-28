@@ -251,6 +251,7 @@ export async function GET(req: NextRequest) {
 
         const horasRestantes = horasSemana.subtract(totalHorasPerfil);
         const minutosTotales = Math.round(horasRestantes.asMinutes());
+        const minutosTrabajados = Math.round(totalHorasPerfil.asMinutes());
 
         users.push({
             id: profile.id,
@@ -259,7 +260,8 @@ export async function GET(req: NextRequest) {
             email: profile.email,
             image: profile.image,
             horas_semanales: formatTime(horasSemana.asMinutes()),
-            horas_restantes: formatTime(minutosTotales)
+            horas_restantes: formatTime(minutosTotales),
+            horas_trabajadas: formatTime(minutosTrabajados)
         });
 
         totalHoras = totalHoras.add(totalHorasPerfil);
