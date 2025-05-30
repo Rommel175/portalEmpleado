@@ -28,7 +28,7 @@ export default function CustomSelect({ localizacionFichaje, setLocalizacionFicha
     }, [])
 
     return (
-        <div className={styles.customSelect} onClick={() => {
+        <div className={`${ (estado === 'Jornada Finalizada' || estado === 'Pausa') ? styles.customSelectChange : styles.customSelectNoChange }`} onClick={() => {
             if (estado === 'Jornada Finalizada' || estado === 'Pausa') {
                 setShow(!show);
             }

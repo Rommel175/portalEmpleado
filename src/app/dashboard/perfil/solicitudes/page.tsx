@@ -7,6 +7,7 @@ import styles from './solicitudes.module.css';
 import DropdownExportarSolicitudes from '@/components/customInputs/dropdownExportar/exportarSolicitudes/DropdownExportarSolicitudes';
 import dayjs from 'dayjs';
 import { SolicitudesType } from '@/types/Types';
+import Loading from '@/components/loading/Loading';
 
 export default function Solicitudes() {
   const [startDate, setStartDate] = useState<Date | null>(null);
@@ -27,6 +28,7 @@ export default function Solicitudes() {
     reciente: true,
     checkedStateRegistro: {},
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     let start = startDate;
@@ -44,28 +46,36 @@ export default function Solicitudes() {
 
     const fetchData = async () => {
 
-      const params = new URLSearchParams({
-        option: option,
-        startDate: start ? start.toISOString() : '',
-        endDate: end ? end.toISOString() : '',
-        reciente: reciente ? 'true' : 'false',
-        checkedStateRegistro: JSON.stringify(checkedStateRegistro)
-      });
+      setIsLoading(true);
 
-      const res = await fetch(`/api/solicitudes/obtener?${params.toString()}`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
+      try {
+        const params = new URLSearchParams({
+          option: option,
+          startDate: start ? start.toISOString() : '',
+          endDate: end ? end.toISOString() : '',
+          reciente: reciente ? 'true' : 'false',
+          checkedStateRegistro: JSON.stringify(checkedStateRegistro)
+        });
 
-      if (!res.ok) {
-        console.error('Error en la respuesta:', res.status);
-        return;
-      }
+        const res = await fetch(`/api/solicitudes/obtener?${params.toString()}`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        });
 
-      const result = await res.json();
+        if (!res.ok) {
+          console.error('Error en la respuesta:', res.status);
+          return;
+        }
 
-      if (result.success) {
-        setSolicitudes(result.data);
+        const result = await res.json();
+
+        if (result.success) {
+          setSolicitudes(result.data);
+        }
+      } catch (error) {
+        console.log('Error cargando datos: ', error);
+      } finally {
+        setIsLoading(false)
       }
     }
 
@@ -111,6 +121,10 @@ export default function Solicitudes() {
 
   return (
     <>
+      {
+        (isLoading) &&
+        <Loading />
+      }
       <div className={styles.options}>
         <DropdownExportarSolicitudes solicitudes={solicitudes} />
         <ContainerOptions
@@ -151,9 +165,12 @@ export default function Solicitudes() {
       </div>
 
       {
-        solicitudes.map((item, index) => {
-          return <EntradaSolicitudes key={index} created_at={item.created_at} fecha_original={item.fecha_original} fecha_solicitada={item.fecha_solicitada} evento={item.evento} motivo={item.motivo} />
-        })
+        !isLoading && solicitudes.length == 0 ? (
+          <p>No hay solicitudes</p>
+        ) :
+          solicitudes.map((item, index) => {
+            return <EntradaSolicitudes key={index} created_at={item.created_at} fecha_original={item.fecha_original} fecha_solicitada={item.fecha_solicitada} evento={item.evento} motivo={item.motivo} />
+          })
       }
     </>
   );

@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react';
 import { Profile, SolicitudesType } from '@/types/Types';
 import { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 import { createClient } from '@/utils/supabase/client';
+import Loading from '@/components/loading/Loading';
+import Solicitudes from '../../perfil/solicitudes/page';
 
 type Solicitud = {
   id: string,
@@ -25,6 +27,7 @@ export default function Incidencias() {
 
   const [soicitudes, setSolicitudes] = useState<Solicitud[]>([]);
   const [supervisor, setSupervisor] = useState<Profile[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const supabase = createClient();
 
   useEffect(() => {
@@ -43,22 +46,32 @@ export default function Incidencias() {
         headers: { 'Content-Type': 'application/json' },
       });*/
 
-      const res = await fetch(`/api/solicitudes/all`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
+      setIsLoading(true);
 
-      if (!res.ok) {
-        console.error('Error en la respuesta:', res.status);
-        return;
+      try {
+        const res = await fetch(`/api/solicitudes/all`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        });
+
+        if (!res.ok) {
+          console.error('Error en la respuesta:', res.status);
+          return;
+        }
+
+        const result = await res.json();
+
+        if (result.success) {
+          setSolicitudes(result.data);
+          setSupervisor(result.supervisor);
+        };
+      } catch (error) {
+        console.log('Error cargando datos: ', error);
+      } finally {
+        setIsLoading(false);
       }
 
-      const result = await res.json();
 
-      if (result.success) {
-        setSolicitudes(result.data);
-        setSupervisor(result.supervisor);
-      };
     }
 
     fetchData();
@@ -90,10 +103,19 @@ export default function Incidencias() {
 
   return (
     <div className={styles.container}>
+
       {
-        soicitudes.map((item, index) => {
-          return <IncidenciasCard key={index} id={item.id} image={item.image} nombre={item.nombre} apellido={item.apellido} email={item.email} created_at={item.created_at} evento={item.evento} fecha_original={item.fecha_original} fecha_solicitada={item.fecha_solicitada} motivo={item.motivo} fichaje_evento_id={item.fichaje_evento_id} supervisor={supervisor} />
-        })
+        (isLoading) &&
+        <Loading />
+      }
+
+      {
+        !isLoading && Solicitudes.length == 0 ? (
+          <p>No hay solicitudes</p>
+        ) :
+          soicitudes.map((item, index) => {
+            return <IncidenciasCard key={index} id={item.id} image={item.image} nombre={item.nombre} apellido={item.apellido} email={item.email} created_at={item.created_at} evento={item.evento} fecha_original={item.fecha_original} fecha_solicitada={item.fecha_solicitada} motivo={item.motivo} fichaje_evento_id={item.fichaje_evento_id} supervisor={supervisor} />
+          })
       }
     </div>
   );

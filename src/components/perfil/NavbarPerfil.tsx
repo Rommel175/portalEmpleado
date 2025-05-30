@@ -15,7 +15,7 @@ export default function NavbarPerfil() {
                 </svg>
                 Historial de Fichajes
             </Link>
-            <Link href={'/dashboard/perfil/vacaciones'} className={`${(path == '/dashboard/perfil/vacaciones') ? styles.active : ''}`}>
+            <Link href={'/dashboard/perfil/vacaciones'} className={`${(path == '/dashboard/perfil/vacaciones') ? styles.active : ''}`} style={{display: 'none'}}>
                 <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M14.75 5.16667V3.5M7.25 5.16667V3.5M3.70833 7.66667H18.2917M3.5 9.37C3.5 7.6075 3.5 6.72583 3.86333 6.0525C4.19187 5.45192 4.70166 4.97042 5.32 4.67667C6.03333 4.33333 6.96667 4.33333 8.83333 4.33333H13.1667C15.0333 4.33333 15.9667 4.33333 16.68 4.67667C17.3075 4.97833 17.8167 5.46 18.1367 6.05167C18.5 6.72667 18.5 7.60833 18.5 9.37083V13.4642C18.5 15.2267 18.5 16.1083 18.1367 16.7817C17.8081 17.3822 17.2983 17.8637 16.68 18.1575C15.9667 18.5 15.0333 18.5 13.1667 18.5H8.83333C6.96667 18.5 6.03333 18.5 5.32 18.1567C4.70179 17.8631 4.19201 17.3819 3.86333 16.7817C3.5 16.1067 3.5 15.225 3.5 13.4625V9.37Z" stroke={(path == '/dashboard/perfil/vacaciones') ? "#0B3C70" : '#B3B7BA'} strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>

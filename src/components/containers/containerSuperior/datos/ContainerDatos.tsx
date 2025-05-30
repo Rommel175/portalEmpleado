@@ -11,6 +11,7 @@ import dayjs from 'dayjs';
 import Tooltips2 from '@/components/tooltip/Tooltips2';
 import Tooltips from '@/components/tooltip/Tooltips';
 import CustomSelect from '@/components/customInputs/customSelect/CustomSelect';
+import { usePathname } from 'next/navigation';
 //import { useEffect } from 'react';
 
 export default function DatosContainer({ profile, estado, localizacionFichaje, setLocalizacionFichaje, horaInicio, /*setHoraInicio,*/ horaFinalAprox/*, setHoraFinalAprox*/ }: { profile: Profile, estado: string, localizacionFichaje: string, setLocalizacionFichaje: React.Dispatch<React.SetStateAction<string>>, horaInicio: string | Date | null/*, setHoraInicio: React.Dispatch<React.SetStateAction<Date>>*/, horaFinalAprox: null | Date, setHoraFinalAprox: React.Dispatch<React.SetStateAction<Date | null>> }) {
@@ -51,7 +52,7 @@ export default function DatosContainer({ profile, estado, localizacionFichaje, s
         };
     }, [])*/
 
-
+    const pathname = usePathname();
 
     function parseHora(hora: string | Date | null): string {
         if (!hora) return '-';
@@ -64,12 +65,21 @@ export default function DatosContainer({ profile, estado, localizacionFichaje, s
         <div className={styles.container}>
 
             <div className={styles.title}>
-                <h1>Inicio</h1>
+                {
+                    (pathname == '/dashboard/perfil/fichajes' || pathname == '/dashboard/perfil/solicitudes' || pathname == '/dashboard/perfil/vacaciones') &&
+                    <h1>Perfil</h1>
+                }
+
+                {
+                    (pathname == '/dashboard/inicio') &&
+                    <h1>Inicio</h1>
+                }
+                
             </div>
 
             <div className={styles.profile}>
 
-                <Tooltips2 infoText='Gestionar cuenta'>
+                <Tooltips2 infoText='Gestionar cuenta' place='bottom-start'>
                     <div className={styles.containerImage}>
                         <Link href={'/dashboard/editar_perfil'}>
                             <Image

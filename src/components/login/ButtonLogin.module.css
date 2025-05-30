@@ -19,6 +19,7 @@
 
 .button:hover {
     cursor: pointer;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.07) 0%, rgba(0, 0, 0, 0.07) 100%), #F9F9F9;
 }
 
 @media (width < 400px),

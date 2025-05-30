@@ -1,27 +1,30 @@
 'use client';
-import React from 'react';
-import { Tooltip } from 'react-tooltip'
+import React, { useId } from 'react';
+import { Tooltip, PlacesType } from 'react-tooltip'
 import 'react-tooltip/dist/react-tooltip.css';
 
 
 interface TooltipProps {
   children: React.ReactNode;
   infoText: string;
+  place?: PlacesType
 }
 
-export default function Tooltips2({ children, infoText }: TooltipProps) {
+export default function Tooltips2({ children, infoText, place }: TooltipProps) {
+  const tooltipId = useId();
+
   return (
     <>
       <div
-        data-tooltip-id="tooltip2"
+        data-tooltip-id={tooltipId}
         data-tooltip-content={infoText}
       >
         {children}
       </div>
 
       <Tooltip
-        place="bottom-start"
-        id="tooltip2"
+        place={place}
+        id={tooltipId}
         noArrow
         offset={0}
         style={{

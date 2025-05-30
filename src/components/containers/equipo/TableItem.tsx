@@ -1,6 +1,7 @@
 import TooltipUserInfo from '@/components/tooltip/TooltipUserInfo';
 import styles from './tableItem.module.css'
 import Image from 'next/image';
+import Tooltips2 from '@/components/tooltip/Tooltips2';
 
 type Prop = {
     nombre: string,
@@ -18,22 +19,24 @@ export default function TableItem({ nombre, apellido, email, foto, estado = 'Jor
 
     return (
         <div className={styles.items}>
+
             <TooltipUserInfo id={id}>
                 <div className={styles.usuario}>
                     <Image src={foto ?? "/images/default.jpg"} width={40} height={40} alt='img_profile' />
                     <div className={styles.personalInfo}>
                         <div className={styles.name}>
                             <h2>{nombre} {apellido}</h2>
-                            <svg width="10" height="11" viewBox="0 0 10 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M3.60176 8.38657L6.41431 5.57402L3.60176 2.76148" stroke="#333333" strokeWidth="0.623087" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
+                            <Tooltips2 infoText='Ver usuario' place='top'>
+                                <svg width="10" height="11" viewBox="0 0 10 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M3.60176 8.38657L6.41431 5.57402L3.60176 2.76148" stroke="#333333" strokeWidth="0.623087" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                            </Tooltips2>
                         </div>
 
                         <h4>{email}</h4>
                     </div>
                 </div>
             </TooltipUserInfo>
-
 
             <div className={styles.estado}>
                 {

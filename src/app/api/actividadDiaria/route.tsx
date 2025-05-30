@@ -16,8 +16,10 @@ export async function GET() {
     }
 
     const now = dayjs();
-    const start = now.day(1).startOf('day');
-    const end = now.day(1).add(5, 'day').endOf('day');
+    //const start = now.day(1).startOf('day');
+    //const end = now.day(1).add(5, 'day').endOf('day');
+    const start = now.startOf('day');
+    const end = now.endOf('day');
 
     const { data: dataProfile, error: errorProfile } = await supabase
         .from('profiles')
@@ -31,7 +33,7 @@ export async function GET() {
 
     //const profile = dataProfile;
 
-    const horasSemana = dayjs.duration(dataProfile[0].horas_semana, 'hours');
+    const horasSemana = dayjs.duration(dataProfile[0].horas_semana / 5, 'hours');
     let totalHorasPerfil = dayjs.duration(0);
 
     const { data: dataFichaje, error: errorFichaje } = await supabase
@@ -129,6 +131,7 @@ export async function GET() {
     console.log(formatTime(minutosTrabajados))
     console.log(formatTime(minutosRestantes))
     console.log(horasRestantes.asHours())
+    console.log(horasSemana.asHours())
 
     return NextResponse.json({
         success: true,

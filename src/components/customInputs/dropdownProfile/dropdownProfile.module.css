@@ -1,7 +1,11 @@
 .navImage {
     aspect-ratio: 1/1;
-    border-radius: 36px;
+    border-radius: 32px;
     background: lightgray 50% / cover no-repeat;
+}
+
+.navImage:hover {
+    background: linear-gradient(0deg, rgba(255, 255, 255, 0.40) 0%, rgba(255, 255, 255, 0.40) 100%);
 }
 
 .containerImage {

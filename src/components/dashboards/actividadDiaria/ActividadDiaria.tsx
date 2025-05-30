@@ -1,25 +1,23 @@
 'use client'
 
 import { useEffect, useState } from 'react';
-import styles from './actividadSemanal.module.css';
+import styles from './actividadDiaria.module.css'
 
-export default function ActividadSemanal() {
-
+export default function ActividadDiaria() {
     const [minutosEsperados, setMinutosEsperados] = useState(0);
     const [minutosTrabajados, setMinutosTrabajados] = useState(0);
     const [minutosRestantes, setMinutosRestantes] = useState(0);
 
     useEffect(() => {
         const fetchActividad = async () => {
-            const res = await fetch('/api/actividadSemanal');
-            const data = await res.json();
-            if (data.success) {
-                setMinutosEsperados(data.minutosEsperados);
-                setMinutosTrabajados(data.minutosTrabajados);
-                setMinutosRestantes(data.minutosRestantes);
+            const res = await fetch('/api/actividadDiaria');
+
+            const result = await res.json();
+            if (result.success) {
+                setMinutosEsperados(result.minutosEsperados);
+                setMinutosTrabajados(result.minutosTrabajados);
+                setMinutosRestantes(result.minutosRestantes);
             }
-
-
         };
 
         fetchActividad();
@@ -35,10 +33,9 @@ export default function ActividadSemanal() {
         ? Math.min(100, (minutosTrabajados / minutosEsperados) * 100)
         : 0;
 
-
     return (
-        <div className={styles.container} style={{display: 'none'}}>
-            <h3>Actividad semanal</h3>
+        <div className={styles.container}>
+            <h3>Actividad diaria</h3>
             <div className={styles.content}>
                 <div className={styles.header}>
                     <div className={styles.text}>
@@ -48,7 +45,7 @@ export default function ActividadSemanal() {
                         </div>
 
                         <div className={styles.horizontalBarContainer}>
-                            <div className={styles.horizontalBar} style={{ width: `${porcentaje}` }} />
+                            <div className={styles.horizontalBar} style={{ width: `${porcentaje}%` }} />
                         </div>
 
                     </div>

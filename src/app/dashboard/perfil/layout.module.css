@@ -24,3 +24,10 @@
     gap: 24px;
     align-self: stretch;
 }
+
+.cards {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    align-self: stretch;
+}

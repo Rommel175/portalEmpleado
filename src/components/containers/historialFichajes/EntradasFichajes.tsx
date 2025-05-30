@@ -4,6 +4,8 @@ import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import EntradaFichajesItem from './EntradaFichajesItem';
 import styles from './entradasFichajes.module.css';
+import { useEffect, useState } from 'react';
+import SelectAll2 from '@/components/customInputs/customCheckbox/SelectAll2';
 
 type Evento = {
   id: number;
@@ -17,6 +19,8 @@ type Evento = {
 };
 
 export default function EntradasFichajes({ dateJoranda, eventos, checkedStateFichajes, setCheckedStateFichaje }: { dateJoranda: string, eventos: Evento[], checkedStateFichajes: { [key: string]: boolean }, setCheckedStateFichaje: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>> }) {
+
+  const [registrosSelected, setRegistrosSelected] = useState(0);
 
   function tiempoTotal(eventos: Evento[]) {
     dayjs.extend(duration);
@@ -105,8 +109,21 @@ export default function EntradasFichajes({ dateJoranda, eventos, checkedStateFic
 
   const isSelected = eventos.some(evento => checkedStateFichajes[evento.id]);
 
+  useEffect(() => {
+    const countSelected = eventos.filter(evento => checkedStateFichajes[evento.id]).length;
+    setRegistrosSelected(countSelected);
+  }, [checkedStateFichajes, eventos]);
+
+
   return (
     <div className={styles.container}>
+      {
+        isSelected &&
+        <div className={styles.selected}>
+          <SelectAll2 checkedState={checkedStateFichajes} setCheckedState={setCheckedStateFichaje} eventos={eventos} />
+          <label> {registrosSelected} seleccionados</label>
+        </div>
+      }
       {
         (eventos && eventos.length > 0) &&
         <>

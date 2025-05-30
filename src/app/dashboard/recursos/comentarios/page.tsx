@@ -3,6 +3,7 @@
 import ComentariosCard from '@/components/recursos/comentarios/ComentariosCard';
 import styles from './comentarios.module.css';
 import { useEffect, useState } from "react";
+import Loading from '@/components/loading/Loading';
 //import ContainerOptions from "@/components/containers/ContainerOptions";
 
 type FichajeComentario = {
@@ -23,11 +24,12 @@ export default function ComentariosPage() {
     //const [startDate, setStartDate] = useState<Date | null>(null);
     //const [endDate, setEndDate] = useState<Date | null>(null);
     //const [option, setOption] = useState('Esta semana');
-    const [usersData, setUsersData] = useState<UserData[]>([]);
     //const [localizacion, setLocalizacion] = useState('all');
     //const [reciente, setReciente] = useState(true);
     //const [checkedState, setCheckedState] = useState<{ [key: string]: boolean }>({});
     //const [checkedStateRegistro, setCheckedStateRegistro] = useState<{ [key: string]: boolean }>({});
+    const [usersData, setUsersData] = useState<UserData[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
 
@@ -58,22 +60,30 @@ export default function ComentariosPage() {
                 checkedState: JSON.stringify(checkedState),
             });*/
 
+            setIsLoading(true);
 
-            const res = await fetch(`/api/comentarios`, {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' },
-            });
+            try {
+                const res = await fetch(`/api/comentarios`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' },
+                });
 
-            if (!res.ok) {
-                console.error('Error en la respuesta:', res.status);
-                return;
+                if (!res.ok) {
+                    console.error('Error en la respuesta:', res.status);
+                    return;
+                }
+
+                const result = await res.json();
+
+                if (result.success) {
+                    setUsersData(result.usersData);
+                }
+            } catch (error) {
+                console.log('Error catga de datos: ', error);
+            } finally {
+                setIsLoading(false);
             }
 
-            const result = await res.json();
-
-            if (result.success) {
-                setUsersData(result.usersData);
-            }
         };
 
         fetchData();
@@ -199,18 +209,27 @@ export default function ComentariosPage() {
             }
 
             {
-                usersData.map((user, userIndex) =>
-                    user.fichajes.map((fichaje, fichajeIndex) => (
-                        <ComentariosCard
-                            key={`${userIndex}-${fichajeIndex}`}
-                            nombre={user.nombre}
-                            apellido={user.apellido}
-                            email={user.email}
-                            image={user.image}
-                            fichajes={fichaje}
-                        />
-                    ))
-                )
+                (isLoading) &&
+                <Loading />
+            }
+
+            {
+                !isLoading && usersData.length == 0 ? (
+                    <p>No hay comentarios</p>
+                ) :
+                    usersData.map((user, userIndex) =>
+                        user.fichajes.map((fichaje, fichajeIndex) => (
+                            <ComentariosCard
+                                key={`${userIndex}-${fichajeIndex}`}
+                                nombre={user.nombre}
+                                apellido={user.apellido}
+                                email={user.email}
+                                image={user.image}
+                                fichajes={fichaje}
+                            />
+                        ))
+                    )
+
             }
 
 

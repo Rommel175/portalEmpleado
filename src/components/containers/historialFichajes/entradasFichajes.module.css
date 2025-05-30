@@ -59,3 +59,18 @@
 .container .title > div .svg:hover {
     cursor: pointer;
 }
+
+.selected {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.selected label {
+    color: var(--dark-01, #333);
+    text-align: center;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}

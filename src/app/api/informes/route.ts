@@ -241,9 +241,9 @@ export async function GET(req: NextRequest) {
             }
         }
 
-        console.log('Horas trabajadas', formatTime(totalHorasPerfil.asMinutes()));
-        console.log('Horas esperadas', horasSemana.asHours())
-        console.log('Horas restantes:', formatTime(horasSemana.subtract(totalHorasPerfil).asMinutes()));
+        //console.log('Horas trabajadas', formatTime(totalHorasPerfil.asMinutes()));
+        //console.log('Horas esperadas', horasSemana.asHours())
+        //console.log('Horas restantes:', formatTime(horasSemana.subtract(totalHorasPerfil).asMinutes()));
 
         const horasRestantes = horasSemana.subtract(totalHorasPerfil);
         //const minutosTotales = Math.round(horasRestantes.asMinutes());

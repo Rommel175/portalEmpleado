@@ -1,6 +1,6 @@
-.containerSuperior {
+.cards {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 18px;
-    align-self: stretch; 
+    align-self: stretch;
 }
