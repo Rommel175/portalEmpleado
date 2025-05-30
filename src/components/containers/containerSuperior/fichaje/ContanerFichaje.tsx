@@ -16,6 +16,7 @@ dayjs.extend(duration);
 export default function ContainerFichaje({ estado, setEstado, profile, localizacionFichaje }: { estado: string, setEstado: React.Dispatch<React.SetStateAction<string>>, profile: Profile, localizacionFichaje: string }) {
 
     const [isOpen, setIsOpen] = useState(false);
+    //const [isOpen2, setIsOpen2] = useState(false);
     const [isRunning, setRunning] = useState<boolean>(false);
     const [currentDate, setCurrentDate] = useState<string>("");
     const [horaFinalAprox, setHoraFinalAprox] = useState<Date | null>(null);

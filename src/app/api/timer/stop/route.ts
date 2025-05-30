@@ -1,6 +1,11 @@
 import { createClient } from "@/utils/supabase/server";
 import dayjs from "dayjs";
 import { NextRequest, NextResponse } from "next/server";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone)
 
 export async function POST(req: NextRequest) {
     const supabase = await createClient();
@@ -83,5 +88,108 @@ export async function POST(req: NextRequest) {
         }
 
         return NextResponse.json({ success: true, estado: 'Jornada Finalizada' }, { status: 200 });
+    } else {
+
+        const { data: ultimaJornada, error: errorUltimaJornada } = await supabase
+            .from('fichaje_jornada')
+            .select('id, date')
+            .eq('profile_id', profileId)
+            .order('date', { ascending: false })
+            .limit(1);
+
+        if (errorUltimaJornada) {
+            console.log('Error 21: ' + errorUltimaJornada);
+            return NextResponse.json({ success: false, error: 'No se encontró ninguna jornada anterior.' }, { status: 404 });
+        }
+
+        if (ultimaJornada && ultimaJornada.length > 0) {
+
+            const { data: eventos, error: errorEventos } = await supabase
+                .from('fichaje_eventos')
+                .select('*')
+                .eq('fichaje_id', ultimaJornada[0].id)
+                .order('id', { ascending: false })
+                .limit(1);
+
+            if (errorEventos) {
+                console.log('Error 22: ' + errorEventos);
+                return NextResponse.json({ error: 'No se encontraron eventos en la última jornada.' }, { status: 500 });
+            }
+
+            const fecha = dayjs(eventos[0].date).tz('Europe/Madrid');
+            const fechaForzada = fecha.hour(23).minute(59);
+            const fechaForzadaUtc = fechaForzada.utc().toISOString();
+
+            if (eventos[0].evento == 'Inicio Pausa') {
+
+                const { error: errorInsertFichajeEvent } = await supabase
+                    .from('fichaje_eventos')
+                    .insert({ fichaje_id: ultimaJornada[0].id, evento: 'Fin Pausa', date: fechaForzadaUtc, localizacion: eventos[0].localizacion });
+
+                if (errorInsertFichajeEvent) {
+                    console.log('Error 3: ', errorInsertFichajeEvent);
+                    return NextResponse.json({ error: errorInsertFichajeEvent }, { status: 500 });
+                }
+
+                const { error: errorInsertFichajeEvent2 } = await supabase
+                    .from('fichaje_eventos')
+                    .insert({ fichaje_id: ultimaJornada[0].id, evento: 'Jornada Finalizada', date: fechaForzadaUtc, localizacion: eventos[0].localizacion });
+
+                if (errorInsertFichajeEvent2) {
+                    console.log('Error 4: ', errorInsertFichajeEvent2);
+                    return NextResponse.json({ error: errorInsertFichajeEvent2 }, { status: 500 });
+                }
+
+                const { error: errorUpdatingEstado } = await supabase
+                    .from('profiles')
+                    .update({ estado: 'Jornada Finalizada' })
+                    .eq('id', profileId);
+
+                if (errorUpdatingEstado) {
+                    console.log('Error 9', errorUpdatingEstado)
+                    return NextResponse.json({ error: errorUpdatingEstado }, { status: 500 })
+                }
+
+                return NextResponse.json({ success: true, acriva: true}, { status: 200 })
+
+            } else if (eventos[0].evento == 'Inicio Jornada' || eventos[0].evento == 'Fin Pausa') {
+
+                const { error: errorInsertFichajeEvent2 } = await supabase
+                    .from('fichaje_eventos')
+                    .insert({ fichaje_id: ultimaJornada[0].id, evento: 'Jornada Finalizada', date: fechaForzadaUtc, localizacion: eventos[0].localizacion });
+
+                if (errorInsertFichajeEvent2) {
+                    console.log('Error 5: ', errorInsertFichajeEvent2);
+                    return NextResponse.json({ error: errorInsertFichajeEvent2 }, { status: 500 });
+                }
+
+                const { error: errorUpdatingEstado } = await supabase
+                    .from('profiles')
+                    .update({ estado: 'Jornada Finalizada' })
+                    .eq('id', profileId);
+
+                if (errorUpdatingEstado) {
+                    console.log('Error 9', errorUpdatingEstado)
+                    return NextResponse.json({ error: errorUpdatingEstado }, { status: 500 })
+                }
+
+                return NextResponse.json({ success: true, acriva: true }, { status: 200 })
+
+            }
+
+        } else {
+            const { error: errorUpdatingEstado } = await supabase
+                .from('profiles')
+                .update({ estado: 'Jornada Finalizada' })
+                .eq('id', profileId);
+
+            if (errorUpdatingEstado) {
+                console.log('Error 9', errorUpdatingEstado)
+                return NextResponse.json({ error: errorUpdatingEstado }, { status: 500 })
+            }
+
+            return NextResponse.json({ success: true }, { status: 200 })
+        }
+
     }
 }
