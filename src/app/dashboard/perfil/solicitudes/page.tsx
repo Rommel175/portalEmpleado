@@ -57,7 +57,7 @@ export default function Solicitudes() {
           checkedStateRegistro: JSON.stringify(checkedStateRegistro)
         });
 
-        const res = await fetch(`/api/solicitudes/obtener?${params.toString()}`, {
+        const res = await fetch(`/api/solicitudes/getAll?${params.toString()}`, {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
         });

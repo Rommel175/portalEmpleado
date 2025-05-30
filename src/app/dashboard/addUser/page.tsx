@@ -19,7 +19,7 @@ export default async function AddUser() {
 
             <div className={styles.wraper}>
                 <div className={styles.header}>
-                    Perfil
+                    Añadir usuario
                 </div>
 
                 <FormularioAdd />

@@ -59,17 +59,74 @@ export default function ButtonModificar({ hour, date, id, action }: Prop) {
         setMotivo(e.target.value)
     }
 
+    /*function formatHora(value: string) {
+
+        const digits = value.replace(/\D/g, '');
+
+        if (digits.length === 0) return '';
+
+        if (digits.length <= 2) {
+            const padded = digits.padStart(2, '0');
+            return `00:${padded}`;
+        }
+
+        if (digits.length === 3) {
+            const horas = digits.slice(0, 1).padStart(2, '0');
+            const minutos = digits.slice(1);
+            return `${horas}:${minutos}`;
+        }
+
+        if (digits.length >= 4) {
+            const horas = digits.slice(0, 2);
+            const minutos = digits.slice(2, 4);
+            return `${horas}:${minutos}`;
+        }
+
+        return value;
+    }*/
+
+    function formatToHora(value: string): string | null {
+        const digits = value.replace(/\D/g, '');
+
+        if (digits.length === 0) return '';
+
+        if (digits.length <= 2) {
+            const mins = digits.padStart(2, '0');
+            return `00:${mins}`;
+        }
+
+        if (digits.length === 3) {
+            const h = digits.slice(0, 1);
+            const m = digits.slice(1, 3);
+            return `${h.padStart(2, '0')}:${m}`;
+        }
+
+        if (digits.length >= 4) {
+            const h = digits.slice(0, 2);
+            const m = digits.slice(2, 4);
+            return `${h}:${m}`;
+        }
+
+        return null;
+    }
+
     function handleChangeHoraSolicitada(e: React.ChangeEvent<HTMLInputElement>) {
-        setHoraSolicitada({ ...horaSolicitada, value: e.target.value });
+        setHoraSolicitada({ value: e.target.value, hasError: false });
     }
 
     function handleBlurHoraSolicitada() {
-        const hasError = !hourRegexp.test(horaSolicitada.value);
-        setHoraSolicitada((prev) => ({ ...prev, hasError }))
+        const formatted = formatToHora(horaSolicitada.value);
+
+        if (!formatted || !hourRegexp.test(formatted)) {
+            setHoraSolicitada((prev) => ({ ...prev, hasError: true }));
+            return;
+        }
+
+        setHoraSolicitada({ value: formatted, hasError: false });
     }
 
     async function enviarSolicitud() {
-        const res = await fetch('/api/solicitudes/crear', {
+        const res = await fetch('/api/solicitudes/create', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -104,7 +161,7 @@ export default function ButtonModificar({ hour, date, id, action }: Prop) {
             setHoraSolicitada((prev) => ({ ...prev, hasError: true }));
             return;
         }
-        
+
         setIsOpen(false);
         enviarSolicitud();
     }

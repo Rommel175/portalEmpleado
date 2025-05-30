@@ -19,6 +19,11 @@
     gap: 6px;
 }
 
+.usuario:hover {
+    cursor: pointer;
+    opacity: 0.8;
+}
+
 .usuario img {
     flex-shrink: 0;
     aspect-ratio: 1/1;

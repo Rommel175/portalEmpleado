@@ -357,8 +357,8 @@ export default function FormularioAdd() {
                 </div>
 
                 <div className={styles.buttons}>
-                    <input type="button" onClick={resetForm} value="Denegar" />
-                    <input type="submit" value="Guardar cambios" />
+                    <input type="button" onClick={resetForm} value="Cancelar" />
+                    <input type="submit" value="Añair usuario" />
                 </div>
             </form>
         </>

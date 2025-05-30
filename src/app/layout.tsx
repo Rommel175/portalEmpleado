@@ -15,6 +15,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Portal empleado",
   description: "Portal empleado de Xana System",
+  icons: {
+    icon: '/favicon.svg'
+  }
 };
 
 export default function RootLayout({

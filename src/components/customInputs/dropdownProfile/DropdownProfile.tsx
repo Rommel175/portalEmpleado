@@ -38,6 +38,7 @@ export default function DropdownProfile({ image, nombre, apellido, email }: { im
     return (
         <div className={styles.containerImage} ref={dropdownRef} onClick={handleDropdown}>
             <Image src={image} width={32} height={32} alt='img' className={styles.navImage} style={{cursor: 'pointer'}} />
+            
             {
                 show &&
                 <>
