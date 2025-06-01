@@ -110,7 +110,7 @@ export default function Incidencias() {
       }
 
       {
-        !isLoading && Solicitudes.length == 0 ? (
+        !isLoading && soicitudes.length == 0 ? (
           <p>No hay solicitudes</p>
         ) :
           soicitudes.map((item, index) => {
