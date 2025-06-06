@@ -50,3 +50,9 @@
     border-radius: 6.522px;
     background: #E2E9FF;
 }
+
+@media (width <= 1024px) {
+    .container {
+        display: none;
+    }
+}

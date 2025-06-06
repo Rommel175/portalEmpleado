@@ -132,3 +132,9 @@
     background-color: #E2E9FF;
     border-radius: 12px;
 }*/
+
+@media (width <= 1024px) {
+    .container {
+        display: none;
+    }
+}
