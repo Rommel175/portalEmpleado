@@ -69,7 +69,7 @@ export async function GET(request: Request) {
 
     return NextResponse.redirect(`${origin}/`);
 
-  } else if (email == 'rommel.xana@gmail.com' || email == 'example.xana@gmail.com' || email.endsWith('@xanasystem.com') || email.endsWith('@xanatechnolgies.com')) {
+  } else if (email == 'rommel.xana@gmail.com' || email == 'example.xana@gmail.com' || email == 'rrommel5@gmail.com' || email.endsWith('@xanasystem.com') || email.endsWith('@xanatechnolgies.com')) {
 
     const { data: dataProfile, error: errorProfle } = await supabase
       .from('profiles')

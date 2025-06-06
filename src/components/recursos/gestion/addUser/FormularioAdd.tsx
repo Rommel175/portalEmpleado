@@ -95,7 +95,8 @@ export default function FormularioAdd() {
             cleaned.endsWith('@xanasystem.com') ||
             cleaned === 'example.xana@gmail.com' ||
             cleaned === 'rommel.xana@gmail.com' ||
-            cleaned.endsWith('@xanatechnologies.com')
+            cleaned.endsWith('@xanatechnologies.com') ||
+            cleaned === 'rrommel5@gmail.com'
         );
         setEmail((prev) => ({ ...prev, hasError }));
     }
@@ -147,7 +148,8 @@ export default function FormularioAdd() {
             trimmedEmail.endsWith('@xanasystem.com') ||
             trimmedEmail === 'example.xana@gmail.com' ||
             trimmedEmail === 'rommel.xana@gmail.com' ||
-            trimmedEmail.endsWith('@xanatechnologies.com');
+            trimmedEmail.endsWith('@xanatechnologies.com') ||
+            trimmedEmail === 'rrommel5@gmail.com';
 
         if (!isEmailValid) {
             setEmail((prev) => ({ ...prev, hasError: true }));
