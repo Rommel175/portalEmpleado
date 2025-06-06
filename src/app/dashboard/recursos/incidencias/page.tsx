@@ -7,7 +7,6 @@ import { Profile, SolicitudesType } from '@/types/Types';
 import { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 import { createClient } from '@/utils/supabase/client';
 import Loading from '@/components/loading/Loading';
-import Solicitudes from '../../perfil/solicitudes/page';
 
 type Solicitud = {
   id: string,
